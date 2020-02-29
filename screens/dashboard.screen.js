@@ -1,92 +1,98 @@
 import React, { Component } from "react";
-import { View, Text, FlatList } from "react-native";
-import { Card, Button } from "react-native-elements";
+import { View } from "react-native";
+import { ListItem } from "react-native-elements";
+import { FlatList } from "react-native-gesture-handler";
+
+const list = [
+  {
+    name: "Grow and Thrive at Work"
+  },
+  {
+    name: "Amy Farha",
+    subtitle: "Vice President"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+  {
+    name: "Chris Jackson",
+    subtitle: "Vice Chairman"
+  },
+];
 
 export class DashboardScreen extends Component {
   render() {
     return (
-      <View
-        style={{
-          flex: 10,
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#ffffff"
+      <View>
+        <FlatList style={{
+          marginTop: 25,
         }}
-      >
-        <Text></Text>
-        <Text></Text>
-        <Button
-          style={{
-            marginLeft: 50,
-            marginRight: 50,
-            width: 350
-          }}
-          title="Enter Items for Today"
-          onPress={() => {this.props.navigation.navigate("TodaysGoals")}}
-        ></Button>
-        <Text></Text>
-        <Text></Text>
-        <Button
-          style={{
-            marginLeft: 50,
-            marginRight: 50,
-            width: 350
-          }}
-          title="Export to Excel"
-          onPress={() => {this.props.navigation.navigate("ExcelExport")}}
-        ></Button>
-        <Text></Text>
-        <Text
-          style={{
-            fontSize: 25,
-            fontFamily: "PingFangTC-Thin"
-          }}
-        >
-          {" "}
-          Your hard work
-        </Text>
-        <Text>
-          ----------------------------------------------------------
-        </Text>
-
-        <FlatList
-          style={{
-            marginLeft: 20,
-            marginRight: 20
-          }}
-          data={[
-            { key: "Contact Boss     Jan 20th, 2019" },
-            { key: "Contact Boss     Jan 21st, 2019" },
-            { key: "Contact Boss     Jan 22nd, 2019" },
-            { key: "Contact Boss     Jan 23nd, 2019" },
-            { key: "Contact Boss     Jan 24th, 2019" },
-            { key: "Contact Boss     Jan 25th, 2019" },
-            { key: "Contact Boss     Jan 26th, 2019" },
-            { key: "Contact Boss     Jan 28th, 2019" },
-            { key: "Contact Boss     Jan 29th, 2019" },
-            { key: "Contact Boss     Jan 30th, 2019" },
-            { key: "Contact Boss     Jan 31st, 2019" },
-            { key: "Contact Boss     Feb 1st, 2019" },
-            { key: "Contact Boss     Feb 2nd, 2019" },
-            { key: "Contact Boss     Feb 3rd, 2019" },
-            { key: "Contact Boss     Feb 4th, 2019" },
-            { key: "Contact Boss     Feb 5th, 2019" },
-            { key: "Contact Boss     Feb 6th, 2019" }
-          ]}
+          data={list}
           renderItem={({ item }) => (
-            <Card>
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontFamily: "PingFangTC-Thin"
+            <View>
+              <ListItem
+                key={item}
+                title={item.name}
+                titleStyle={{
+                  marginLeft: 25
                 }}
-              >
-                {item.key}
-              </Text>
-            </Card>
+                subtitle={item.subtitle}
+                bottomDivider
+                chevron
+                friction={90}
+                tension={100}
+                subtitleStyle={{
+                  marginLeft: 65 
+                }}
+              />
+            </View>
           )}
-        />
+        ></FlatList>
       </View>
     );
   }
