@@ -1,10 +1,12 @@
 import { createStackNavigator } from "react-navigation-stack";
-import { createAppContainer } from "react-navigation";
-import { LoginScreen } from './login.screen';
+import { DashboardScreen } from "./dashboard.screen";
+import {ExcelExportScreen} from './excel.export.screen';
+import { TodaysGoalsScreen } from "./todays.goals.screen";
 
-const appNavigator = createStackNavigator(
+export const DashboardNavigation = createStackNavigator(
   {
-    Login : LoginScreen
+    Dashboard : DashboardScreen,
+    ExcelExport: ExcelExportScreen,
+    TodaysGoals: TodaysGoalsScreen
   },
 );
-export const MainNavigator = createAppContainer(appNavigator);
