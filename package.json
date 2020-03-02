@@ -19,8 +19,9 @@
     "expo": "~36.0.0",
     "jest-environment-enzyme": "^7.1.2",
     "jest-enzyme": "^7.1.2",
-    "react": "~16.9.0",
-    "react-dom": "^16.13.0",
+    "metro-react-native-babel-preset": "^0.58.0",
+    "react": "16",
+    "react-dom": "16",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "~1.5.0",
@@ -36,11 +37,17 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
-    "babel-preset-expo": "~8.0.0",
+    "babel-preset-expo": "^8.0.0",
     "jest": "^25.1.0"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "setupFilesAfterEnv": [
+      "<rootDir>/setupTest.js"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!react-native-elements).+\\.js$"
+    ]
   },
   "private": true
 }
