@@ -16,12 +16,12 @@ export class HardWorkEntry {
   }
 
   equals(object) {
-    if (!object) {
+    if (!object || !object.getAccomplishment || !object.getAccomplishedOn) {
       return false;
     }
 
     const equalAccomplishment = object.getAccomplishment() === this.getAccomplishment();
-    const equalTimestamp = object.timestamp.getTime() === this.timestamp.getTime();
+    const equalTimestamp = object.getAccomplishedOn().getTime() === this.getAccomplishedOn().getTime();
 
     return equalAccomplishment && equalTimestamp;
   }

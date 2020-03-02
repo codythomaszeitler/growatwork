@@ -22,37 +22,52 @@ describe("Hard Work Entry", () => {
   it("should be able to copy and the same hard work entry", () => {
     const copy = testObject.copy();
     expect(copy.getAccomplishment()).toBe(accomplishment);
-    expect(copy.getAccomplishedOn().getTime()).toBe(
-      accomplishedOn.getTime()
-    );
+    expect(copy.getAccomplishedOn().getTime()).toBe(accomplishedOn.getTime());
   });
 
-  it('should return true on equals if achievement and timestamp are the same', () => {
+  it("should return true on equals if achievement and timestamp are the same", () => {
     const copy = testObject.copy();
     expect(testObject.equals(copy)).toBe(true);
   });
 
-  it('should return false on equals if achievement is different', () => {
-    const comparison = new HardWorkEntry('Im different!', accomplishedOn);
+  it("should return false on equals if achievement is different", () => {
+    const comparison = new HardWorkEntry("Im different!", accomplishedOn);
     expect(testObject.equals(comparison)).toBe(false);
   });
 
-  it('should return false on equals if timestamp is different', () => {
+  it("should return false on equals if timestamp is different", () => {
     const comparison = new HardWorkEntry(accomplishment, new Date(1000));
     expect(testObject.equals(comparison)).toBe(false);
   });
 
-  it('should return false if timestamp and achievement are both different', () => {
-    const comparison = new HardWorkEntry('Im different!', new Date(1000));
+  it("should return false if timestamp and achievement are both different", () => {
+    const comparison = new HardWorkEntry("Im different!", new Date(1000));
     expect(testObject.equals(comparison)).toBe(false);
   });
 
-  it('should return false on equals if given object is null', () => {
+  it("should return false on equals if given object is null", () => {
     expect(testObject.equals(null)).toBe(false);
   });
 
-  it('should return false on equals if given object is undefined', () => {
+  it("should return false on equals if given object is undefined", () => {
     expect(testObject.equals()).toBe(false);
+  });
+
+  it("should return false on equals if given object does not have a getAccomplishment method", () => {
+    const comparison = {
+
+      getAccomplishedOn: function() {return new Date()}
+    };
+
+    expect(testObject.equals(comparison)).toBe(false);
+  });
+
+  it("should return false on equals if given object does not have a getAccomplishedOn method", () => {
+    const comparison = {
+      getAccomplishment: function() {return 'accomplishent'}
+    };
+
+    expect(testObject.equals(comparison)).toBe(false);
   });
 
   it("should be able to copy and not share any references", () => {
