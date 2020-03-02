@@ -15,15 +15,26 @@ export class HardWorkEntry {
     this.timestamp = timestamp;
   }
 
-  copy() {
-    return new HardWorkEntry(this.accomplished(), this.accomplishedOn());
+  equals(object) {
+    if (!object) {
+      return false;
+    }
+
+    const equalAccomplishment = object.getAccomplishment() === this.getAccomplishment();
+    const equalTimestamp = object.timestamp.getTime() === this.timestamp.getTime();
+
+    return equalAccomplishment && equalTimestamp;
   }
 
-  accomplished() {
+  copy() {
+    return new HardWorkEntry(this.getAccomplishment(), this.getAccomplishedOn());
+  }
+
+  getAccomplishment() {
     return this.accomplishment;
   }
 
-  accomplishedOn() {
+  getAccomplishedOn() {
     return new Date(this.timestamp);
   }
 }
