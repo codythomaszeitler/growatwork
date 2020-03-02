@@ -38,16 +38,11 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "babel-preset-expo": "^8.0.0",
-    "jest": "^25.1.0"
+    "jest": "^25.1.0",
+    "jest-expo": "^36.0.1"
   },
   "jest": {
-    "preset": "react-native",
-    "setupFilesAfterEnv": [
-      "<rootDir>/setupTest.js"
-    ],
-    "transformIgnorePatterns": [
-      "/node_modules/(?!react-native-elements).+\\.js$"
-    ]
+    "preset": "jest-expo"
   },
   "private": true
 }
