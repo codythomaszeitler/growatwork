@@ -5,7 +5,6 @@ import { configureEnzyme } from "../../setupTest";
 import {HardWorkEntryScreenSegment} from '../../screens/hard.work.entry.screen.segment';
 import { HardWorkEntry } from "../../pojo/hard.work.entry";
 import { CareerImprovementClient } from "../../pojo/career.improvement.client";
-import {ListItem} from 'react-native-elements';
 
 describe("Dashboard view information", () => {
   let testObject;

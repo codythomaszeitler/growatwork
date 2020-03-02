@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { ActivityIndicator, View, Text } from "react-native";
+import { CareerImprovementClient } from "../pojo/career.improvement.client";
+import { HardWorkEntry } from "../pojo/hard.work.entry";
 
 export class LoadingScreen extends Component {
   constructor(props) {
@@ -7,11 +9,23 @@ export class LoadingScreen extends Component {
   }
 
   componentDidMount() {
-      console.log('console mounted');
 
-      setTimeout(function(){
-        this.props.navigation.navigate("Dashboard")
+      this.loadingId = setTimeout(function(){
+
+        let careerImprovementClient = new CareerImprovementClient();
+        for (let i = 0; i < 100; i++) {
+          careerImprovementClient.log(new HardWorkEntry(i.toString(), new Date()));
+        }
+
+        this.props.navigation.navigate("Dashboard", {
+          a : 5
+        })
       }.bind(this), 3000);
+  }
+
+  componentWillUnmount() {
+    console.log('was unmounted');
+    clearTimeout(this.loadingId);
   }
 
 

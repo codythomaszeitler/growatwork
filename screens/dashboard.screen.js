@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { View, FlatList, Text } from "react-native";
+import { View, FlatList } from "react-native";
 import { HardWorkEntryScreenSegment } from "./hard.work.entry.screen.segment";
+
 
 export class DashboardScreen extends Component {
   constructor(props) {
@@ -8,7 +9,7 @@ export class DashboardScreen extends Component {
     this.props = props;
 
     this.state = {
-      entries : this.props.careerImprovementClient.getHardWork()
+      entries : [] //this.props.careerImprovementClient.getHardWork()
     }
   }
 

@@ -5,12 +5,9 @@ export class HardWorkEntryScreenSegment extends Component {
   constructor(props) {
     super(props);
     this.props = props;
-    console.log(this.props);
   }
 
   componentDidCatch(error, errorInfo) {
-      console.log(error);
-      console.log(errorInfo);
   }
 
   render() {
