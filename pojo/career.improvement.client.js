@@ -1,7 +1,14 @@
 
+class OnLogEvent {
+    constructor(entry) {
+        this.logged = entry.copy();
+    }
+}
+
 export class CareerImprovementClient {
     constructor() {
         this.hardWorkEntries = [];
+        this.listeners = [];
     }
 
     log(hardWorkEntry) {
@@ -11,6 +18,22 @@ export class CareerImprovementClient {
         this.checkForDuplicate(hardWorkEntry);
 
         this.hardWorkEntries.push(hardWorkEntry.copy());
+        this.emitOnLogEvent(hardWorkEntry.copy());
+    }
+
+    emitOnLogEvent(hardWorkEntry) {
+        for (let i = 0; i < this.listeners.length; i++) {
+            const listener = this.listeners[i];
+            listener.onLog(new OnLogEvent(hardWorkEntry));
+        }
+    }
+
+    addOnLogListener(listener) {
+        if (!listener) {
+            throw new Error('Cannot add a listener that does not exist')
+        }
+
+        this.listeners.push(listener);
     }
 
     checkForDuplicate(toCheck) {
