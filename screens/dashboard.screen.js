@@ -1,23 +1,31 @@
 import React, { Component } from "react";
 import { View, FlatList } from "react-native";
 import { HardWorkEntryScreenSegment } from "./hard.work.entry.screen.segment";
-
+import { datastore } from "../datastore/datastore";
 
 export class DashboardScreen extends Component {
   constructor(props) {
     super(props);
     this.props = props;
-    console.log('Dashboard screen' + JSON.stringify(this.props));
+
+    const client = datastore().getCareerImprovementClient();
+    client.addOnLogListener(this);
 
     this.state = {
-      entries : [] //this.props.careerImprovementClient.getHardWork()
-    }
+      entries: client.getHardWork()
+    };
+  }
+
+  onLog(event) {
+    console.log(event);
+    this.setState({
+      entries: [event.logged].concat(this.state.entries) 
+    });
   }
 
   add(entry) {
-    this.setState({
-      entries: this.state.entries.concat([entry])
-    });
+    const client = datastore().getCareerImprovementClient();
+    client.log(entry);
   }
 
   render() {
@@ -26,7 +34,9 @@ export class DashboardScreen extends Component {
         <FlatList
           data={this.state.entries}
           renderItem={({ item }) => (
-            <HardWorkEntryScreenSegment hardWorkEntry={item}></HardWorkEntryScreenSegment> 
+            <HardWorkEntryScreenSegment
+              hardWorkEntry={item}
+            ></HardWorkEntryScreenSegment>
           )}
         ></FlatList>
       </View>

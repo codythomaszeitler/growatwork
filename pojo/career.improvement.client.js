@@ -24,7 +24,7 @@ export class CareerImprovementClient {
         }
         this.checkForDuplicate(hardWorkEntry);
 
-        this.hardWorkEntries.push(hardWorkEntry.copy());
+        this.hardWorkEntries.unshift(hardWorkEntry.copy());
         this.emitOnLogEvent(hardWorkEntry.copy());
     }
 

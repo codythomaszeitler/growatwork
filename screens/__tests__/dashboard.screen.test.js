@@ -5,6 +5,7 @@ import { configureEnzyme } from "../../setupTest";
 import {HardWorkEntryScreenSegment} from '../../screens/hard.work.entry.screen.segment';
 import { HardWorkEntry } from "../../pojo/hard.work.entry";
 import { CareerImprovementClient } from "../../pojo/career.improvement.client";
+import {getInstance} from '../../datastore/datastore';
 
 describe("Dashboard view information", () => {
   let testObject;
@@ -14,6 +15,8 @@ describe("Dashboard view information", () => {
     configureEnzyme();
 
     careerImprovementClient = new CareerImprovementClient();
+    careerImprovementClient.id = '1000';
+    getInstance().add(careerImprovementClient);
   });
 
   it("should load all hard work entries found in the initial sleep consultant client", () => {

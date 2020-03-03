@@ -1,32 +1,95 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 import { View, Text } from "react-native";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Button } from "react-native-elements";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-export class ExcelExportScreen extends Component { 
+export class ExcelExportScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.props = props;
 
-    render() {
-        return (
-            <View style={{
-                flex: 1,
-                backgroundColor: '#ffffff'
-            }}>
+    this.onPress = this.onPress.bind(this);
+    this.onFromChange = this.onFromChange.bind(this);
+    this.onToChange = this.onToChange.bind(this);
 
-                <Text></Text>
-                <Text></Text>
-                <Text></Text>
-                <Text style={{
-                    fontSize: 20,
-                    fontFamily: "PingFangTC-Thin"
-                }}>     From:</Text>
-                <DateTimePicker value={new Date()}></DateTimePicker>
-                <Text></Text>
-                <Text style={{
-                    fontSize: 20,
-                    fontFamily: "PingFangTC-Thin"
-                }}>     To:</Text>
-                <DateTimePicker value={new Date()}></DateTimePicker>
-            </View>
-        );
-    }
+    this.state = {
+      toDate: new Date(),
+      fromDate: new Date()
+    };
+  }
 
+  onPress() {
+    console.log(this.state.fromDate);
+    console.log(this.state.toDate);
+  }
+
+  onFromChange(event) {
+    this.setState({
+      fromDate: new Date(event.nativeEvent.timestamp)
+    });
+  }
+
+  onToChange(event) {
+    this.setState({
+      toDate: new Date(event.nativeEvent.timestamp)
+    });
+  }
+
+  render() {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#ffffff"
+        }}
+      >
+        <Text></Text>
+        <Text></Text>
+        <Text></Text>
+        <Text
+          style={{
+            fontSize: 20,
+            fontFamily: "PingFangTC-Thin",
+            marginLeft: 30
+          }}
+        >
+          {" "}
+          From:
+        </Text>
+        <DateTimePicker
+          value={this.state.fromDate}
+          onChange={this.onFromChange}
+        ></DateTimePicker>
+        <Text></Text>
+        <Text
+          style={{
+            fontSize: 20,
+            fontFamily: "PingFangTC-Thin",
+            marginLeft: 30
+          }}
+        >
+          {" "}
+          To:
+        </Text>
+        <DateTimePicker
+          value={this.state.toDate}
+          onChange={this.onToChange}
+        ></DateTimePicker>
+
+        <Text></Text>
+        <Text></Text>
+        <Text></Text>
+
+        <Button
+          style={{
+            width: 300,
+            flexGrow: 0.5,
+            marginLeft: 50
+          }}
+          title="Export"
+          onPress={this.onPress}
+        />
+      </View>
+    );
+  }
 }

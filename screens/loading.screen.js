@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { ActivityIndicator, View, Text } from "react-native";
 import { CareerImprovementClient } from "../pojo/career.improvement.client";
 import { HardWorkEntry } from "../pojo/hard.work.entry";
+import {datastore} from '../datastore/datastore';
 
 export class LoadingScreen extends Component {
   constructor(props) {
@@ -18,16 +19,14 @@ export class LoadingScreen extends Component {
           );
         }
 
-        this.props.navigation.navigate("Dashboard", {
-            careerImprovementClient
-        });
-      }.bind(this),
-      3000
-    );
+        datastore().setCareerImprovementClient(careerImprovementClient);
+
+        this.props.navigation.navigate("Dashboard"); 
+        
+      }.bind(this), 3000);
   }
 
   componentWillUnmount() {
-    console.log("was unmounted");
     clearTimeout(this.loadingId);
   }
 

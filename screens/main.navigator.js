@@ -70,12 +70,11 @@ export class DashboardNavigation extends Component {
   constructor(props){
     super(props);
     this.props = props;
-    this.careerImprovementClient = this.props.navigation.state.params.careerImprovementClient;
   }
 
   render() {
     return (
-      <NavigationContainer screenProps={this.props.navigation.state.params.careerImprovementClient}>
+      <NavigationContainer>
         <DashboardTabs></DashboardTabs>
       </NavigationContainer>
     );
