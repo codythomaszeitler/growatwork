@@ -6,9 +6,23 @@ import { View } from "react-native";
 import React, { Component } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
-import {Header} from 'react-native-elements';
+import { Header } from "react-native-elements";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+
+import { ExcelExportDestinationScreen } from "./excel.export.destination.screen";
+
+const MainStack = createStackNavigator();
+
+function ModalScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ fontSize: 30 }}>This is a modal!</Text>
+      <Button onPress={() => navigation.goBack()} title="Dismiss" />
+    </View>
+  );
+}
 
 const Tab = createBottomTabNavigator();
 function DashboardTabs() {
@@ -61,7 +75,8 @@ function DashboardTabs() {
             </View>
           )
         }}
-      />
+      >
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }
@@ -76,9 +91,12 @@ export class DashboardNavigation extends Component {
     return (
       <NavigationContainer>
         <Header
-          centerComponent={{ text: "Grow and Thrive at Work", style: { color: "#4d7bd1", fontSize: 18 } }}
+          centerComponent={{
+            text: "Grow and Thrive at Work",
+            style: { color: "#4d7bd1", fontSize: 18 }
+          }}
           rightComponent={{ icon: "menu", color: "#4d7bd1" }}
-          backgroundColor={'#ffffff'}
+          backgroundColor={"#ffffff"}
         />
         <DashboardTabs></DashboardTabs>
       </NavigationContainer>

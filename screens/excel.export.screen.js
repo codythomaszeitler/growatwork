@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
-import { Button } from "react-native-elements";
+import { Text, Modal, View, TouchableHighlight } from "react-native";
+import { Button, Card, Icon, Input } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Divider } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
@@ -13,16 +13,28 @@ export class ExcelExportScreen extends Component {
     this.onPress = this.onPress.bind(this);
     this.onFromChange = this.onFromChange.bind(this);
     this.onToChange = this.onToChange.bind(this);
+    this.setModalVisible = this.setModalVisible.bind(this);
+    this.turnOff = this.turnOff.bind(this);
 
     this.state = {
       toDate: new Date(),
-      fromDate: new Date()
+      fromDate: new Date(),
+      modalVisible: false
     };
+  }
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
+
+  turnOff() {
+    this.setState({modalVisible : false});
   }
 
   onPress() {
     console.log(this.state.fromDate);
     console.log(this.state.toDate);
+    this.setModalVisible(!this.state.modalVisible);
   }
 
   onFromChange(event) {
@@ -45,6 +57,68 @@ export class ExcelExportScreen extends Component {
           backgroundColor: "#ffffff"
         }}
       >
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
+          <Card title="Export via Excel">
+            <Text style={{ marginBottom: 10 }}>
+              Export your select achievements to an excel sheet on your phone!
+            </Text>
+            <Button
+              icon={<Icon name="code" color="#ffffff" />}
+              buttonStyle={{
+                borderRadius: 0,
+                marginLeft: 0,
+                marginRight: 0,
+                marginBottom: 0
+              }}
+              title="Export"
+            />
+          </Card>
+
+          <Card title="Export via Email">
+            <Text style={{ marginBottom: 10 }}>
+              Export your select achievements to given email address!
+            </Text>
+            <Input placeholder="E-mail"></Input>
+            <Text></Text>
+            <Button
+              icon={<Icon name="code" color="#ffffff" />}
+              buttonStyle={{
+                borderRadius: 0,
+                marginLeft: 0,
+                marginRight: 0,
+                marginBottom: 0
+              }}
+              title="Export"
+            />
+          </Card>
+
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
+
+          <Card>
+            <Button
+              buttonStyle={{
+                borderRadius: 0,
+                marginLeft: 0,
+                marginRight: 0,
+                marginBottom: 0
+              }}
+              title="Cancel"
+              onPress={this.turnOff}
+            />
+          </Card>
+        </Modal>
         <Divider style={{ backgroundColor: "black" }} />
 
         <Text></Text>
