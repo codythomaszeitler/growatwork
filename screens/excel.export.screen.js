@@ -32,8 +32,6 @@ export class ExcelExportScreen extends Component {
   }
 
   onPress() {
-    console.log(this.state.fromDate);
-    console.log(this.state.toDate);
     this.setModalVisible(!this.state.modalVisible);
   }
 
