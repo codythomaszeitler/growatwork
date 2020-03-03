@@ -29,7 +29,7 @@ export class InputHardWorkEntryScreen extends Component {
       return;
     }
 
-    const client = datastore().getCareerImprovementClient();
+    const client = datastore().get();
     client.log(new HardWorkEntry(this.state.accomplishment, new Date()));
   }
 

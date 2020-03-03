@@ -22,7 +22,7 @@ export class LoadingScreen extends Component {
           careerImprovementClient.log(new HardWorkEntry('Partered with AMEX', new Date()));
           careerImprovementClient.log(new HardWorkEntry('Founded a new regime', new Date()));
 
-        datastore().setCareerImprovementClient(careerImprovementClient);
+        datastore().set(careerImprovementClient);
 
         this.props.navigation.navigate("Dashboard"); 
         

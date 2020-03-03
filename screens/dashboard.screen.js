@@ -8,7 +8,7 @@ export class DashboardScreen extends Component {
     super(props);
     this.props = props;
 
-    const client = datastore().getCareerImprovementClient();
+    const client = datastore().get();
     client.addOnLogListener(this);
 
     this.state = {
@@ -17,14 +17,13 @@ export class DashboardScreen extends Component {
   }
 
   onLog(event) {
-    console.log(event);
     this.setState({
       entries: [event.logged].concat(this.state.entries) 
     });
   }
 
   add(entry) {
-    const client = datastore().getCareerImprovementClient();
+    const client = datastore().get();
     client.log(entry);
   }
 

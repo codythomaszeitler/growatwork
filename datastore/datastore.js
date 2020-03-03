@@ -1,29 +1,25 @@
-import {type as clienttype} from '../pojo/career.improvement.client';
-
-export class DataStore {
+export class CareerImprovementClientDataStore {
 
     constructor() {
-        this.store = {};
+        this.client = null;
     }
 
-    setCareerImprovementClient(client) {
-
+    set(client) {
         if (client === null) {
             throw new Error('Cannot set career improvement client to null');
         }
-
-        this.store[clienttype] = client;
+        this.client = client;
     }
 
-    getCareerImprovementClient() {
-        return this.store[clienttype];
+    get() {
+        return this.client;
     }
 };
 
 let dataStore = null;
 export function datastore() {
     if (!dataStore) {
-        dataStore = new DataStore();
+        dataStore = new CareerImprovementClientDataStore();
     }
     return dataStore;
 }
