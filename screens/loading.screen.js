@@ -9,25 +9,27 @@ export class LoadingScreen extends Component {
   }
 
   componentDidMount() {
-
-      this.loadingId = setTimeout(function(){
-
+    this.loadingId = setTimeout(
+      function() {
         let careerImprovementClient = new CareerImprovementClient();
         for (let i = 0; i < 100; i++) {
-          careerImprovementClient.log(new HardWorkEntry(i.toString(), new Date()));
+          careerImprovementClient.log(
+            new HardWorkEntry(i.toString(), new Date())
+          );
         }
 
         this.props.navigation.navigate("Dashboard", {
-          a : 5
-        })
-      }.bind(this), 3000);
+            careerImprovementClient
+        });
+      }.bind(this),
+      3000
+    );
   }
 
   componentWillUnmount() {
-    console.log('was unmounted');
+    console.log("was unmounted");
     clearTimeout(this.loadingId);
   }
-
 
   render() {
     return (
@@ -54,7 +56,7 @@ export class LoadingScreen extends Component {
             justifyContent: "flex-start",
             fontFamily: "PingFangTC-Thin",
             fontSize: 12
-           }}
+          }}
         >
           Grow and Thrive at Work
         </Text>

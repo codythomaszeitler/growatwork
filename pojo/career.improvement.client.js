@@ -5,10 +5,17 @@ class OnLogEvent {
     }
 }
 
+export const type = 'careerimprovementclient';
+
 export class CareerImprovementClient {
     constructor() {
         this.hardWorkEntries = [];
         this.listeners = [];
+        this.type = type;
+    }
+
+    equals(object) {
+        return true;
     }
 
     log(hardWorkEntry) {

@@ -7,6 +7,7 @@ export class DashboardScreen extends Component {
   constructor(props) {
     super(props);
     this.props = props;
+    console.log('Dashboard screen' + JSON.stringify(this.props));
 
     this.state = {
       entries : [] //this.props.careerImprovementClient.getHardWork()

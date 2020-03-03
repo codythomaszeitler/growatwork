@@ -22,6 +22,11 @@ describe("Career Improvement Client", () => {
     expect(entries).toContainEqual(new HardWorkEntry("Third!", timestamp));
   });
 
+  it('should return true on equals when both clients are empty', () => {
+    const comparison = new CareerImprovementClient();
+    expect(testObject.equals(comparison)).toBe(true);
+  });
+
   it("should throw an exception if there is a duplicate hard work entry added", () => {
     const timestamp = new Date();
     const toDuplicate = new HardWorkEntry("Duplicate!", timestamp);

@@ -10,7 +10,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const Tab = createBottomTabNavigator();
-function DashboardTabs() {
+function DashboardTabs(){
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -66,9 +66,16 @@ function DashboardTabs() {
 }
 
 export class DashboardNavigation extends Component {
+
+  constructor(props){
+    super(props);
+    this.props = props;
+    this.careerImprovementClient = this.props.navigation.state.params.careerImprovementClient;
+  }
+
   render() {
     return (
-      <NavigationContainer>
+      <NavigationContainer screenProps={this.props.navigation.state.params.careerImprovementClient}>
         <DashboardTabs></DashboardTabs>
       </NavigationContainer>
     );
