@@ -1,12 +1,4 @@
-
-let singleton = null;
-export function getInstance() {
-    if (!singleton) {
-        singleton = new DataStore();
-    }
-
-    return singleton;
-}
+import {type as clienttype} from '../pojo/career.improvement.client';
 
 export class DataStore {
 
@@ -14,47 +6,28 @@ export class DataStore {
         this.store = {};
     }
 
-    static instance() {
+    setCareerImprovementClient(client) {
 
-    }
-    
-    add(object) {
-
-        if (!object) {
-            throw new Error('Cannot add a null object to datastore');
+        if (client === null) {
+            throw new Error('Cannot set career improvement client to null');
         }
 
-        if (!object.type) {
-            throw new Error('Cannot add an object to datastore without a "type" attribute');
-        }
-
-        if (!this.store[object.type]) {
-            this.store[object.type] = [];
-        }
-
-        this.store[object.type].push(object);
+        this.store[clienttype] = client;
     }
 
-    get(command) {
-
-        if (!command) {
-            throw new Error('Cannot get using a null command');
-        }
-
-        if (!this.store[command.type()]) {
-            return null;
-        }
-
-        let found = null;
-        const collection = this.store[command.type()];
-        for (let i = 0; i < collection.length; i++) {
-            const element = collection[i];
-
-            if (element.id === command.id()) {
-                found = element;
-            }
-        }
-
-        return found;
+    getCareerImprovementClient() {
+        return this.store[clienttype];
     }
 };
+
+let dataStore = null;
+export function datastore() {
+    if (!dataStore) {
+        dataStore = new DataStore();
+    }
+    return dataStore;
+}
+
+export function reset() {
+    dataStore = null;
+}
