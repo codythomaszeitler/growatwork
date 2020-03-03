@@ -18,13 +18,13 @@ function DashboardTabs() {
         name="Dashboard"
         component={DashboardScreen}
         options={{
-          tabBarLabel: "Dashboard",
+          tabBarLabel: "Accomplishments",
           tabBarIcon: ({ tintColor }) => (
             <View>
               <Icon
                 style={[{ color: tintColor }]}
                 size={25}
-                name={"ios-home"}
+                name={"ios-checkmark"}
               />
             </View>
           )

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { View, Text } from "react-native";
 import { Button } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Divider } from "react-native-elements";
+import { ScrollView } from "react-native-gesture-handler";
 
 export class ExcelExportScreen extends Component {
   constructor(props) {
@@ -37,12 +39,26 @@ export class ExcelExportScreen extends Component {
 
   render() {
     return (
-      <View
+      <ScrollView
         style={{
           flex: 1,
           backgroundColor: "#ffffff"
         }}
       >
+        <Divider style={{ backgroundColor: "black" }} />
+
+        <Text></Text>
+        <Button
+          style={{
+            flexGrow: 0.5,
+            alignItems: "center"
+          }}
+          title="Export"
+          onPress={this.onPress}
+        />
+        <Text></Text>
+        <Divider style={{ backgroundColor: "black" }} />
+        <Text></Text>
         <Text
           style={{
             fontSize: 20,
@@ -53,10 +69,14 @@ export class ExcelExportScreen extends Component {
           {" "}
           From:
         </Text>
+        <Text></Text>
         <DateTimePicker
           value={this.state.fromDate}
           onChange={this.onFromChange}
         ></DateTimePicker>
+        <Text></Text>
+        <Divider style={{ backgroundColor: "black" }} />
+
         <Text></Text>
         <Text
           style={{
@@ -72,15 +92,8 @@ export class ExcelExportScreen extends Component {
           value={this.state.toDate}
           onChange={this.onToChange}
         ></DateTimePicker>
-        <Button
-          style={{
-            flexGrow: 0.5,
-            alignItems: 'center'
-          }}
-          title="Export"
-          onPress={this.onPress}
-        />
-      </View>
+        <Divider style={{ backgroundColor: "black" }} />
+      </ScrollView>
     );
   }
 }

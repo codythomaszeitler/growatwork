@@ -22,22 +22,19 @@ export class InitialScreen extends Component {
             flex: 4,
             justifyContent: "center",
             alignItems: "flex-start",
-            marginLeft: -120,
+            marginLeft: 0,
             marginTop: -60
           }}
         >
           <Text
             style={{
-              fontSize: 60,
+              fontSize: 30,
               textAlign: "justify",
               fontFamily: "PingFangTC-Thin"
             }}
           >{`
-        Grow
-        and
-        Thrive
-        at
-        Work`}</Text>
+        Grow and Thrive 
+              at Work`}</Text>
         </View>
 
         <View
