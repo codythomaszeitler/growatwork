@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/Cellar/yarn/1.21.1/libexec/bin/yarn.js test
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.21.1/libexec/bin/yarn.js add module:metro-react-native-babel-preset
 
 PATH: 
   /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
@@ -14,12 +14,17 @@ Platform:
   darwin x64
 
 Trace: 
-  SyntaxError: /Users/codyzeitler/dev/growatwork/package.json: Unexpected token } in JSON at position 1407
-      at JSON.parse (<anonymous>)
-      at /usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:1625:59
-      at Generator.next (<anonymous>)
-      at step (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:310:30)
-      at /usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:321:13
+  Error: module:metro-react-native-babel-preset: Invalid protocol: module:
+      at Request.module.exports.Request.init (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:140934:31)
+      at new Request (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:140607:8)
+      at request (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:137513:10)
+      at RequestManager.execute (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:66999:15)
+      at RequestManager.shiftQueue (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:67037:10)
+      at /usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:66716:13
+      at new Promise (<anonymous>)
+      at new F (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:5301:28)
+      at RequestManager.request (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:66714:19)
+      at NpmRegistry.<anonymous> (/usr/local/Cellar/yarn/1.21.1/libexec/lib/cli.js:31704:42)
 
 npm manifest: 
   {
@@ -43,8 +48,8 @@ npm manifest:
       "expo": "~36.0.0",
       "jest-environment-enzyme": "^7.1.2",
       "jest-enzyme": "^7.1.2",
-      "react": "~16.9.0",
-      "react-dom": "^16.13.0",
+      "react": "16",
+      "react-dom": "16",
       "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
       "react-native-elements": "^1.2.7",
       "react-native-gesture-handler": "~1.5.0",
@@ -65,6 +70,8 @@ npm manifest:
     },
     "jest": {
       "preset": "react-native",
+      "setupFilesAfterEnv": ["<rootDir>/setupTest.js"],
+      "transformIgnorePatterns": [ "/node_modules/(?!react-native-elements).+\\.js$"]
     },
     "private": true
   }
@@ -6501,7 +6508,7 @@ Lockfile:
       shell-quote "^1.6.1"
       ws "^3.3.1"
   
-  react-dom@^16.13.0:
+  react-dom@16:
     version "16.13.0"
     resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.13.0.tgz#cdde54b48eb9e8a0ca1b3dc9943d9bb409b81866"
     integrity sha512-y09d2c4cG220DzdlFkPTnVvGTszVvNpC73v+AaLGLHbkpy3SSgvYq8x0rNwPJ/Rk/CicTNgk0hbHNw1gMEZAXg==
@@ -6708,10 +6715,10 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz#75a00c3c94c13abe29b43d63b4c65a88fc8264d3"
     integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
   
-  react@~16.9.0:
-    version "16.9.0"
-    resolved "https://registry.yarnpkg.com/react/-/react-16.9.0.tgz#40ba2f9af13bc1a38d75dbf2f4359a5185c4f7aa"
-    integrity sha512-+7LQnFBwkiw+BobzOF6N//BdoNw0ouwmSJTEm9cglOOmsg/TMiFHZLe2sEoN5M7LgJTj9oHH0gxklfnQe66S1w==
+  react@16:
+    version "16.13.0"
+    resolved "https://registry.yarnpkg.com/react/-/react-16.13.0.tgz#d046eabcdf64e457bbeed1e792e235e1b9934cf7"
+    integrity sha512-TSavZz2iSLkq5/oiE7gnFzmURKZMltmi193rm5HEoUDAXpzT9Kzw6oNZnGoai/4+fUnm7FqS5dwgUL34TujcWQ==
     dependencies:
       loose-envify "^1.1.0"
       object-assign "^4.1.1"

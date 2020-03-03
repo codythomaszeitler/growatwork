@@ -1,96 +1,42 @@
 import React, { Component } from "react";
-import { View } from "react-native";
-import { ListItem } from "react-native-elements";
-import { FlatList } from "react-native-gesture-handler";
-
-const list = [
-  {
-    name: "Grow and Thrive at Work"
-  },
-  {
-    name: "Amy Farha",
-    subtitle: "Vice President"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-  {
-    name: "Chris Jackson",
-    subtitle: "Vice Chairman"
-  },
-];
+import { View, FlatList } from "react-native";
+import { HardWorkEntryScreenSegment } from "./hard.work.entry.screen.segment";
+import { datastore } from "../datastore/datastore";
 
 export class DashboardScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.props = props;
+
+    const client = datastore().getCareerImprovementClient();
+    client.addOnLogListener(this);
+
+    this.state = {
+      entries: client.getHardWork()
+    };
+  }
+
+  onLog(event) {
+    console.log(event);
+    this.setState({
+      entries: [event.logged].concat(this.state.entries) 
+    });
+  }
+
+  add(entry) {
+    const client = datastore().getCareerImprovementClient();
+    client.log(entry);
+  }
+
   render() {
     return (
       <View>
-        <FlatList style={{
-          marginTop: 25,
-        }}
-          data={list}
+        <FlatList
+          data={this.state.entries}
           renderItem={({ item }) => (
-            <View>
-              <ListItem
-                key={item}
-                title={item.name}
-                titleStyle={{
-                  marginLeft: 25
-                }}
-                subtitle={item.subtitle}
-                bottomDivider
-                chevron
-                friction={90}
-                tension={100}
-                subtitleStyle={{
-                  marginLeft: 65 
-                }}
-              />
-            </View>
+            <HardWorkEntryScreenSegment
+              hardWorkEntry={item}
+            ></HardWorkEntryScreenSegment>
           )}
         ></FlatList>
       </View>
