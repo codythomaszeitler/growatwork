@@ -47,7 +47,9 @@ export class InputHardWorkEntryScreen extends Component {
           flexGrow: .1
         }}></Text>
           <Input style={{
-            flexGrow: .5
+            flexGrow: .5,
+            multiline: true,
+            textAlignVertical : 'top'
           }} 
           onChangeText={this.onChangeText}
           placeholder="What you did today!" />

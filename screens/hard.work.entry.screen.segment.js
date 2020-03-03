@@ -23,7 +23,7 @@ export class HardWorkEntryScreenSegment extends Component {
           marginLeft: 15
         }}
         leftAvatar={{ source: logo } }
-        subtitle={'Jan 25, 2019'}//{this.props.hardWorkEntry.getAccomplishedOn().toString()}
+        subtitle={this.props.hardWorkEntry.getAccomplishedOn().toLocaleDateString()}
         bottomDivider
         chevron
         friction={90}
