@@ -6,11 +6,12 @@ import { View } from "react-native";
 import React, { Component } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
+import {Header} from 'react-native-elements';
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const Tab = createBottomTabNavigator();
-function DashboardTabs(){
+function DashboardTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -66,8 +67,7 @@ function DashboardTabs(){
 }
 
 export class DashboardNavigation extends Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
     this.props = props;
   }
@@ -75,6 +75,11 @@ export class DashboardNavigation extends Component {
   render() {
     return (
       <NavigationContainer>
+        <Header
+          centerComponent={{ text: "Grow and Thrive at Work", style: { color: "#4d7bd1", fontSize: 18 } }}
+          rightComponent={{ icon: "menu", color: "#4d7bd1" }}
+          backgroundColor={'#ffffff'}
+        />
         <DashboardTabs></DashboardTabs>
       </NavigationContainer>
     );

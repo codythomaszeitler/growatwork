@@ -15,7 +15,7 @@ export class LoadingScreen extends Component {
         let careerImprovementClient = new CareerImprovementClient();
         for (let i = 0; i < 100; i++) {
           careerImprovementClient.log(
-            new HardWorkEntry(i.toString(), new Date())
+            new HardWorkEntry('Accomplishment ' + i.toString(), new Date())
           );
         }
 

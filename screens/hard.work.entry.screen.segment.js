@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import {View, Image } from 'react-native';
 import { ListItem } from "react-native-elements";
+import logo from '../checkbox.png';
 
 export class HardWorkEntryScreenSegment extends Component {
   constructor(props) {
@@ -7,26 +9,30 @@ export class HardWorkEntryScreenSegment extends Component {
     this.props = props;
   }
 
-  componentDidCatch(error, errorInfo) {
-  }
-
   render() {
     return (
+      <View style={{
+        paddingTop: 10,
+        paddingHorizontal: 10,
+        
+      }}>
       <ListItem
         key={this.props.hardWorkEntry.getAccomplishment()}
         title={this.props.hardWorkEntry.getAccomplishment()}
         titleStyle={{
-          marginLeft: 25
+          marginLeft: 15
         }}
-        subtitle={this.props.hardWorkEntry.getAccomplishedOn().toString()}
+        leftAvatar={{ source: logo } }
+        subtitle={'Jan 25, 2019'}//{this.props.hardWorkEntry.getAccomplishedOn().toString()}
         bottomDivider
         chevron
         friction={90}
         tension={100}
         subtitleStyle={{
-          marginLeft: 65
+          marginLeft: 35
         }}
       />
+      </View>
     );
   }
 }

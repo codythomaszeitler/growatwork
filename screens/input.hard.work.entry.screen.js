@@ -39,7 +39,8 @@ export class InputHardWorkEntryScreen extends Component {
         style={{
           flex: 3,
           justifyContent: "space-evenly",
-          alignItems: "center"
+          alignItems: "center",
+          backgroundColor: "#ffffff" 
         }}
       >
         <Text style={{

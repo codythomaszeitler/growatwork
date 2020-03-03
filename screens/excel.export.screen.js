@@ -43,9 +43,6 @@ export class ExcelExportScreen extends Component {
           backgroundColor: "#ffffff"
         }}
       >
-        <Text></Text>
-        <Text></Text>
-        <Text></Text>
         <Text
           style={{
             fontSize: 20,
@@ -75,16 +72,10 @@ export class ExcelExportScreen extends Component {
           value={this.state.toDate}
           onChange={this.onToChange}
         ></DateTimePicker>
-
-        <Text></Text>
-        <Text></Text>
-        <Text></Text>
-
         <Button
           style={{
-            width: 300,
             flexGrow: 0.5,
-            marginLeft: 50
+            alignItems: 'center'
           }}
           title="Export"
           onPress={this.onPress}
