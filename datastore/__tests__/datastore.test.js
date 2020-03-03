@@ -1,6 +1,5 @@
 import {
-  CareerImprovementClient,
-  type
+  CareerImprovementClient
 } from "../../pojo/career.improvement.client";
 import { CareerImprovementClientDataStore} from "../datastore";
 import { HardWorkEntry } from "../../pojo/hard.work.entry";
