@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { View, Text } from "react-native";
 import { Input, Button } from "react-native-elements";
-import {datastore} from '../datastore/datastore';
+import { datastore } from "../datastore/datastore";
 import { HardWorkEntry } from "../pojo/hard.work.entry";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export class InputHardWorkEntryScreen extends Component {
-
   constructor(props) {
     super(props);
     this.props = props;
@@ -14,16 +14,16 @@ export class InputHardWorkEntryScreen extends Component {
     this.onPress = this.onPress.bind(this);
 
     this.state = {
-      accomplishment : ''
-    }
+      accomplishment: ""
+    };
   }
 
   onChangeText(event) {
     this.setState({
-      accomplishment : event
-    })
+      accomplishment: event
+    });
   }
-  
+
   onPress() {
     if (!this.state.accomplishment) {
       return;
@@ -37,27 +37,34 @@ export class InputHardWorkEntryScreen extends Component {
     return (
       <View
         style={{
-          flex: 3,
-          justifyContent: "space-evenly",
-          alignItems: "center",
-          backgroundColor: "#ffffff" 
+          backgroundColor: "#ffffff",
+          flexDirection: "space-evenly",
+          alignItems: "center"
         }}
       >
-        <Text style={{
-          flexGrow: .1
-        }}></Text>
-          <Input style={{
-            flexGrow: .5,
+        <Text></Text>
+        <Text></Text>
+        <Input
+          style={{
             multiline: true,
-            textAlignVertical : 'top'
-          }} 
+            textAlignVertical: "top",
+            flex: 5,
+          }}
+          leftIcon={<Icon name="edit" size={18} color="blue" />}
           onChangeText={this.onChangeText}
-          placeholder="What you did today!" />
+          placeholder=" What you did today!"
+        />
+        <Text></Text>
+        <Text></Text>
+        <Text></Text>
+        <Text></Text>
+
           <Button
-            style={{
-              width: 300,
-              flexGrow : .5
-            }}
+          style={{
+            flex: 5,
+            width: 250
+          }}
+            iconRight
             title="Add"
             onPress={this.onPress}
           />
