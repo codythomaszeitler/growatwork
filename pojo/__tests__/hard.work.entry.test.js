@@ -55,7 +55,7 @@ describe("Hard Work Entry", () => {
   it("should return false on equals if given object does not have a getAccomplishment method", () => {
     const comparison = {
 
-      getAccomplishedOn: function() {return new Date()}
+      getAccomplishedOn: function() {return Timestamp.today()}
     };
 
     expect(testObject.equals(comparison)).toBe(false);
