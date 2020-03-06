@@ -3,6 +3,7 @@ import {
 } from "../../pojo/career.improvement.client";
 import { CareerImprovementClientDataStore} from "../datastore";
 import { HardWorkEntry } from "../../pojo/hard.work.entry";
+import {Timestamp} from '../../pojo/timestamp';
 
 describe("Data Store", () => {
   it("should get the CareerImprovementClient loaded in the datastore", () => {
@@ -20,7 +21,7 @@ describe("Data Store", () => {
 
     const beforeGet = new CareerImprovementClient();
     for (let i = 0; i < 10; i++) {
-      beforeGet.log(new HardWorkEntry(i.toString(), new Date()));
+      beforeGet.log(new HardWorkEntry(i.toString(), Timestamp.today()));
     }
     testObject.set(beforeGet);
 

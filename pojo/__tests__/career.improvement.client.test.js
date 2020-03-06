@@ -1,5 +1,6 @@
 import { CareerImprovementClient } from "../career.improvement.client";
 import { HardWorkEntry } from "../hard.work.entry";
+import {Timestamp} from '../timestamp';
 
 describe("Career Improvement Client", () => {
   let testObject;
@@ -8,7 +9,7 @@ describe("Career Improvement Client", () => {
   });
 
   it("should be able to track all hard work entries", () => {
-    const timestamp = new Date();
+    const timestamp = Timestamp.today();
 
     testObject.log(new HardWorkEntry("First!", timestamp));
     testObject.log(new HardWorkEntry("Second!", timestamp));
@@ -28,7 +29,7 @@ describe("Career Improvement Client", () => {
   });
 
   it("should throw an exception if there is a duplicate hard work entry added", () => {
-    const timestamp = new Date();
+    const timestamp = Timestamp.today();
     const toDuplicate = new HardWorkEntry("Duplicate!", timestamp);
 
     testObject.log(toDuplicate.copy());
@@ -64,7 +65,7 @@ describe("Career Improvement Client", () => {
       }
     };
 
-    let entry = new HardWorkEntry("Entry!", new Date());
+    let entry = new HardWorkEntry("Entry!", Timestamp.today());
     testObject.addOnLogListener(listener);
     testObject.log(entry);
 

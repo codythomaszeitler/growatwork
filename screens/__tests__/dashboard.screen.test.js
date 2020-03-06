@@ -7,6 +7,7 @@ import {HardWorkEntryScreenSegment} from '../../screens/hard.work.entry.screen.s
 import { HardWorkEntry } from "../../pojo/hard.work.entry";
 import { CareerImprovementClient } from "../../pojo/career.improvement.client";
 import {datastore} from '../../datastore/datastore';
+import {Timestamp} from '../../pojo/timestamp';
 
 describe("Dashboard view information", () => {
   let testObject;
@@ -21,9 +22,9 @@ describe("Dashboard view information", () => {
   });
 
   it("should load all hard work entries found in the initial sleep consultant client", () => {
-    const first = new HardWorkEntry("1", new Date());
-    const second = new HardWorkEntry("2", new Date());
-    const third = new HardWorkEntry("3", new Date());
+    const first = new HardWorkEntry("1", Timestamp.today());
+    const second = new HardWorkEntry("2", Timestamp.today());
+    const third = new HardWorkEntry("3", Timestamp.today());
 
     careerImprovementClient.log(first);
     careerImprovementClient.log(second);
@@ -47,8 +48,8 @@ describe("Dashboard view information", () => {
       ></DashboardScreen>
     );
 
-    const first = new HardWorkEntry("1", new Date());
-    const second = new HardWorkEntry("2", new Date());
+    const first = new HardWorkEntry("1", Timestamp.today());
+    const second = new HardWorkEntry("2", Timestamp.today());
     testObject.getInstance().add(first);
     testObject.getInstance().add(second);
 

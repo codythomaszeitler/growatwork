@@ -21,7 +21,7 @@ export class HardWorkEntry {
     }
 
     const equalAccomplishment = object.getAccomplishment() === this.getAccomplishment();
-    const equalTimestamp = object.getAccomplishedOn().getTime() === this.getAccomplishedOn().getTime();
+    const equalTimestamp = object.getAccomplishedOn().equals(this.timestamp);
 
     return equalAccomplishment && equalTimestamp;
   }
@@ -35,6 +35,6 @@ export class HardWorkEntry {
   }
 
   getAccomplishedOn() {
-    return new Date(this.timestamp);
+    return this.timestamp.copy();
   }
 }

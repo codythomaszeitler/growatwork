@@ -1,4 +1,5 @@
 import { HardWorkEntry } from "../hard.work.entry";
+import { Timestamp } from "../timestamp";
 
 describe("Hard Work Entry", () => {
   let accomplishment;
@@ -7,22 +8,20 @@ describe("Hard Work Entry", () => {
 
   beforeEach(() => {
     accomplishment = "This is what we did today";
-    accomplishedOn = new Date();
+    accomplishedOn = Timestamp.today();
 
     testObject = new HardWorkEntry(accomplishment, accomplishedOn);
   });
 
   it("should be able to hold the hard work entry on what you accomplished", () => {
     expect(testObject.getAccomplishment()).toBe(accomplishment);
-    expect(testObject.getAccomplishedOn().getTime()).toBe(
-      accomplishedOn.getTime()
-    );
+    expect(testObject.getAccomplishedOn().equals(accomplishedOn)).toBe(true);
   });
 
   it("should be able to copy and the same hard work entry", () => {
     const copy = testObject.copy();
     expect(copy.getAccomplishment()).toBe(accomplishment);
-    expect(copy.getAccomplishedOn().getTime()).toBe(accomplishedOn.getTime());
+    expect(copy.getAccomplishedOn().equals(accomplishedOn)).toBe(true);
   });
 
   it("should return true on equals if achievement and timestamp are the same", () => {
@@ -36,12 +35,12 @@ describe("Hard Work Entry", () => {
   });
 
   it("should return false on equals if timestamp is different", () => {
-    const comparison = new HardWorkEntry(accomplishment, new Date(1000));
+    const comparison = new HardWorkEntry(accomplishment, new Timestamp(1000, 'January', 1));
     expect(testObject.equals(comparison)).toBe(false);
   });
 
   it("should return false if timestamp and achievement are both different", () => {
-    const comparison = new HardWorkEntry("Im different!", new Date(1000));
+    const comparison = new HardWorkEntry("Im different!", new Timestamp(1000, 'January', 1));
     expect(testObject.equals(comparison)).toBe(false);
   });
 
@@ -77,16 +76,14 @@ describe("Hard Work Entry", () => {
     copy.accomplishedOn = null;
 
     expect(testObject.getAccomplishment()).toBe(accomplishment);
-    expect(testObject.getAccomplishedOn().getTime()).toBe(
-      accomplishedOn.getTime()
-    );
+    expect(testObject.getAccomplishedOn().equals(accomplishedOn)).toBe(true);
   });
 
   it("should throw an exception if there was no accomplishment provied", () => {
     let caughtException = null;
 
     try {
-      new HardWorkEntry(null, new Date());
+      new HardWorkEntry(null, Timestamp.today());
     } catch (e) {
       caughtException = e;
     }
