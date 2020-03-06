@@ -4,6 +4,7 @@ import { Input, Button } from "react-native-elements";
 import { datastore } from "../datastore/datastore";
 import { HardWorkEntry } from "../pojo/hard.work.entry";
 import Icon from "react-native-vector-icons/FontAwesome";
+import {Timestamp} from '../pojo/timestamp';
 
 export class InputHardWorkEntryScreen extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ export class InputHardWorkEntryScreen extends Component {
     }
 
     const client = datastore().get();
-    client.log(new HardWorkEntry(this.state.accomplishment, new Date()));
+    client.log(new HardWorkEntry(this.state.accomplishment, Timestamp.today()));
   }
 
   render() {
