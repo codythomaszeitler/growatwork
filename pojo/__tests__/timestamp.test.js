@@ -69,6 +69,17 @@ describe("Timestamp", () => {
     expect(testObject.equals(testObject.copy())).toBe(true);
   });
 
+  it('should be able to create a timestamp from a date object', () => {
+    const date = new Date(2019, 0, 1);
+
+    const testObject = Timestamp.fromDate(date);
+
+    expect(testObject.getYear()).toBe(2019);
+    expect(testObject.getMonth()).toBe('January');
+    expect(testObject.getDay()).toBe(1);
+
+  });
+
   it("should throw an exception if a non 1-12 month given", () => {
     let caughtException = null;
     try {

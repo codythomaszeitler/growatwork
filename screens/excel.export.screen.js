@@ -4,6 +4,7 @@ import { Button, Card, Icon, Input } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Divider } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
+import { Timestamp } from "../pojo/timestamp";
 
 export class ExcelExportScreen extends Component {
   constructor(props) {
@@ -17,8 +18,8 @@ export class ExcelExportScreen extends Component {
     this.turnOff = this.turnOff.bind(this);
 
     this.state = {
-      toDate: new Date(),
-      fromDate: new Date(),
+      toTimestamp: this.props.startingTo.copy(),
+      fromTimestamp: this.props.startingFrom.copy(),
       modalVisible: false
     };
   }
@@ -28,7 +29,7 @@ export class ExcelExportScreen extends Component {
   }
 
   turnOff() {
-    this.setState({modalVisible : false});
+    this.setState({ modalVisible: false });
   }
 
   onPress() {
@@ -36,20 +37,28 @@ export class ExcelExportScreen extends Component {
   }
 
   onFromChange(event) {
+    console.log("on from change fired");
+    const fromDate = new Date(event.nativeEvent.timestamp);
+
     this.setState({
-      fromDate: new Date(event.nativeEvent.timestamp)
+      fromTimestamp: Timestamp.fromDate(fromDate)
     });
   }
 
   onToChange(event) {
+    console.log("on to change fired");
+
+    const toDate = new Date(event.nativeEvent.timestamp);
+
     this.setState({
-      toDate: new Date(event.nativeEvent.timestamp)
+      toDate: Timestamp.fromDate(toDate)
     });
   }
 
   render() {
     return (
       <ScrollView
+        testID="scrollView"
         style={{
           flex: 1,
           backgroundColor: "#ffffff"
@@ -143,7 +152,8 @@ export class ExcelExportScreen extends Component {
         </Text>
         <Text></Text>
         <DateTimePicker
-          value={this.state.fromDate}
+          testID="fromDateTimePicker"
+          value={this.state.fromTimestamp.toDate()}
           onChange={this.onFromChange}
         ></DateTimePicker>
         <Text></Text>
@@ -161,7 +171,8 @@ export class ExcelExportScreen extends Component {
           To:
         </Text>
         <DateTimePicker
-          value={this.state.toDate}
+          testID="toDateTimePicker"
+          value={this.state.toTimestamp.toDate()}
           onChange={this.onToChange}
         ></DateTimePicker>
         <Divider style={{ backgroundColor: "black" }} />

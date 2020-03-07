@@ -78,6 +78,10 @@ export class Timestamp {
     return this.day;
   }
 
+  static fromDate(date) {
+    return new Timestamp(date.getFullYear(), months[date.getMonth()], date.getDate());
+  }
+
   toDate() {
     return new Date(this.year, this.getMonthIndex(this.month), this.day);
   }
