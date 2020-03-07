@@ -37,6 +37,34 @@ describe("Career Improvement Client", () => {
     expect(achievements.length).toBe(3);
   });
 
+  it('should be able to get the earliest achievment', () => {
+    testObject.log(new HardWorkEntry('Test Achievement 3', new Timestamp(2019, 'January', 5)));
+
+    const earliest = new HardWorkEntry('Test Achievement 1', new Timestamp(2019, 'January', 2));
+    testObject.log(earliest);
+
+    const found = testObject.getEarliestAchievement();
+
+    expect(found.equals(earliest)).toBe(true);
+  });
+
+  it('should return null if there are no achievements on get earliest achievement', () => {
+    expect(testObject.getEarliestAchievement()).toBeNull(); 
+  });
+
+  it('should be able to get the latest achievement', () => {
+    testObject.log(new HardWorkEntry('Test Achievement 3', new Timestamp(2019, 'January', 1)));
+    const latest = new HardWorkEntry('Test Achievement 1', new Timestamp(2019, 'January', 2));
+    testObject.log(latest);
+
+    const found = testObject.getLatestAchievement();
+    expect(found.equals(latest)).toBe(true);
+  });
+
+  it('should return null if there are no achievements on get latest', () => {
+    expect(testObject.getLatestAchievement()).toBeNull();
+  });
+
   it('should return true on equals when both clients are empty', () => {
     const comparison = new CareerImprovementClient();
     expect(testObject.equals(comparison)).toBe(true);

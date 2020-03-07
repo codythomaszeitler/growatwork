@@ -31,11 +31,11 @@ export class ExcelExportScreen extends Component {
   }
 
   getStartingTo() {
-    return Timestamp.today();
+    return datastore().get().getEarliestAchievement();
   }
 
   getStartingFrom() {
-    return Timestamp.today();
+    return datastore().get().getLatestAchievement();
   }
 
   onEmailDestinationChange(email) {
@@ -49,12 +49,11 @@ export class ExcelExportScreen extends Component {
     );
   }
 
-  write(achievements) {
-    this.props.onWrite.write(achievements);
-  }
-
   setModalVisible(visible) {
-    this.modalVisible = visible;
+    this.setState({
+      modalVisible: visible
+    });
+    // this.modalVisible = visible;
   }
 
   turnOff() {
@@ -67,12 +66,19 @@ export class ExcelExportScreen extends Component {
 
   onFromChange(event) {
     const fromDate = new Date(event.nativeEvent.timestamp);
-    this.state.fromTimestamp = Timestamp.fromDate(fromDate);
+
+    this.setState({
+      fromTimestamp: Timestamp.fromDate(fromDate)
+    });
+    // this.state.fromTimestamp = Timestamp.fromDate(fromDate);
   }
 
   onToChange(event) {
     const toDate = new Date(event.nativeEvent.timestamp);
-    this.state.toTimestamp = Timestamp.fromDate(toDate);
+    this.setState({
+      toTimestamp: Timestamp.fromDate(toDate)
+    });
+    // this.state.toTimestamp = Timestamp.fromDate(toDate);
   }
 
   onExportViaExcel() {

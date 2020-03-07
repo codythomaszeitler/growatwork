@@ -15,6 +15,14 @@ export class HardWorkEntry {
     this.timestamp = timestamp;
   }
 
+  isBefore(comparison) {
+    return this.getAccomplishedOn().isBefore(comparison.getAccomplishedOn());
+  }
+
+  isAfter(comparison) {
+    return this.getAccomplishedOn().isAfter(comparison.getAccomplishedOn());
+  }
+
   equals(object) {
     if (!object || !object.getAccomplishment || !object.getAccomplishedOn) {
       return false;

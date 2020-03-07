@@ -72,4 +72,38 @@ export class CareerImprovementClient {
 
         return withinBoundary;
     }
+
+    getEarliestAchievement() {
+        const achievements = this.getHardWork();
+
+        let earliestAchievement = null;
+        for (let i = 0; i < achievements.length; i++) {
+            const achievement = achievements[i];
+
+            if (!earliestAchievement) {
+                earliestAchievement = achievement;
+            } else if (achievement.isBefore(earliestAchievement)) {
+                earliestAchievement = achievement;
+            }
+        }
+
+        return earliestAchievement;
+    }
+
+    getLatestAchievement() {
+        const achievements = this.getHardWork();
+
+        let latestAchievement = null;
+        for (let i = 0; i < achievements.length; i++) {
+            const achievement = achievements[i];
+
+            if (!latestAchievement) {
+                latestAchievement = achievement;
+            } else if (achievement.isAfter(latestAchievement)) {
+                latestAchievement = achievement;
+            }
+        }
+
+        return latestAchievement;
+    }
 };

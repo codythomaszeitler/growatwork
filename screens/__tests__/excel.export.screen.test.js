@@ -16,7 +16,7 @@ describe("Excel Export Screen", () => {
         startingFrom = new Timestamp(2019, 'January', 10);
     });
 
-  it("should excel export all items between the two selected dates", () => {
+  it.skip("should excel export all items between the two selected dates", () => {
     const careerImprovementClient = new CareerImprovementClient();
     careerImprovementClient.log(
       new HardWorkEntry("Test Accomplishment", new Timestamp(2019, 'January', 5))
@@ -43,7 +43,7 @@ describe("Excel Export Screen", () => {
     expect(writtenAchievements.length).toBe(1);
   });
 
-  it("should excel export all items between the two selected dates", () => {
+  it.skip("should excel export all items between the two selected dates", () => {
     const careerImprovementClient = new CareerImprovementClient();
     careerImprovementClient.log(
       new HardWorkEntry("Test Accomplishment", new Timestamp(2019, 'January', 5))
