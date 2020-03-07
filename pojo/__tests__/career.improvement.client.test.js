@@ -23,6 +23,20 @@ describe("Career Improvement Client", () => {
     expect(entries).toContainEqual(new HardWorkEntry("Third!", timestamp));
   });
 
+  it('should be able to get achievements within two timestamp ranges', () => {
+    const fromTimestamp = new Timestamp(2019, 'January', 1);
+    const toTimestamp = new Timestamp(2019, 'January', 31);
+
+    testObject.log(new HardWorkEntry('Test Achievement 1', new Timestamp(2019, 'January', 15)));
+    testObject.log(new HardWorkEntry('Test Achievement 2', new Timestamp(2019, 'January', 16)));
+    testObject.log(new HardWorkEntry('Out of range under', new Timestamp(2018, 'January', 16)));
+    testObject.log(new HardWorkEntry('Out of range over', new Timestamp(2020, 'January', 16)));
+    testObject.log(new HardWorkEntry('Test Achievement 3', new Timestamp(2019, 'January', 7)));
+
+    const achievements = testObject.getAchievements(fromTimestamp, toTimestamp);
+    expect(achievements.length).toBe(3);
+  });
+
   it('should return true on equals when both clients are empty', () => {
     const comparison = new CareerImprovementClient();
     expect(testObject.equals(comparison)).toBe(true);

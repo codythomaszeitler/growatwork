@@ -5,54 +5,84 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Divider } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 import { Timestamp } from "../pojo/timestamp";
+import { datastore } from "../datastore/datastore";
 
 export class ExcelExportScreen extends Component {
   constructor(props) {
     super(props);
     this.props = props;
 
-    this.onPress = this.onPress.bind(this);
+    this.onExcelStartPress = this.onExcelStartPress.bind(this);
     this.onFromChange = this.onFromChange.bind(this);
     this.onToChange = this.onToChange.bind(this);
     this.setModalVisible = this.setModalVisible.bind(this);
     this.turnOff = this.turnOff.bind(this);
+    this.onExportViaExcel = this.onExportViaExcel.bind(this);
+    this.onEmailDestinationChange = this.onEmailDestinationChange.bind(this);
+    this.onExportViaEmail = this.onExportViaEmail.bind(this);
 
     this.state = {
-      toTimestamp: this.props.startingTo.copy(),
-      fromTimestamp: this.props.startingFrom.copy(),
+      selectedToDate: new Date(),
+      selectedFromDate: new Date(),
+      toTimestamp: this.getStartingTo(),
+      fromTimestamp: this.getStartingFrom(),
       modalVisible: false
     };
   }
 
+  getStartingTo() {
+    return Timestamp.today();
+  }
+
+  getStartingFrom() {
+    return Timestamp.today();
+  }
+
+  onEmailDestinationChange(email) {
+    this.state.destinationEmail = email;
+  }
+
+  onExportViaEmail() {
+    this.props.onEmailWriter.write(
+      this.state.destinationEmail,
+      this.getSelectedAchievements()
+    );
+  }
+
+  write(achievements) {
+    this.props.onWrite.write(achievements);
+  }
+
   setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
+    this.modalVisible = visible;
   }
 
   turnOff() {
     this.setState({ modalVisible: false });
   }
 
-  onPress() {
+  onExcelStartPress() {
     this.setModalVisible(!this.state.modalVisible);
   }
 
   onFromChange(event) {
-    console.log("on from change fired");
     const fromDate = new Date(event.nativeEvent.timestamp);
-
-    this.setState({
-      fromTimestamp: Timestamp.fromDate(fromDate)
-    });
+    this.state.fromTimestamp = Timestamp.fromDate(fromDate);
   }
 
   onToChange(event) {
-    console.log("on to change fired");
-
     const toDate = new Date(event.nativeEvent.timestamp);
+    this.state.toTimestamp = Timestamp.fromDate(toDate);
+  }
 
-    this.setState({
-      toDate: Timestamp.fromDate(toDate)
-    });
+  onExportViaExcel() {
+    this.props.onExcelWriter.write(this.getSelectedAchievements());
+  }
+
+  getSelectedAchievements() {
+    return datastore()
+      .get()
+      .getAchievements(this.state.toTimestamp, this.state.fromTimestamp);
   }
 
   render() {
@@ -87,6 +117,8 @@ export class ExcelExportScreen extends Component {
                 marginRight: 0,
                 marginBottom: 0
               }}
+              onPress={this.onExportViaExcel}
+              testID="ExportViaExcel"
               title="Export"
             />
           </Card>
@@ -95,7 +127,11 @@ export class ExcelExportScreen extends Component {
             <Text style={{ marginBottom: 10 }}>
               Export your select achievements to given email address!
             </Text>
-            <Input placeholder="E-mail"></Input>
+            <Input
+              testID="DestinationEmailInput"
+              placeholder="E-mail"
+              onChangeText={this.onEmailDestinationChange}
+            ></Input>
             <Text></Text>
             <Button
               icon={<Icon name="code" color="#ffffff" />}
@@ -105,6 +141,8 @@ export class ExcelExportScreen extends Component {
                 marginRight: 0,
                 marginBottom: 0
               }}
+              onPress={this.onExportViaEmail}
+              testID="ExportViaEmail"
               title="Export"
             />
           </Card>
@@ -134,8 +172,9 @@ export class ExcelExportScreen extends Component {
             flexGrow: 0.5,
             alignItems: "center"
           }}
+          testID="Export"
           title="Export"
-          onPress={this.onPress}
+          onPress={this.onExcelStartPress}
         />
         <Text></Text>
         <Divider style={{ backgroundColor: "black" }} />
@@ -153,7 +192,7 @@ export class ExcelExportScreen extends Component {
         <Text></Text>
         <DateTimePicker
           testID="fromDateTimePicker"
-          value={this.state.fromTimestamp.toDate()}
+          value={this.state.selectedFromDate}
           onChange={this.onFromChange}
         ></DateTimePicker>
         <Text></Text>
@@ -172,7 +211,7 @@ export class ExcelExportScreen extends Component {
         </Text>
         <DateTimePicker
           testID="toDateTimePicker"
-          value={this.state.toTimestamp.toDate()}
+          value={this.state.selectedToDate}
           onChange={this.onToChange}
         ></DateTimePicker>
         <Divider style={{ backgroundColor: "black" }} />

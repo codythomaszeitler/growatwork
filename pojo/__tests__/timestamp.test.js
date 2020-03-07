@@ -80,6 +80,44 @@ describe("Timestamp", () => {
 
   });
 
+  it('should be able to return true if this timestamp is before the given timestamp', () => {
+    const testObject = new Timestamp(2019, "January", 1);
+    const other = new Timestamp(2019, 'January', 3);
+
+    expect(testObject.isBefore(other)).toBe(true);
+  });
+
+  it('should be able to return false if this timestamp is not before the given timestamp', () => {
+    const testObject = new Timestamp(2019, "January", 3);
+    const other = new Timestamp(2019, 'January', 1);
+
+    expect(testObject.isBefore(other)).toBe(false);
+  });
+
+  it('should be able to return false on is before if the given timestamps are equivalent', () => {
+    const testObject = new Timestamp(2019, "January", 3);
+    expect(testObject.isBefore(testObject.copy())).toBe(false);
+  });
+
+  it('should be able to return true if this timestamp is after the given timestamp', () => {
+    const testObject = new Timestamp(2019, "January", 3);
+    const other = new Timestamp(2019, 'January', 1);
+
+    expect(testObject.isAfter(other)).toBe(true);
+  });
+
+  it('should be able to return false if this timestamp is not after the given timestamp', () => {
+    const testObject = new Timestamp(2019, "January", 1);
+    const other = new Timestamp(2019, 'January', 3);
+
+    expect(testObject.isAfter(other)).toBe(false);
+  });
+
+  it('should be able to return false if the given timestamps are equivalent on isAfter', () => {
+    const testObject = new Timestamp(2019, "January", 3);
+    expect(testObject.isAfter(testObject.copy())).toBe(false);
+  });
+
   it("should throw an exception if a non 1-12 month given", () => {
     let caughtException = null;
     try {

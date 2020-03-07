@@ -78,6 +78,20 @@ export class Timestamp {
     return this.day;
   }
 
+  isBefore(comparison) {
+    const thisDate = this.toDate();
+    const comparisonDate = comparison.toDate();
+
+    return thisDate.getTime() < comparisonDate.getTime();
+  }
+
+  isAfter(comparison) {
+    const thisDate = this.toDate();
+    const comparisonDate = comparison.toDate();
+
+    return thisDate.getTime() > comparisonDate.getTime();
+  }
+
   static fromDate(date) {
     return new Timestamp(date.getFullYear(), months[date.getMonth()], date.getDate());
   }

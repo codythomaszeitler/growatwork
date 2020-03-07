@@ -56,4 +56,20 @@ export class CareerImprovementClient {
     getHardWork() {
         return this.hardWorkEntries.slice();
     }
+
+    getAchievements(fromTimestamp, toTimestamp) {
+        const withinBoundary = [];
+
+        const achievements = this.getHardWork();
+        for (let i = 0; i < achievements.length; i++) {
+            const achievement = achievements[i];
+
+            if (fromTimestamp.isBefore(achievement.getAccomplishedOn()) 
+                && toTimestamp.isAfter(achievement.getAccomplishedOn())) {
+                withinBoundary.push(achievement.copy());
+            }
+        }
+
+        return withinBoundary;
+    }
 };
