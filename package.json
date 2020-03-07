@@ -45,7 +45,7 @@
     "jest-expo": "^36.0.1"
   },
   "jest": {
-    "preset": "@testing-library/react-native"
+    "preset": "jest-expo"
   },
   "private": true
 }
