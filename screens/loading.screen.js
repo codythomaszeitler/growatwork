@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { ActivityIndicator, View, Text } from "react-native";
 import { CareerImprovementClient } from "../pojo/career.improvement.client";
-import { HardWorkEntry } from "../pojo/hard.work.entry";
 import {datastore} from '../datastore/datastore';
-import {Timestamp} from '../pojo/timestamp';
 
 export class LoadingScreen extends Component {
   constructor(props) {

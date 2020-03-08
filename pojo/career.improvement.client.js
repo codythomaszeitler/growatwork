@@ -1,109 +1,121 @@
-
 class OnLogEvent {
-    constructor(entry) {
-        this.logged = entry.copy();
-    }
+  constructor(entry) {
+    this.logged = entry.copy();
+  }
 }
 
-export const type = 'careerimprovementclient';
+export const type = "careerimprovementclient";
 
 export class CareerImprovementClient {
-    constructor() {
-        this.hardWorkEntries = [];
-        this.listeners = [];
-        this.type = type;
+  constructor() {
+    this.hardWorkEntries = [];
+    this.listeners = [];
+    this.type = type;
+  }
+
+  equals(object) {
+    return true;
+  }
+
+  contains(toCheck) {
+    let containsEntry = false;
+    for (let i = 0; i < this.hardWorkEntries.length; i++) {
+      const hardWorkEntry = this.hardWorkEntries[i];
+
+      if (hardWorkEntry.equals(toCheck)) {
+        containsEntry = true;
+        break;
+      }
+    }
+    return containsEntry;
+  }
+
+  log(hardWorkEntry) {
+    if (!hardWorkEntry) {
+      throw new Error(
+        "Cannot log without a hard work entry to a career improvement client"
+      );
+    }
+    this.checkForDuplicate(hardWorkEntry);
+
+    this.hardWorkEntries.unshift(hardWorkEntry.copy());
+    this.emitOnLogEvent(hardWorkEntry.copy());
+  }
+
+  emitOnLogEvent(hardWorkEntry) {
+    for (let i = 0; i < this.listeners.length; i++) {
+      const listener = this.listeners[i];
+      listener.onLog(new OnLogEvent(hardWorkEntry));
+    }
+  }
+
+  addOnLogListener(listener) {
+    if (!listener) {
+      throw new Error("Cannot add a listener that does not exist");
     }
 
-    equals(object) {
-        return true;
+    this.listeners.push(listener);
+  }
+
+  checkForDuplicate(toCheck) {
+    if (this.contains(toCheck)) {
+      throw new Error("Cannot add the same hard work entry twice");
+    }
+  }
+
+  getHardWork() {
+    return this.hardWorkEntries.slice();
+  }
+
+  getAchievements(fromTimestamp, toTimestamp) {
+    const withinBoundary = [];
+
+    const achievements = this.getHardWork();
+    for (let i = 0; i < achievements.length; i++) {
+      const achievement = achievements[i];
+
+      if (
+        fromTimestamp.isBefore(achievement.getAccomplishedOn()) &&
+        toTimestamp.isAfter(achievement.getAccomplishedOn())
+      ) {
+        withinBoundary.push(achievement.copy());
+      }
     }
 
-    log(hardWorkEntry) {
-        if (!hardWorkEntry) {
-            throw new Error('Cannot log without a hard work entry to a career improvement client');
-        }
-        this.checkForDuplicate(hardWorkEntry);
+    return withinBoundary;
+  }
 
-        this.hardWorkEntries.unshift(hardWorkEntry.copy());
-        this.emitOnLogEvent(hardWorkEntry.copy());
+  getEarliestAchievement() {
+    const achievements = this.getHardWork();
+
+    let earliestAchievement = null;
+    for (let i = 0; i < achievements.length; i++) {
+      const achievement = achievements[i];
+
+      if (!earliestAchievement) {
+        earliestAchievement = achievement;
+      } else if (achievement.isBefore(earliestAchievement)) {
+        earliestAchievement = achievement;
+      }
     }
 
-    emitOnLogEvent(hardWorkEntry) {
-        for (let i = 0; i < this.listeners.length; i++) {
-            const listener = this.listeners[i];
-            listener.onLog(new OnLogEvent(hardWorkEntry));
-        }
+    return earliestAchievement;
+  }
+
+  getLatestAchievement() {
+    const achievements = this.getHardWork();
+
+    let latestAchievement = null;
+    for (let i = 0; i < achievements.length; i++) {
+      const achievement = achievements[i];
+
+      if (!latestAchievement) {
+        latestAchievement = achievement;
+      } else if (achievement.isAfter(latestAchievement)) {
+        latestAchievement = achievement;
+      }
     }
 
-    addOnLogListener(listener) {
-        if (!listener) {
-            throw new Error('Cannot add a listener that does not exist')
-        }
-
-        this.listeners.push(listener);
-    }
-
-    checkForDuplicate(toCheck) {
-        for (let i = 0; i < this.hardWorkEntries.length; i++) {
-            const hardWorkEntry = this.hardWorkEntries[i];
-
-            if (hardWorkEntry.equals(toCheck)) {
-                throw new Error('Cannot add the same hard work entry twice');
-            }
-        }
-    }
-
-    getHardWork() {
-        return this.hardWorkEntries.slice();
-    }
-
-    getAchievements(fromTimestamp, toTimestamp) {
-        const withinBoundary = [];
-
-        const achievements = this.getHardWork();
-        for (let i = 0; i < achievements.length; i++) {
-            const achievement = achievements[i];
-
-            if (fromTimestamp.isBefore(achievement.getAccomplishedOn()) 
-                && toTimestamp.isAfter(achievement.getAccomplishedOn())) {
-                withinBoundary.push(achievement.copy());
-            }
-        }
-
-        return withinBoundary;
-    }
-
-    getEarliestAchievement() {
-        const achievements = this.getHardWork();
-
-        let earliestAchievement = null;
-        for (let i = 0; i < achievements.length; i++) {
-            const achievement = achievements[i];
-
-            if (!earliestAchievement) {
-                earliestAchievement = achievement;
-            } else if (achievement.isBefore(earliestAchievement)) {
-                earliestAchievement = achievement;
-            }
-        }
-
-        return earliestAchievement;
-    }
-
-    getLatestAchievement() {
-        const achievements = this.getHardWork();
-
-        let latestAchievement = null;
-        for (let i = 0; i < achievements.length; i++) {
-            const achievement = achievements[i];
-
-            if (!latestAchievement) {
-                latestAchievement = achievement;
-            } else if (achievement.isAfter(latestAchievement)) {
-                latestAchievement = achievement;
-            }
-        }
-
-        return latestAchievement;
-    }
-};
+    return latestAchievement;
+  }
+}

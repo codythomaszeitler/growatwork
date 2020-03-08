@@ -112,11 +112,6 @@ export class ExcelExportScreen extends Component {
   async onExportViaExcel() {
     const excelWriter = new AchievementExcelWriter();
     await excelWriter.write("yourhardwork.csv", this.getSelectedAchievements());
-    // await MailComposer.composeAsync({
-    //   recipients: ["codyzeitler12@gmail.com"],
-    //   subject: this.parseSubjectLine(),
-    //   attachments: [FileSystem.documentDirectory + "yourhardwork.csv"]
-    // });
   }
 
   parseSubjectLine() {
@@ -158,27 +153,10 @@ export class ExcelExportScreen extends Component {
           <Text></Text>
           <Text></Text>
           <Text></Text>
-          <Card title="Export via Excel">
-            <Text style={{ marginBottom: 10 }}>
-              Export your select achievements to an excel sheet on your phone!
-            </Text>
-            <Button
-              icon={<Icon name="code" color="#ffffff" />}
-              buttonStyle={{
-                borderRadius: 0,
-                marginLeft: 0,
-                marginRight: 0,
-                marginBottom: 0
-              }}
-              onPress={this.onExportViaExcel}
-              testID="ExportViaExcel"
-              title="Export"
-            />
-          </Card>
 
           <Card title="Export via Email">
             <Text style={{ marginBottom: 10 }}>
-              Export your select achievements to given email address!
+              Export the achievements within the selected ranged to the given email address!
             </Text>
             <Input
               testID="DestinationEmailInput"

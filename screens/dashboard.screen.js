@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, FlatList } from "react-native";
+import { View, FlatList, Text, Alert } from "react-native";
 import { HardWorkEntryScreenSegment } from "./hard.work.entry.screen.segment";
 import { datastore } from "../datastore/datastore";
 
@@ -12,13 +12,27 @@ export class DashboardScreen extends Component {
     client.addOnLogListener(this);
 
     this.state = {
-      entries: client.getHardWork()
+      entries: client.getHardWork(),
+      modalVisible: !this.hasAchievements()
     };
+  }
+
+  componentDidMount() {
+    if (!this.hasAchievements()) {
+      Alert.alert(
+        'No accomplishments yet!',
+        'Go to the add screen and put your hard work in!');
+    }
+  }
+
+  hasAchievements() {
+    const client = datastore().get();
+    return client.getHardWork().length !== 0;
   }
 
   onLog(event) {
     this.setState({
-      entries: [event.logged].concat(this.state.entries) 
+      entries: [event.logged].concat(this.state.entries)
     });
   }
 
@@ -32,6 +46,7 @@ export class DashboardScreen extends Component {
       <View>
         <FlatList
           data={this.state.entries}
+          keyExtractor={item => item.accomplishment}
           renderItem={({ item }) => (
             <HardWorkEntryScreenSegment
               hardWorkEntry={item}

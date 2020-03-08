@@ -4,7 +4,8 @@ import { Input, Button } from "react-native-elements";
 import { datastore } from "../datastore/datastore";
 import { HardWorkEntry } from "../pojo/hard.work.entry";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {Timestamp} from '../pojo/timestamp';
+import { Timestamp } from "../pojo/timestamp";
+import { Keyboard } from 'react-native'
 
 export class InputHardWorkEntryScreen extends Component {
   constructor(props) {
@@ -30,8 +31,16 @@ export class InputHardWorkEntryScreen extends Component {
       return;
     }
 
+    const newEntry = new HardWorkEntry(
+      this.state.accomplishment,
+      Timestamp.today()
+    );
+
     const client = datastore().get();
-    client.log(new HardWorkEntry(this.state.accomplishment, Timestamp.today()));
+    if (!client.contains(newEntry)) {
+      client.log(newEntry);
+      Keyboard.dismiss();
+    }
   }
 
   render() {
@@ -49,7 +58,7 @@ export class InputHardWorkEntryScreen extends Component {
           style={{
             multiline: true,
             textAlignVertical: "top",
-            flex: 5,
+            flex: 5
           }}
           leftIcon={<Icon name="edit" size={18} color="blue" />}
           onChangeText={this.onChangeText}
@@ -60,15 +69,15 @@ export class InputHardWorkEntryScreen extends Component {
         <Text></Text>
         <Text></Text>
 
-          <Button
+        <Button
           style={{
             flex: 5,
             width: 250
           }}
-            iconRight
-            title="Add"
-            onPress={this.onPress}
-          />
+          iconRight
+          title="Add"
+          onPress={this.onPress}
+        />
       </View>
     );
   }
