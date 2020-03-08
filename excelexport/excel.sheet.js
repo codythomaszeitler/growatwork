@@ -1,33 +1,47 @@
 export class ExcelSheet {
-  constructor(columns) {
+  constructor(columns, converter) {
     this.columns = columns;
+    this.converter = converter;
+    this.elements = [];
   }
 
-  add(excelRowConverter) {
-    // excelRowConverter.toRow(this.columns);
+  add(element) {
+    this.elements.push(element);
   }
 
-  async write(file) {
-    const first = new HardWorkEntry(
-      "Test Achievement 1",
-      new Timestamp(2019, "January", 1)
-    );
-    const second = new HardWorkEntry(
-      "Test Achievement 2",
-      new Timestamp(2019, "January", 2)
-    );
-    const third = new HardWorkEntry(
-      "Test Achievement 3",
-      new Timestamp(2019, "January", 3)
-    );
+  write(file) {
+    let contents = this.convertColumnsToExcelRow() + "\n";
 
-    let contents = '';
+    for (let i = 0; i < this.elements.length; i++) {
+      const element = this.elements[i];
 
-    const converter = new AchievementCsvRowConverter();
-    contents += converter.convert(first) + '\n';
-    contents += converter.convert(second) + '\n';
-    contents += converter.convert(third) + '\n';
+      if (this.isLastIndex(i, this.elements)) {
+        contents += this.converter.convert(element);
+      } else {
+        contents += this.converter.convert(element) + "\n";
+      }
+    }
 
     file.write(contents);
+  }
+
+  convertColumnsToExcelRow() {
+    let columnExcelRow = "";
+
+    for (let i = 0; i < this.columns.length; i++) {
+      const column = this.columns[i];
+
+      if (this.isLastIndex(i, this.columns)) {
+        columnExcelRow += column;
+      } else {
+        columnExcelRow += column + ",";
+      }
+    }
+
+    return columnExcelRow;
+  }
+
+  isLastIndex(i, array) {
+    return i === (array.length - 1);
   }
 }
