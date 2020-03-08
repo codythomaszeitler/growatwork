@@ -34,22 +34,37 @@ export class ExcelExportScreen extends Component {
   }
 
   getStartingTo() {
-    return datastore()
+    let earliestAchievement = datastore()
       .get()
-      .getEarliestAchievement()
-      .getAccomplishedOn();
+      .getEarliestAchievement();
+
+    let earliest;
+    if (earliestAchievement) {
+      earliest = earliestAchievement.getAccomplishedOn();
+    } else {
+      earliest = Timestamp.today();
+    }
+
+    return earliest;
   }
 
   getStartingFrom() {
-    return datastore()
+    let latestAchievement = datastore()
       .get()
-      .getLatestAchievement()
-      .getAccomplishedOn();
+      .getLatestAchievement();
+
+    if (latestAchievement) {
+      latest = latestAchievement.getAccomplishedOn();
+    } else {
+      latest = Timestamp.today();
+    }
+
+    return latest;
   }
 
   onEmailDestinationChange(email) {
     this.setState({
-      destinationEmail : email
+      destinationEmail: email
     });
   }
 

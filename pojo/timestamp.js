@@ -82,14 +82,14 @@ export class Timestamp {
     const thisDate = this.toDate();
     const comparisonDate = comparison.toDate();
 
-    return thisDate.getTime() < comparisonDate.getTime();
+    return thisDate.getTime() <= comparisonDate.getTime();
   }
 
   isAfter(comparison) {
     const thisDate = this.toDate();
     const comparisonDate = comparison.toDate();
 
-    return thisDate.getTime() > comparisonDate.getTime();
+    return thisDate.getTime() >= comparisonDate.getTime();
   }
 
   static fromDate(date) {

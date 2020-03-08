@@ -14,19 +14,8 @@ export class LoadingScreen extends Component {
     this.loadingId = setTimeout(
       function() {
         let careerImprovementClient = new CareerImprovementClient();
-          careerImprovementClient.log(new HardWorkEntry('Finished out big project what happens if this string is super super long', Timestamp.today()));
-          careerImprovementClient.log(new HardWorkEntry('Got into contact with delta', Timestamp.today()));
-          careerImprovementClient.log(new HardWorkEntry('Got important documents', Timestamp.today()));
-          careerImprovementClient.log(new HardWorkEntry('Talked to Don', Timestamp.today()));
-          careerImprovementClient.log(new HardWorkEntry('Made significat merger', Timestamp.today()));
-          careerImprovementClient.log(new HardWorkEntry('Made tons of money', Timestamp.today()));
-          careerImprovementClient.log(new HardWorkEntry('Partered with AMEX', Timestamp.today()));
-          careerImprovementClient.log(new HardWorkEntry('Founded a new regime', Timestamp.today()));
-
         datastore().set(careerImprovementClient);
-
         this.props.navigation.navigate("Dashboard"); 
-        
       }.bind(this), 3000);
   }
 

@@ -59,11 +59,8 @@ export class CareerImprovementClient {
 
     getAchievements(fromTimestamp, toTimestamp) {
         const withinBoundary = [];
-        console.log(fromTimestamp);
-        console.log(toTimestamp);
 
         const achievements = this.getHardWork();
-        console.log(achievements);
         for (let i = 0; i < achievements.length; i++) {
             const achievement = achievements[i];
 

@@ -17,8 +17,6 @@ export class AchievementExcelWriter {
             }
         }
 
-        console.log(achievements);
-
         for (let i = 0; i < achievements.length; i++) {
             const achievement = achievements[i];
             excelSheet.add(achievement);
