@@ -109,7 +109,7 @@ export class Timestamp {
 
     const timestamp = new Timestamp(
       todayAsDate.getFullYear(),
-      months[todayAsDate.getMonth() + 1],
+      months[todayAsDate.getMonth()],
       todayAsDate.getDate()
     );
 

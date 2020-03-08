@@ -9,7 +9,7 @@ export class ExcelSheet {
     this.elements.push(element);
   }
 
-  write(file) {
+  async write(file) {
     let contents = this.convertColumnsToExcelRow() + "\n";
 
     for (let i = 0; i < this.elements.length; i++) {
@@ -22,7 +22,7 @@ export class ExcelSheet {
       }
     }
 
-    file.write(contents);
+    await file.write(contents);
   }
 
   convertColumnsToExcelRow() {

@@ -6,6 +6,9 @@ import { Divider } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 import { Timestamp } from "../pojo/timestamp";
 import { datastore } from "../datastore/datastore";
+import { AchievementExcelWriter } from "../excelexport/excel.writer";
+import * as MailComposer from "expo-mail-composer";
+import * as FileSystem from "expo-file-system";
 
 export class ExcelExportScreen extends Component {
   constructor(props) {
@@ -31,29 +34,39 @@ export class ExcelExportScreen extends Component {
   }
 
   getStartingTo() {
-    return datastore().get().getEarliestAchievement();
+    return datastore()
+      .get()
+      .getEarliestAchievement()
+      .getAccomplishedOn();
   }
 
   getStartingFrom() {
-    return datastore().get().getLatestAchievement();
+    return datastore()
+      .get()
+      .getLatestAchievement()
+      .getAccomplishedOn();
   }
 
   onEmailDestinationChange(email) {
-    this.state.destinationEmail = email;
+    this.setState({
+      destinationEmail : email
+    });
   }
 
-  onExportViaEmail() {
-    this.props.onEmailWriter.write(
-      this.state.destinationEmail,
-      this.getSelectedAchievements()
-    );
+  async onExportViaEmail() {
+    const excelWriter = new AchievementExcelWriter();
+    await excelWriter.write("yourhardwork.csv", this.getSelectedAchievements());
+    await MailComposer.composeAsync({
+      recipients: [this.state.destinationEmail],
+      subject: this.parseSubjectLine(),
+      attachments: [FileSystem.documentDirectory + "yourhardwork.csv"]
+    });
   }
 
   setModalVisible(visible) {
     this.setState({
       modalVisible: visible
     });
-    // this.modalVisible = visible;
   }
 
   turnOff() {
@@ -68,27 +81,46 @@ export class ExcelExportScreen extends Component {
     const fromDate = new Date(event.nativeEvent.timestamp);
 
     this.setState({
-      fromTimestamp: Timestamp.fromDate(fromDate)
+      fromTimestamp: Timestamp.fromDate(fromDate),
+      selectedFromDate: fromDate
     });
-    // this.state.fromTimestamp = Timestamp.fromDate(fromDate);
   }
 
   onToChange(event) {
     const toDate = new Date(event.nativeEvent.timestamp);
     this.setState({
-      toTimestamp: Timestamp.fromDate(toDate)
+      toTimestamp: Timestamp.fromDate(toDate),
+      selectedToDate: toDate
     });
-    // this.state.toTimestamp = Timestamp.fromDate(toDate);
   }
 
-  onExportViaExcel() {
-    this.props.onExcelWriter.write(this.getSelectedAchievements());
+  async onExportViaExcel() {
+    const excelWriter = new AchievementExcelWriter();
+    await excelWriter.write("yourhardwork.csv", this.getSelectedAchievements());
+    // await MailComposer.composeAsync({
+    //   recipients: ["codyzeitler12@gmail.com"],
+    //   subject: this.parseSubjectLine(),
+    //   attachments: [FileSystem.documentDirectory + "yourhardwork.csv"]
+    // });
+  }
+
+  parseSubjectLine() {
+    return (
+      "You hard work between " +
+      this.parseTimestampEmailFormat(this.state.fromTimestamp) +
+      " to " +
+      this.parseTimestampEmailFormat(this.state.toTimestamp)
+    );
+  }
+
+  parseTimestampEmailFormat(timestamp) {
+    return timestamp.getMonth() + " " + timestamp.getDay();
   }
 
   getSelectedAchievements() {
     return datastore()
       .get()
-      .getAchievements(this.state.toTimestamp, this.state.fromTimestamp);
+      .getAchievements(this.state.fromTimestamp, this.state.toTimestamp);
   }
 
   render() {

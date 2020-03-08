@@ -19,6 +19,7 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "expo": "~36.0.0",
     "expo-file-system": "~8.0.0",
+    "expo-mail-composer": "~8.0.0",
     "jest-environment-enzyme": "^7.1.2",
     "jest-enzyme": "^7.1.2",
     "metro-react-native-babel-preset": "^0.58.0",
