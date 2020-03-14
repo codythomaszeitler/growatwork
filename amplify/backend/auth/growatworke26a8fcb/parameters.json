@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "growatwork_identitypool_a27ee36e",
+    "identityPoolName": "growatworke26a8fcb_identitypool_e26a8fcb",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "growata27ee36e",
-    "userPoolName": "growatwork_userpool_a27ee36e",
+    "resourceNameTruncated": "growate26a8fcb",
+    "userPoolName": "growatworke26a8fcb_userpool_e26a8fcb",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "growata27ee36e_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "growate26a8fcb_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
+    "resourceName": "growatworke26a8fcb",
     "authSelections": "identityPoolAndUserPool",
-    "resourceName": "cognito41949666",
     "authRoleArn": {
         "Fn::GetAtt": [
             "AuthRole",
@@ -43,5 +43,11 @@
             "UnauthRole",
             "Arn"
         ]
-    }
+    },
+    "useDefault": "default",
+    "usernameAttributes": [
+        "email"
+    ],
+    "userPoolGroupList": [],
+    "dependsOn": []
 }

@@ -1,0 +1,5 @@
+{
+    "tableName": "careerImprovementClients",
+    "partitionKeyName": "username",
+    "partitionKeyType": "S"
+}

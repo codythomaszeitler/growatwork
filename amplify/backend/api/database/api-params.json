@@ -1,8 +1,8 @@
 {
     "paths": [
         {
-            "name": "/items",
-            "lambdaFunction": "gawlamda",
+            "name": "/achievements",
+            "lambdaFunction": "achievements",
             "privacy": {
                 "private": true,
                 "auth": [
@@ -15,8 +15,8 @@
             }
         },
         {
-            "name": "/careerimprovementclient",
-            "lambdaFunction": "careerimprovementclient",
+            "name": "/careerImprovementClients",
+            "lambdaFunction": "careerImprovementClients",
             "privacy": {
                 "private": true,
                 "auth": [
@@ -29,26 +29,26 @@
             }
         }
     ],
-    "resourceName": "growatworkapi",
-    "apiName": "growatworkapi",
+    "resourceName": "database",
+    "apiName": "database",
     "functionArns": [
         {
-            "lambdaFunction": "gawlamda"
+            "lambdaFunction": "achievements"
         },
         {
-            "lambdaFunction": "careerimprovementclient"
+            "lambdaFunction": "careerImprovementClients"
         }
     ],
     "privacy": {
         "auth": 2,
         "unauth": 0,
-        "authRoleName": "amplify-growatwork-growatwork-172859-authRole",
-        "unAuthRoleName": "amplify-growatwork-growatwork-172859-unauthRole"
+        "authRoleName": "amplify-growatwork-growatwork-211411-authRole",
+        "unAuthRoleName": "amplify-growatwork-growatwork-211411-unauthRole"
     },
     "dependsOn": [
         {
             "category": "function",
-            "resourceName": "gawlamda",
+            "resourceName": "achievements",
             "attributes": [
                 "Name",
                 "Arn"
@@ -56,12 +56,11 @@
         },
         {
             "category": "function",
-            "resourceName": "careerimprovementclient",
+            "resourceName": "careerImprovementClients",
             "attributes": [
                 "Name",
                 "Arn"
             ]
         }
-    ],
-    "uuid": "bec1dacb"
+    ]
 }

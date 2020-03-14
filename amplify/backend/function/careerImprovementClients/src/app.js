@@ -6,19 +6,7 @@ or in the "license" file accompanying this file. This file is distributed on an 
 See the License for the specific language governing permissions and limitations under the License.
 */
 
-/* Amplify Params - DO NOT EDIT
-You can access the following resource attributes as environment variables from your Lambda function
-var environment = process.env.ENV
-var region = process.env.REGION
-var storageAchievementName = process.env.STORAGE_ACHIEVEMENT_NAME
-var storageAchievementArn = process.env.STORAGE_ACHIEVEMENT_ARN
-var storageCareerimprovementclientName = process.env.STORAGE_CAREERIMPROVEMENTCLIENT_NAME
-var storageCareerimprovementclientArn = process.env.STORAGE_CAREERIMPROVEMENTCLIENT_ARN
-var functionGawlamdaName = process.env.FUNCTION_GAWLAMDA_NAME
-var authCognito41949666UserPoolId = process.env.AUTH_COGNITO41949666_USERPOOLID
-var apiGrowatworkapiApiName = process.env.API_GROWATWORKAPI_APINAME
 
-Amplify Params - DO NOT EDIT */
 
 const AWS = require('aws-sdk')
 var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
@@ -29,18 +17,18 @@ AWS.config.update({ region: process.env.TABLE_REGION });
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-let tableName = "careerimprovementclient";
+let tableName = "careerImprovementClients";
 if(process.env.ENV && process.env.ENV !== "NONE") {
   tableName = tableName + '-' + process.env.ENV;
 }
 
 const userIdPresent = false; // TODO: update in case is required to use that definition
-const partitionKeyName = "UserName";
+const partitionKeyName = "username";
 const partitionKeyType = "S";
 const sortKeyName = "";
 const sortKeyType = "";
 const hasSortKey = sortKeyName !== "";
-const path = "/careerimprovementclient";
+const path = "/careerImprovementClients";
 const UNAUTH = 'UNAUTH';
 const hashKeyPath = '/:' + partitionKeyName;
 const sortKeyPath = hasSortKey ? '/:' + sortKeyName : '';

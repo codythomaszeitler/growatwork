@@ -17,7 +17,7 @@ const MainStack = createStackNavigator();
 
 function ModalScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text style={{ fontSize: 30 }}>This is a modal!</Text>
       <Button onPress={() => navigation.goBack()} title="Dismiss" />
     </View>
@@ -75,8 +75,7 @@ function DashboardTabs() {
             </View>
           )
         }}
-      >
-      </Tab.Screen>
+      ></Tab.Screen>
     </Tab.Navigator>
   );
 }
@@ -95,7 +94,13 @@ export class DashboardNavigation extends Component {
             text: "Grow and Thrive at Work",
             style: { color: "#4d7bd1", fontSize: 18 }
           }}
-          rightComponent={{ icon: "menu", color: "#4d7bd1" }}
+          rightComponent={{ 
+            icon: "menu",
+            color: "#4d7bd1",
+            onPress: () => {
+              console.log("we presssed the header button");
+            }
+          }}
           backgroundColor={"#ffffff"}
         />
         <DashboardTabs></DashboardTabs>

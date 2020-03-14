@@ -1,23 +1,31 @@
 {
+	"auth": {
+		"growatworke26a8fcb": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		}
+	},
 	"storage": {
-		"achievement": {
+		"achievements": {
 			"service": "DynamoDB",
 			"providerPlugin": "awscloudformation"
 		},
-		"careerimprovementclient": {
+		"careerImprovementClients": {
 			"service": "DynamoDB",
 			"providerPlugin": "awscloudformation"
 		}
 	},
 	"function": {
-		"gawlamda": {
+		"achievements": {
 			"service": "Lambda",
 			"providerPlugin": "awscloudformation",
 			"build": true,
 			"dependsOn": [
 				{
 					"category": "storage",
-					"resourceName": "achievement",
+					"resourceName": "achievements",
 					"attributes": [
 						"Name",
 						"Arn"
@@ -25,79 +33,38 @@
 				}
 			]
 		},
-		"careerimprovementclient": {
+		"careerImprovementClients": {
 			"service": "Lambda",
 			"providerPlugin": "awscloudformation",
 			"build": true,
 			"dependsOn": [
 				{
 					"category": "storage",
-					"resourceName": "careerimprovementclient",
+					"resourceName": "careerImprovementClients",
 					"attributes": [
 						"Name",
 						"Arn"
-					]
-				},
-				{
-					"category": "storage",
-					"resourceName": "achievement",
-					"attributes": [
-						"Name",
-						"Arn"
-					]
-				},
-				{
-					"category": "function",
-					"resourceName": "gawlamda",
-					"attributes": [
-						"Name"
-					]
-				},
-				{
-					"category": "auth",
-					"resourceName": "cognito41949666",
-					"attributes": [
-						"UserPoolId"
-					]
-				},
-				{
-					"category": "api",
-					"resourceName": "growatworkapi",
-					"attributes": [
-						"ApiName"
 					]
 				}
 			]
-		}
-	},
-	"auth": {
-		"cognito41949666": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation"
 		}
 	},
 	"api": {
-		"growatworkapi": {
+		"database": {
 			"service": "API Gateway",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": [
 				{
 					"category": "function",
-					"resourceName": "gawlamda",
+					"resourceName": "achievements",
 					"attributes": [
 						"Name",
 						"Arn"
 					]
-				}
-			]
-		},
-		"api0ee3f7f2": {
-			"service": "API Gateway",
-			"providerPlugin": "awscloudformation",
-			"dependsOn": [
+				},
 				{
 					"category": "function",
-					"resourceName": "gawlamda",
+					"resourceName": "careerImprovementClients",
 					"attributes": [
 						"Name",
 						"Arn"

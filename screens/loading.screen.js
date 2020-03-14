@@ -2,15 +2,18 @@ import React, { Component } from "react";
 import { ActivityIndicator, View, Text } from "react-native";
 import { CareerImprovementClient } from "../pojo/career.improvement.client";
 import {datastore} from '../datastore/datastore';
+import {Auth} from 'aws-amplify';
 
 export class LoadingScreen extends Component {
   constructor(props) {
     super(props);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.loadingId = setTimeout(
-      function() {
+      async function() {
+        const currentUser = await Auth.currentAuthenticatedUser();
+        console.log(currentUser.username);
         let careerImprovementClient = new CareerImprovementClient();
         datastore().set(careerImprovementClient);
         this.props.navigation.navigate("Dashboard"); 

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, Button } from "react-native";
+
 export class InitialScreen extends Component {
   constructor(props) {
     super(props);

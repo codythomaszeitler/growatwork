@@ -1,19 +1,19 @@
 {
     "growatwork": {
         "awscloudformation": {
-            "AuthRoleName": "amplify-growatwork-growatwork-172859-authRole",
-            "UnauthRoleArn": "arn:aws:iam::771082127534:role/amplify-growatwork-growatwork-172859-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::771082127534:role/amplify-growatwork-growatwork-172859-authRole",
+            "AuthRoleName": "amplify-growatwork-growatwork-211411-authRole",
+            "UnauthRoleArn": "arn:aws:iam::771082127534:role/amplify-growatwork-growatwork-211411-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::771082127534:role/amplify-growatwork-growatwork-211411-authRole",
             "Region": "us-east-1",
-            "DeploymentBucketName": "amplify-growatwork-growatwork-172859-deployment",
-            "UnauthRoleName": "amplify-growatwork-growatwork-172859-unauthRole",
-            "StackName": "amplify-growatwork-growatwork-172859",
-            "StackId": "arn:aws:cloudformation:us-east-1:771082127534:stack/amplify-growatwork-growatwork-172859/cdae5cf0-658a-11ea-b8fb-1277bf9feb05",
-            "AmplifyAppId": "d1wr3za9gwhb7l"
+            "DeploymentBucketName": "amplify-growatwork-growatwork-211411-deployment",
+            "UnauthRoleName": "amplify-growatwork-growatwork-211411-unauthRole",
+            "StackName": "amplify-growatwork-growatwork-211411",
+            "StackId": "arn:aws:cloudformation:us-east-1:771082127534:stack/amplify-growatwork-growatwork-211411/4456b400-65aa-11ea-89ca-12a417a66525",
+            "AmplifyAppId": "d1eb4mhuj24e8o"
         },
         "categories": {
             "auth": {
-                "cognito41949666": {}
+                "growatworke26a8fcb": {}
             }
         }
     }

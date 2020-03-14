@@ -5,13 +5,13 @@
 		"env": {
 			"Type": "String"
 		},
-		"storageachievementName": {
+		"storageachievementsName": {
 			"Type": "String",
-			"Default": "storageachievementName"
+			"Default": "storageachievementsName"
 		},
-		"storageachievementArn": {
+		"storageachievementsArn": {
 			"Type": "String",
-			"Default": "storageachievementArn"
+			"Default": "storageachievementsArn"
 		}
 	},
 	"Conditions": {
@@ -36,12 +36,12 @@
 				"FunctionName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"gawlamda",
+						"achievements",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"gawlamda",
+									"achievements",
 									"-",
 									{
 										"Ref": "env"
@@ -70,8 +70,8 @@
 				"Runtime": "nodejs10.x",
 				"Timeout": "25",
 				"Code": {
-					"S3Bucket": "amplify-growatwork-growatwork-172859-deployment",
-					"S3Key": "amplify-builds/gawlamda-58575a52706b57653375-build.zip"
+					"S3Bucket": "amplify-growatwork-growatwork-211411-deployment",
+					"S3Key": "amplify-builds/achievements-3456676f614643705533-build.zip"
 				}
 			}
 		},
@@ -81,12 +81,12 @@
 				"RoleName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"growatworkLambdaRolec29a27d1",
+						"growatworkLambdaRole6113795d",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"growatworkLambdaRolec29a27d1",
+									"growatworkLambdaRole6113795d",
 									"-",
 									{
 										"Ref": "env"
@@ -165,14 +165,14 @@
 							],
 							"Resource": [
 								{
-									"Ref": "storageachievementArn"
+									"Ref": "storageachievementsArn"
 								},
 								{
 									"Fn::Join": [
 										"/",
 										[
 											{
-												"Ref": "storageachievementArn"
+												"Ref": "storageachievementsArn"
 											},
 											"index/*"
 										]

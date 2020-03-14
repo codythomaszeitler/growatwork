@@ -33,15 +33,15 @@
                 "AttributeDefinitions": [
                   
                   {
-                      "AttributeName": "UserName",
-                      "AttributeType": "S"
+                      "AttributeName": "id",
+                      "AttributeType": "N"
                   } 
                   
                 ],
                 "KeySchema": [
                   
                   {
-                    "AttributeName": "UserName",
+                    "AttributeName": "id",
                     "KeyType": "HASH"
                   } 
                   
