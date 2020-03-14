@@ -116,7 +116,7 @@ export class ExcelExportScreen extends Component {
 
   parseSubjectLine() {
     return (
-      "You hard work between " +
+      "Your hard work between " +
       this.parseTimestampEmailFormat(this.state.fromTimestamp) +
       " to " +
       this.parseTimestampEmailFormat(this.state.toTimestamp)
@@ -162,6 +162,7 @@ export class ExcelExportScreen extends Component {
               testID="DestinationEmailInput"
               placeholder="E-mail"
               onChangeText={this.onEmailDestinationChange}
+              autoCompleteType='email'
             ></Input>
             <Text></Text>
             <Button

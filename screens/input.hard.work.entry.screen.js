@@ -6,6 +6,7 @@ import { HardWorkEntry } from "../pojo/hard.work.entry";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Timestamp } from "../pojo/timestamp";
 import { Keyboard } from 'react-native'
+import Toast from 'react-native-root-toast';
 
 export class InputHardWorkEntryScreen extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ export class InputHardWorkEntryScreen extends Component {
 
     this.onChangeText = this.onChangeText.bind(this);
     this.onPress = this.onPress.bind(this);
+    this.myTextInput = React.createRef();
 
     this.state = {
       accomplishment: ""
@@ -40,6 +42,18 @@ export class InputHardWorkEntryScreen extends Component {
     if (!client.contains(newEntry)) {
       client.log(newEntry);
       Keyboard.dismiss();
+
+      Toast.show('Accomplishment Successfully Added!', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+        backgroundColor	: '#1ec96b',
+        opacity : 1
+    });
+    this.myTextInput.current.clear();
     }
   }
 
@@ -60,6 +74,7 @@ export class InputHardWorkEntryScreen extends Component {
             textAlignVertical: "top",
             flex: 5
           }}
+          ref={this.myTextInput}
           leftIcon={<Icon name="edit" size={18} color="blue" />}
           onChangeText={this.onChangeText}
           placeholder=" What you did today!"

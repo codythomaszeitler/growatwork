@@ -94,9 +94,9 @@ describe("Timestamp", () => {
     expect(testObject.isBefore(other)).toBe(false);
   });
 
-  it('should be able to return false on is before if the given timestamps are equivalent', () => {
+  it('should be able to return true on is before if the given timestamps are equivalent', () => {
     const testObject = new Timestamp(2019, "January", 3);
-    expect(testObject.isBefore(testObject.copy())).toBe(false);
+    expect(testObject.isBefore(testObject.copy())).toBe(true);
   });
 
   it('should be able to return true if this timestamp is after the given timestamp', () => {
@@ -113,9 +113,9 @@ describe("Timestamp", () => {
     expect(testObject.isAfter(other)).toBe(false);
   });
 
-  it('should be able to return false if the given timestamps are equivalent on isAfter', () => {
+  it('should be able to return true if the given timestamps are equivalent on isAfter', () => {
     const testObject = new Timestamp(2019, "January", 3);
-    expect(testObject.isAfter(testObject.copy())).toBe(false);
+    expect(testObject.isAfter(testObject.copy())).toBe(true);
   });
 
   it("should throw an exception if a non 1-12 month given", () => {
