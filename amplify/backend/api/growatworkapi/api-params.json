@@ -1,0 +1,67 @@
+{
+    "paths": [
+        {
+            "name": "/items",
+            "lambdaFunction": "gawlamda",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            }
+        },
+        {
+            "name": "/careerimprovementclient",
+            "lambdaFunction": "careerimprovementclient",
+            "privacy": {
+                "private": true,
+                "auth": [
+                    "/POST",
+                    "/GET",
+                    "/PUT",
+                    "/PATCH",
+                    "/DELETE"
+                ]
+            }
+        }
+    ],
+    "resourceName": "growatworkapi",
+    "apiName": "growatworkapi",
+    "functionArns": [
+        {
+            "lambdaFunction": "gawlamda"
+        },
+        {
+            "lambdaFunction": "careerimprovementclient"
+        }
+    ],
+    "privacy": {
+        "auth": 2,
+        "unauth": 0,
+        "authRoleName": "amplify-growatwork-growatwork-172859-authRole",
+        "unAuthRoleName": "amplify-growatwork-growatwork-172859-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "gawlamda",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        },
+        {
+            "category": "function",
+            "resourceName": "careerimprovementclient",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ],
+    "uuid": "bec1dacb"
+}

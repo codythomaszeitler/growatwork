@@ -1,0 +1,7 @@
+{
+    "tableName": "achievement",
+    "partitionKeyName": "content",
+    "partitionKeyType": "S",
+    "sortKeyName": "accomplishedOn",
+    "sortKeyType": "S"
+}

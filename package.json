@@ -9,6 +9,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "@aws-amplify/api": "^2.1.6",
+    "@aws-amplify/pubsub": "^2.1.7",
     "@react-native-community/datetimepicker": "^2.2.2",
     "@react-native-community/masked-view": "0.1.5",
     "@react-navigation/bottom-tabs": "^5.1.0",
@@ -31,8 +33,10 @@
     "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "~1.5.0",
     "react-native-reanimated": "~1.4.0",
+    "react-native-root-toast": "^3.2.0",
     "react-native-safe-area-context": "0.6.0",
     "react-native-screens": "2.0.0-alpha.12",
+    "react-native-simple-toast": "^1.0.0",
     "react-native-testing-library": "^1.12.0",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "~0.11.7",
