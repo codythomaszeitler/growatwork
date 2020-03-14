@@ -1,24 +1,15 @@
-import {Timestamp} from '../pojo/timestamp';
-import {HardWorkEntry} from '../pojo/hard.work.entry';
+import {MapperFactory} from './mapper.factory';
 
 export class DatabaseModelMapper {
+  toDatabaseModel(inMemoryModel) {
+      const factory = new MapperFactory();
+      const mapper = factory.create(inMemoryModel.type);
+      return mapper.toDatabaseModel(inMemoryModel);
+  }
 
-    toDatabaseModel(inMemoryModel) {
-        const databaseModel = {
-            careerImprovementClientId : inMemoryModel.careerImprovementClientId,
-            accomplishment : inMemoryModel.getAccomplishment(),
-            accomplishedOn: inMemoryModel.getAccomplishedOn().toDate().toString()
-        };
-        return databaseModel;
-    }
-
-    toInMemoryModel(databaseModel) {
-        const asDate = new Date(databaseModel.accomplishedOn);
-        const asTimestamp = Timestamp.fromDate(asDate);
-        const accomplishment = new HardWorkEntry(databaseModel.accomplishment, asTimestamp);
-        accomplishment.careerImprovementClientId = databaseModel.careerImprovementClientId;
-
-        return accomplishment;
-    }
-
+  toInMemoryModel(databaseModel) {
+    const factory = new MapperFactory();
+    const mapper = factory.create(databaseModel.body.type);
+    return mapper.toInMemoryModel(databaseModel);
+  }
 }

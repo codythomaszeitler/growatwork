@@ -7,10 +7,20 @@ class OnLogEvent {
 export const type = "careerimprovementclient";
 
 export class CareerImprovementClient {
-  constructor() {
+  constructor(email, username) {
     this.hardWorkEntries = [];
     this.listeners = [];
     this.type = type;
+    this.email = email;
+    this.username = username;
+  }
+
+  getUsername() {
+    return this.username;
+  }
+
+  getEmail() {
+    return this.email;
   }
 
   equals(object) {

@@ -20,9 +20,11 @@ export class Timestamp {
       throw new Error("Cannot create a timestamp without a year");
     }
 
-    if (!month) {
+    if (month === undefined || month === null) {
       throw new Error("Cannot create a timestamp without a month");
     }
+
+    month = this.parseMonthFromInteger(month);
 
     if (!months.includes(this.properlyCapitalizeMonth(month))) {
       throw new Error("The given month [" + month + "] is not a real month");
@@ -35,6 +37,20 @@ export class Timestamp {
     this.year = year;
     this.month = this.properlyCapitalizeMonth(month);
     this.day = day;
+  }
+
+  parseMonthFromInteger(monthIndex) {
+    if (typeof monthIndex === 'string') {
+      return monthIndex;
+    }
+
+    if (monthIndex < 1 || monthIndex > 12) {
+      throw new Error("The given month index [" + monthIndex + "] is not within [1-12]");
+    }
+
+    monthIndex--;
+
+    return months[monthIndex];
   }
 
   toString() {

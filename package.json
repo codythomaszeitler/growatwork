@@ -28,6 +28,7 @@
     "expo-mail-composer": "~8.0.0",
     "jest-environment-enzyme": "^7.1.2",
     "jest-enzyme": "^7.1.2",
+    "luxon": "^1.22.0",
     "metro-react-native-babel-preset": "^0.58.0",
     "react": "16",
     "react-dom": "16",

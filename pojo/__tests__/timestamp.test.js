@@ -9,6 +9,34 @@ describe("Timestamp", () => {
     expect(testObject.getDay()).toBe(1);
   });
 
+  it("should be able to create a timestamp with a month that is an integer", () => {
+    const testObject = new Timestamp(2019, 1, 1);
+    expect(testObject.getMonth()).toBe('January');
+  });
+
+  it("should throw an exception if the month integer is below 0", () => {
+
+    let caughtException = null;
+    try {
+      new Timestamp(2019, 0, 1);
+    } catch (e) {
+      caughtException = e;
+    }
+
+    expect(caughtException.message).toBe("The given month index [0] is not within [1-12]");
+  });
+
+  it("should throw an exception if the month integer is greater than 12", () => {
+    let caughtException = null;
+    try {
+      new Timestamp(2019, 13, 1);
+    } catch (e) {
+      caughtException = e;
+    }
+
+    expect(caughtException.message).toBe("The given month index [13] is not within [1-12]");
+  });
+
   it("should be able to create a timestamp with a month, day, and year with a lowercase starting month", () => {
     const testObject = new Timestamp(2019, "january", 1);
     expect(testObject.getYear()).toBe(2019);

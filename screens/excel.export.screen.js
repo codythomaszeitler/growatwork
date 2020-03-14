@@ -162,7 +162,6 @@ export class ExcelExportScreen extends Component {
               testID="DestinationEmailInput"
               placeholder="E-mail"
               onChangeText={this.onEmailDestinationChange}
-              autoCompleteType='email'
             ></Input>
             <Text></Text>
             <Button

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { View, Text, TextInput, Modal, Alert } from "react-native";
 import { Button, Card } from "react-native-elements";
 import { Authentication } from "../authentication/auth";
+import { API, Auth } from "aws-amplify";
+import {Timestamp} from '../pojo/timestamp';
 
 export class SignUpScreen extends Component {
   constructor(props) {
@@ -16,18 +18,31 @@ export class SignUpScreen extends Component {
     this.signUp = this.signUp.bind(this);
     this.enterConfirmationCode = this.enterConfirmationCode.bind(this);
     this.onConfirmationCodeChange = this.onConfirmationCodeChange.bind(this);
+    this.onEmailChange = this.onEmailChange.bind(this);
+    this.onPasswordChange = this.onPasswordChange.bind(this);
 
     this.authentication = new Authentication();
   }
 
   async signUp() {
-    this.setState({
-      modalVisible: true
-    });
+    if (!this.state.email) {
+      Alert.alert("Sign Up", "Cannot sign up without an e-mail");
+      return;
+    }
+
+    if (!this.state.password) {
+      Alert.alert("Sign Up", "Cannot sign up without a password");
+      return;
+    }
+
     try {
       await this.authentication.signUp(this.state.email, this.state.password);
+      this.setState({
+        modalVisible: true
+      });
     } catch (e) {
-      console.log("within the sign up  function " + e);
+      console.log(e);
+      Alert.alert("Sign Up", e.message);
     }
   }
 
@@ -43,6 +58,19 @@ export class SignUpScreen extends Component {
     );
 
     if (responseMessage === "SUCCESS") {
+      const currentUser = await Auth.currentAuthenticatedUser();
+      try {
+        await API.post("database", "/careerImprovementClients", {
+          body: {
+            username: currentUser.username,
+            createdOn : Timestamp.today().toDate().toString(),
+            email: this.state.email
+          }
+        });
+      } catch (e) {
+        console.log(e);
+      }
+
       this.setState({
         modalVisible: false
       });

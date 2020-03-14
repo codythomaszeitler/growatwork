@@ -13,7 +13,7 @@ export class HardWorkEntry {
 
     this.accomplishment = accomplishment;
     this.timestamp = timestamp;
-    this.databaseType = 'achievement';
+    this.type = 'achievement';
   }
 
   isBefore(comparison) {
