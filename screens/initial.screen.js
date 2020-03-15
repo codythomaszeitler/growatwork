@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View } from "react-native";
+import { Button } from "react-native-elements";
 
 export class InitialScreen extends Component {
   constructor(props) {
@@ -13,41 +14,38 @@ export class InitialScreen extends Component {
         style={{
           flex: 1,
           flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "stretch",
-          backgroundColor : "#ffffff"
+          justifyContent: "space-around",
+          alignItems: "center",
+          backgroundColor: "#ffffff"
         }}
       >
-        <View
-          style={{
-            flex: 4,
-            justifyContent: "center",
-            alignItems: "flex-start",
-            marginLeft: 0,
-            marginTop: -60
-          }}
-        >
+        <View>
           <Text
             style={{
               fontSize: 30,
-              textAlign: "justify",
+              textAlign: "center",
               fontFamily: "PingFangTC-Thin"
             }}
-          >{`
-        Grow and Thrive 
-              at Work`}</Text>
+          >
+            Grow and Thrive
+          </Text>
+          <Text
+            style={{
+              fontSize: 30,
+              textAlign: "center",
+              fontFamily: "PingFangTC-Thin"
+            }}
+          >
+            at Work
+          </Text>
         </View>
 
-        <View
-          style={{
-            flex: 1
-          }}
-        >
-          <Button
-            title="Let's get started!"
-            onPress={this.toLoginScreen}
-          ></Button>
-        </View>
+        <Button
+          title="Let's get started!"
+          onPress={this.toLoginScreen}
+          type='outline'
+          raised
+        ></Button>
       </View>
     );
   }

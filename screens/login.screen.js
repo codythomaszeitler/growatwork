@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Text, View, TextInput, Button, Alert } from "react-native";
+import { Text, View, Alert } from "react-native";
 import { Authentication } from "../authentication/auth";
+import { Input, Icon, Button } from "react-native-elements";
 
 export class LoginScreen extends Component {
   constructor(props) {
@@ -21,9 +22,9 @@ export class LoginScreen extends Component {
   async signIn() {
     try {
       await this.authentication.signIn(this.state.email, this.state.password);
-      this.props.navigation.navigate('Loading');
-    } catch(e) {
-      Alert.alert('Cannot Sign In', e.message);
+      this.props.navigation.navigate("Loading");
+    } catch (e) {
+      Alert.alert("Cannot Sign In", e.message);
     }
   }
 
@@ -44,7 +45,7 @@ export class LoginScreen extends Component {
   }
 
   async onForgotPassword() {
-    this.props.navigation.navigate("ForgotPassword")
+    this.props.navigation.navigate("ForgotPassword");
   }
 
   render() {
@@ -77,7 +78,7 @@ export class LoginScreen extends Component {
             }}
           ></Text>
 
-          <TextInput
+          <Input
             style={{
               height: 40,
               width: 300,
@@ -90,13 +91,14 @@ export class LoginScreen extends Component {
             keyboardType="email-address"
             autoFocus={true}
             onChangeText={this.onEmailChange}
+            leftIcon={<Icon name="email" size={20} color="blue" />}
           />
           <Text
             style={{
               flex: 0.03
             }}
           ></Text>
-          <TextInput
+          <Input
             style={{
               height: 40,
               width: 300,
@@ -107,6 +109,7 @@ export class LoginScreen extends Component {
             placeholder="  Password"
             secureTextEntry={true}
             onChangeText={this.onPasswordChange}
+            leftIcon={<Icon name="book" size={20} color="blue" />}
           />
         </View>
 
@@ -117,10 +120,26 @@ export class LoginScreen extends Component {
             justifyContent: "center"
           }}
         >
-          <Button title="Let's Go!" onPress={this.signIn}></Button>
+          <Button
+            type="outline"
+            raised
+            title="Let's Go!"
+            onPress={this.signIn}
+          ></Button>
+
+          <Button
+            type="outline"
+            raised
+            title="Sign Up"
+            onPress={this.signUp}
+          ></Button>
+          <Button
+            type="outline"
+            raised
+            title="Forgot Password?"
+            onPress={this.signUp}
+          ></Button>
         </View>
-        <Button title="Sign Up" onPress={this.signUp}></Button>
-        <Button title="Forgot Password?" onPress={this.signUp}></Button>
       </View>
     );
   }
