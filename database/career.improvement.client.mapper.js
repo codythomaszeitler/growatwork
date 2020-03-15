@@ -2,16 +2,21 @@ import { CareerImprovementClient } from "../pojo/career.improvement.client";
 
 export class CareerImprovementClientMapper {
   toInMemoryModel(databaseModel) {
-      const careerImprovementClient = new CareerImprovementClient(databaseModel.body.email, databaseModel.body.username);
-      return careerImprovementClient;
+    const contents = databaseModel.data.listCareerImprovementClients.items[0];
+
+    const careerImprovementClient = new CareerImprovementClient(
+      contents.email,
+      contents.username
+    );
+    careerImprovementClient.id = contents.id;
+    return careerImprovementClient;
   }
 
   toDatabaseModel(inMemoryModel) {
     return {
-      body: {
-        username : inMemoryModel.getUsername(),
-        email : inMemoryModel.getEmail(),
-        type : inMemoryModel.type
+      input: {
+        username: inMemoryModel.getUsername(),
+        email: inMemoryModel.getEmail()
       }
     };
   }

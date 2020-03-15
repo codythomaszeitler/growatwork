@@ -1,0 +1,11 @@
+{
+    "AppSyncApiName": "growatwork",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": "false",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authgrowatworkdc3fe228",
+            "Outputs.UserPoolId"
+        ]
+    }
+}

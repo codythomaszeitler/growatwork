@@ -1,76 +1,27 @@
 {
 	"auth": {
-		"growatworkefa60dd4": {
+		"growatworkdc3fe228": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": [],
 			"customAuth": false
 		}
 	},
-	"storage": {
-		"achievements": {
-			"service": "DynamoDB",
-			"providerPlugin": "awscloudformation"
-		},
-		"careerImprovementClients": {
-			"service": "DynamoDB",
-			"providerPlugin": "awscloudformation"
-		}
-	},
-	"function": {
-		"achievements": {
-			"service": "Lambda",
-			"providerPlugin": "awscloudformation",
-			"build": true,
-			"dependsOn": [
-				{
-					"category": "storage",
-					"resourceName": "achievements",
-					"attributes": [
-						"Name",
-						"Arn"
-					]
-				}
-			]
-		},
-		"careerImprovementClients": {
-			"service": "Lambda",
-			"providerPlugin": "awscloudformation",
-			"build": true,
-			"dependsOn": [
-				{
-					"category": "storage",
-					"resourceName": "careerImprovementClients",
-					"attributes": [
-						"Name",
-						"Arn"
-					]
-				}
-			]
-		}
-	},
 	"api": {
-		"database": {
-			"service": "API Gateway",
+		"growatwork": {
+			"service": "AppSync",
 			"providerPlugin": "awscloudformation",
-			"dependsOn": [
-				{
-					"category": "function",
-					"resourceName": "achievements",
-					"attributes": [
-						"Name",
-						"Arn"
-					]
-				},
-				{
-					"category": "function",
-					"resourceName": "careerImprovementClients",
-					"attributes": [
-						"Name",
-						"Arn"
-					]
+			"output": {
+				"authConfig": {
+					"additionalAuthenticationProviders": [],
+					"defaultAuthentication": {
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
+						"userPoolConfig": {
+							"userPoolId": "authgrowatworkdc3fe228"
+						}
+					}
 				}
-			]
+			}
 		}
 	}
 }

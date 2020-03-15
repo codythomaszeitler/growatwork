@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { View, Text, TextInput, Modal, Alert } from "react-native";
 import { Button, Card } from "react-native-elements";
 import { Authentication } from "../authentication/auth";
-import { API, Auth } from "aws-amplify";
 import { CareerImprovementClient } from "../pojo/career.improvement.client";
 import { database } from "../database/database";
 

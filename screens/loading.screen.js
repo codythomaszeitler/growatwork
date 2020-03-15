@@ -3,7 +3,8 @@ import { ActivityIndicator, View, Text } from "react-native";
 import { datastore } from "../datastore/datastore";
 import { CareerImprovementClientFinder } from "../database/career.improvement.client.finder";
 import { Authentication } from "../authentication/auth";
-import {database} from '../database/database';
+import { database } from "../database/database";
+import { AchievementFinder } from "../database/achievement.finder";
 
 export class LoadingScreen extends Component {
   constructor(props) {
@@ -12,22 +13,30 @@ export class LoadingScreen extends Component {
   }
 
   async componentDidMount() {
-    this.loadingId = setTimeout(
-      async function() {
-        const finder = new CareerImprovementClientFinder(database());
-        const careerImprovementClient = await finder.findByUsername(
-          this.authentication.getCurrentUsername()
-        );
-
-        datastore().set(careerImprovementClient);
-        this.props.navigation.navigate("Dashboard");
-      }.bind(this),
-      3000
+    const careerImprovementClientFinder = new CareerImprovementClientFinder(
+      database()
     );
-  }
+    const username = await this.authentication.getCurrentUsername();
+    const careerImprovementClient = await careerImprovementClientFinder.findByUsername(
+      username
+    );
 
-  componentWillUnmount() {
-    clearTimeout(this.loadingId);
+    const achievementFinder = new AchievementFinder(database());
+    let achievements;
+    try {
+      achievements = await achievementFinder.findByUsername(username);
+    } catch (e) {
+      console.log(e);
+    }
+
+    for (let i = 0; i < achievements.length; i++) {
+      careerImprovementClient.log(achievements[i]);
+    }
+
+    datastore().set(careerImprovementClient);
+    careerImprovementClient.addOnLogListener(database());
+
+    this.props.navigation.navigate("Dashboard");
   }
 
   render() {

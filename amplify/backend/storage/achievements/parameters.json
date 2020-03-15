@@ -1,5 +1,0 @@
-{
-    "tableName": "achievements",
-    "partitionKeyName": "id",
-    "partitionKeyType": "N"
-}

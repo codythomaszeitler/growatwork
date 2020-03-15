@@ -1,0 +1,18 @@
+type CareerImprovementClient @model @auth(rules: [{ allow: owner, operations: [create, read, update, delete] }]) {
+  id: ID!
+  username: String!
+  email: String!
+  achievements: [Achievement] @connection(name: "Achievements")
+}
+type Achievement @model @auth(rules: [{ allow: owner, operations: [create, read, update, delete] }]) 
+{
+  id: ID!
+  achievement: String!
+  accomplishedOn: Timestamp!
+  careerImprovementClient: CareerImprovementClient @connection(name: "Achievements")
+}
+
+type Timestamp {
+  utc: AWSDate!
+  timezone: String!
+}
