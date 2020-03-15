@@ -1,6 +1,6 @@
 {
 	"auth": {
-		"growatworke26a8fcb": {
+		"growatworkefa60dd4": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": [],

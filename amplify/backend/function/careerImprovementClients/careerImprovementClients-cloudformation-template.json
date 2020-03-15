@@ -70,7 +70,7 @@
 				"Runtime": "nodejs10.x",
 				"Timeout": "25",
 				"Code": {
-					"S3Bucket": "amplify-growatwork-growatwork-211411-deployment",
+					"S3Bucket": "amplify-growatwork-growatwork-202848-deployment",
 					"S3Key": "amplify-builds/careerImprovementClients-6f4332753332474d666e-build.zip"
 				}
 			}
@@ -81,12 +81,12 @@
 				"RoleName": {
 					"Fn::If": [
 						"ShouldNotCreateEnvResources",
-						"growatworkLambdaRole20eaa370",
+						"growatworkLambdaRolec1cd069a",
 						{
 							"Fn::Join": [
 								"",
 								[
-									"growatworkLambdaRole20eaa370",
+									"growatworkLambdaRolec1cd069a",
 									"-",
 									{
 										"Ref": "env"

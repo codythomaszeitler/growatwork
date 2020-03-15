@@ -42,8 +42,8 @@
     "privacy": {
         "auth": 2,
         "unauth": 0,
-        "authRoleName": "amplify-growatwork-growatwork-211411-authRole",
-        "unAuthRoleName": "amplify-growatwork-growatwork-211411-unauthRole"
+        "authRoleName": "amplify-growatwork-growatwork-202848-authRole",
+        "unAuthRoleName": "amplify-growatwork-growatwork-202848-unauthRole"
     },
     "dependsOn": [
         {

@@ -6,7 +6,7 @@ export class CareerImprovementClientFinder {
   }
 
   async findByUsername(username) {
-    const readResults = await this.database.read("/careerImprovementClients");
+    const readResults = await this.database.read("/careerImprovementClients/:" + username);
     const mapper = new CareerImprovementClientMapper();
     console.log(readResults);
     return mapper.toInMemoryModel(readResults);
