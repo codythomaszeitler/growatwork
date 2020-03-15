@@ -1,23 +1,29 @@
 import React, { Component } from "react";
 import { ActivityIndicator, View, Text } from "react-native";
-import { CareerImprovementClient } from "../pojo/career.improvement.client";
-import {datastore} from '../datastore/datastore';
-import {Auth} from 'aws-amplify';
+import { datastore } from "../datastore/datastore";
+import { CareerImprovementClientFinder } from "../database/career.improvement.client.finder";
+import { Authentication } from "../authentication/auth";
+import {database} from '../database/database';
 
 export class LoadingScreen extends Component {
   constructor(props) {
     super(props);
+    this.authentication = new Authentication();
   }
 
   async componentDidMount() {
     this.loadingId = setTimeout(
       async function() {
-        const currentUser = await Auth.currentAuthenticatedUser();
-        console.log(currentUser.username);
-        let careerImprovementClient = new CareerImprovementClient();
+        const finder = new CareerImprovementClientFinder(database());
+        const careerImprovementClient = await finder.findByUsername(
+          this.authentication.getCurrentUsername()
+        );
+
         datastore().set(careerImprovementClient);
-        this.props.navigation.navigate("Dashboard"); 
-      }.bind(this), 3000);
+        this.props.navigation.navigate("Dashboard");
+      }.bind(this),
+      3000
+    );
   }
 
   componentWillUnmount() {

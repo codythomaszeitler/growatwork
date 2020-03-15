@@ -47,4 +47,9 @@ export class Authentication {
 
     return message;
   }
+
+  async getCurrentUsername() {
+    const currentUser = await Auth.currentAuthenticatedUser();
+    return currentUser.username;
+  }
 }

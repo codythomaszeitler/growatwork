@@ -3,7 +3,8 @@ import { View, Text, TextInput, Modal, Alert } from "react-native";
 import { Button, Card } from "react-native-elements";
 import { Authentication } from "../authentication/auth";
 import { API, Auth } from "aws-amplify";
-import {Timestamp} from '../pojo/timestamp';
+import { CareerImprovementClient } from "../pojo/career.improvement.client";
+import { database } from "../database/database";
 
 export class SignUpScreen extends Component {
   constructor(props) {
@@ -13,7 +14,8 @@ export class SignUpScreen extends Component {
       modalVisible: false,
       email: "",
       password: "",
-      confirmationCode: ""
+      confirmationCode: "",
+      disableConfirmationButton: false
     };
     this.signUp = this.signUp.bind(this);
     this.enterConfirmationCode = this.enterConfirmationCode.bind(this);
@@ -41,7 +43,6 @@ export class SignUpScreen extends Component {
         modalVisible: true
       });
     } catch (e) {
-      console.log(e);
       Alert.alert("Sign Up", e.message);
     }
   }
@@ -52,24 +53,22 @@ export class SignUpScreen extends Component {
       return;
     }
 
+    this.setState({
+      disableConfirmationButton: true
+    });
+
     const responseMessage = await this.authentication.confirmSignUp(
       this.state.email,
       this.state.confirmationCode
     );
 
     if (responseMessage === "SUCCESS") {
-      const currentUser = await Auth.currentAuthenticatedUser();
-      try {
-        await API.post("database", "/careerImprovementClients", {
-          body: {
-            username: currentUser.username,
-            createdOn : Timestamp.today().toDate().toString(),
-            email: this.state.email
-          }
-        });
-      } catch (e) {
-        console.log(e);
-      }
+      await this.authentication.signIn(this.state.email, this.state.password);
+      const careerImprovementClient = new CareerImprovementClient(
+        this.state.email,
+        await this.authentication.getCurrentUsername()  
+      );
+      await database().create(careerImprovementClient);
 
       this.setState({
         modalVisible: false
@@ -198,6 +197,7 @@ export class SignUpScreen extends Component {
           <Button
             title="Send confirmation code!"
             onPress={this.signUp}
+            disabled={this.state.disableConfirmationButton}
           ></Button>
           <Text
             style={{
