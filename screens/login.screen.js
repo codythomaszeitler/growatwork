@@ -52,36 +52,37 @@ export class LoginScreen extends Component {
     return (
       <View
         style={{
-          flex: 1
+          flex: 1,
+          flexDirection: "column",
+          justifyContent: "space-around",
+          alignItems: "stretch"
         }}
       >
-        <View
-          style={{
-            flex: 0.5,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
+        <View style ={{
+          flex : .4
+        }}
+        
+        ></View>
+        <View style={{
+          flex : 1
+        }}>
           <Text
             style={{
-              justifyContent: "flex-start",
+              textAlign: "center",
               fontFamily: "PingFangTC-Thin",
-              fontSize: 30
+              fontSize: 30,
             }}
           >
             Log In
           </Text>
-          <Text
-            style={{
-              flex: 0.2
-            }}
-          ></Text>
-
+        </View>
+        <View
+          style={{
+            flex: 3
+          }}
+        >
           <Input
             style={{
-              height: 40,
-              width: 300,
               borderColor: "gray",
               borderWidth: 1,
               backgroundColor: "#bfbfbf"
@@ -93,15 +94,8 @@ export class LoginScreen extends Component {
             onChangeText={this.onEmailChange}
             leftIcon={<Icon name="email" size={20} color="blue" />}
           />
-          <Text
-            style={{
-              flex: 0.03
-            }}
-          ></Text>
           <Input
             style={{
-              height: 40,
-              width: 300,
               borderColor: "gray",
               borderWidth: 1,
               backgroundColor: "#bfbfbf"
@@ -111,28 +105,35 @@ export class LoginScreen extends Component {
             onChangeText={this.onPasswordChange}
             leftIcon={<Icon name="book" size={20} color="blue" />}
           />
+          <Text></Text>
+          <View
+            style={{
+              alignItems: "center",
+              flex: 1
+            }}
+          >
+            <Button
+              type="outline"
+              raised
+              title="Let's Go!"
+              onPress={this.signIn}
+            ></Button>
+          </View>
         </View>
 
         <View
           style={{
-            flex: 0.1,
             alignItems: "center",
-            justifyContent: "center"
+            flex: 1
           }}
         >
-          <Button
-            type="outline"
-            raised
-            title="Let's Go!"
-            onPress={this.signIn}
-          ></Button>
-
           <Button
             type="outline"
             raised
             title="Sign Up"
             onPress={this.signUp}
           ></Button>
+          <Text></Text>
           <Button
             type="outline"
             raised
