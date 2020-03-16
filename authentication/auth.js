@@ -57,8 +57,16 @@ export class Authentication {
     return await Auth.changePassword(user, oldPassword, newPassword);
   }
 
+  async confirmChangePassword(username, code, newPassword) {
+    await Auth.forgotPasswordSubmit(username, code, newPassword);
+  }
+
   async getCurrentUsername() {
     const currentUser = await Auth.currentAuthenticatedUser();
     return currentUser.username;
+  }
+
+  async sendPasswordResetEmail(username) {
+    return await Auth.forgotPassword(username);
   }
 }

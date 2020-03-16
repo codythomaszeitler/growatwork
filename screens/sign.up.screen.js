@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { View, Text, TextInput, Modal, Alert } from "react-native";
-import { Button, Card } from "react-native-elements";
+import { View, Text, Modal, Alert } from "react-native";
+import { Button, Card, Input, Icon } from "react-native-elements";
 import { Authentication } from "../authentication/auth";
 import { CareerImprovementClient } from "../pojo/career.improvement.client";
 import { database } from "../database/database";
@@ -65,7 +65,7 @@ export class SignUpScreen extends Component {
       await this.authentication.signIn(this.state.email, this.state.password);
       const careerImprovementClient = new CareerImprovementClient(
         this.state.email,
-        await this.authentication.getCurrentUsername()  
+        await this.authentication.getCurrentUsername()
       );
       await database().create(careerImprovementClient);
 
@@ -100,7 +100,8 @@ export class SignUpScreen extends Component {
     return (
       <View
         style={{
-          flex: 1
+          flex: 1,
+          justifyContent: "space-around"
         }}
       >
         <Modal
@@ -115,7 +116,7 @@ export class SignUpScreen extends Component {
           <Text></Text>
           <Text></Text>
           <Card title="Enter Confirmation Code">
-            <TextInput
+            <Input
               style={{
                 borderColor: "gray",
                 height: 50,
@@ -130,19 +131,41 @@ export class SignUpScreen extends Component {
             <Button
               title="Confirm Confirmation Code"
               onPress={this.enterConfirmationCode}
+              type="outline"
+              raised
             ></Button>
           </Card>
+
+          <View
+            style={{
+              alignItems: "center"
+            }}
+          >
+            <View></View>
+            <Button
+              title="Back"
+              onPress={() => {
+                this.props.navigation.navigate("Login");
+              }}
+              type="outline"
+              raised
+            ></Button>
+          </View>
         </Modal>
         <View
           style={{
-            flex: 0.5,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center"
+            flex: 0.4
+          }}
+        ></View>
+
+        <View
+          style={{
+            flex: 1
           }}
         >
           <Text
             style={{
+              textAlign: "center",
               justifyContent: "flex-start",
               fontFamily: "PingFangTC-Thin",
               fontSize: 30
@@ -150,13 +173,15 @@ export class SignUpScreen extends Component {
           >
             Sign Up
           </Text>
-          <Text
-            style={{
-              flex: 0.2
-            }}
-          ></Text>
+        </View>
 
-          <TextInput
+        <View
+          style={{
+            flex: 3,
+            alignItems: "stretch"
+          }}
+        >
+          <Input
             style={{
               height: 40,
               width: 300,
@@ -169,13 +194,9 @@ export class SignUpScreen extends Component {
             keyboardType="email-address"
             autoFocus={true}
             onChangeText={this.onEmailChange}
+            leftIcon={<Icon name="email" size={20} color="blue" />}
           />
-          <Text
-            style={{
-              flex: 0.03
-            }}
-          ></Text>
-          <TextInput
+          <Input
             style={{
               height: 40,
               width: 300,
@@ -186,23 +207,39 @@ export class SignUpScreen extends Component {
             placeholder="  Password"
             secureTextEntry={true}
             onChangeText={this.onPasswordChange}
+            leftIcon={<Icon name="book" size={20} color="blue" />}
           />
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center"
+            }}
+          >
+            <Text></Text>
+            <Button
+              title="Send confirmation code!"
+              onPress={this.signUp}
+              disabled={this.state.disableConfirmationButton}
+              type="outline"
+              raised
+            ></Button>
+          </View>
+        </View>
 
-          <Text
-            style={{
-              flex: 0.03
-            }}
-          ></Text>
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center"
+          }}
+        >
           <Button
-            title="Send confirmation code!"
-            onPress={this.signUp}
-            disabled={this.state.disableConfirmationButton}
-          ></Button>
-          <Text
-            style={{
-              flex: 0.03
+            title="Back"
+            onPress={() => {
+              this.props.navigation.navigate("Login");
             }}
-          ></Text>
+            type="outline"
+            raised
+          ></Button>
         </View>
       </View>
     );
