@@ -5,6 +5,7 @@ import { InitialScreen } from "./screens/initial.screen";
 import { LoadingScreen } from './screens/loading.screen';
 import { DashboardNavigation } from './screens/main.navigator';
 import {SignUpScreen} from './screens/sign.up.screen';
+import {ForgotPasswordScreen} from './screens/forgot.password.screen';
 
 import Amplify from 'aws-amplify';
 import awsconfig from './aws-exports';
@@ -15,7 +16,8 @@ const switchNavigator = createSwitchNavigator({
   Login: LoginScreen,
   Loading : LoadingScreen,
   Dashboard: DashboardNavigation,
-  SignUp : SignUpScreen
+  SignUp : SignUpScreen,
+  ForgotPassword : ForgotPasswordScreen
 });
 const AppNavigator = createAppContainer(switchNavigator);
 

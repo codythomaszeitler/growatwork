@@ -10,6 +10,7 @@ export class LoginScreen extends Component {
     this.onEmailChange = this.onEmailChange.bind(this);
     this.onPasswordChange = this.onPasswordChange.bind(this);
     this.signUp = this.signUp.bind(this);
+    this.forgotPassword = this.forgotPassword.bind(this);
 
     this.authentication = new Authentication();
 
@@ -42,6 +43,10 @@ export class LoginScreen extends Component {
 
   async signUp() {
     this.props.navigation.navigate("SignUp");
+  }
+
+  async forgotPassword() {
+    this.props.navigation.navigate("ForgotPassword");
   }
 
   async onForgotPassword() {
@@ -138,7 +143,7 @@ export class LoginScreen extends Component {
             type="outline"
             raised
             title="Forgot Password?"
-            onPress={this.signUp}
+            onPress={this.forgotPassword}
           ></Button>
         </View>
       </View>

@@ -48,6 +48,15 @@ export class Authentication {
     return message;
   }
 
+  async signOut() {
+    return await Auth.signOut();
+  }
+
+  async changePassword(oldPassword, newPassword) {
+    const user = await Auth.currentAuthenticatedUser();
+    return await Auth.changePassword(user, oldPassword, newPassword);
+  }
+
   async getCurrentUsername() {
     const currentUser = await Auth.currentAuthenticatedUser();
     return currentUser.username;

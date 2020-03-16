@@ -2,27 +2,14 @@
 import { DashboardScreen } from "./dashboard.screen";
 import { ExcelExportScreen } from "./excel.export.screen";
 import { InputHardWorkEntryScreen } from "./input.hard.work.entry.screen";
-import { View } from "react-native";
+import { View, Modal, Text } from "react-native";
 import React, { Component } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import { Header } from "react-native-elements";
+import {SettingsScreen} from './settings.screen';
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
-
-import { ExcelExportDestinationScreen } from "./excel.export.destination.screen";
-
-const MainStack = createStackNavigator();
-
-function ModalScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ fontSize: 30 }}>This is a modal!</Text>
-      <Button onPress={() => navigation.goBack()} title="Dismiss" />
-    </View>
-  );
-}
 
 const Tab = createBottomTabNavigator();
 function DashboardTabs() {
@@ -84,11 +71,33 @@ export class DashboardNavigation extends Component {
   constructor(props) {
     super(props);
     this.props = props;
+    console.log(this.props);
+
+    this.state = {
+      modalVisible : false
+    }
   }
 
   render() {
     return (
       <NavigationContainer>
+        <Modal animationType="slide"
+        transparent={false}
+        visible={this.state.modalVisible}>
+          <SettingsScreen onCloseCall={() => {
+            this.setState({
+              modalVisible : false
+            });
+          }}
+          onLogOutCall={() => {
+            this.setState({
+              modalVisible : false
+            });
+            this.props.navigation.navigate('Login');
+          }}
+          ></SettingsScreen>
+
+        </Modal>
         <Header
           centerComponent={{
             text: "Grow and Thrive at Work",
@@ -98,7 +107,9 @@ export class DashboardNavigation extends Component {
             icon: "menu",
             color: "#4d7bd1",
             onPress: () => {
-              console.log("we presssed the header button");
+              this.setState({
+                modalVisible : true
+              });
             }
           }}
           backgroundColor={"#ffffff"}
