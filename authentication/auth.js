@@ -20,6 +20,12 @@ export class Authentication {
       if (e.code === 'NotAuthorizedException') {
         throw new Error("Incorrect email or password");
       }
+
+      if (e.code === 'UserNotConfirmedException') {
+        throw new Error('You never confirmed your email. Please use the forgot password link to reset your account.');
+      }
+
+      throw new Error(e.message);
     }
   }
 

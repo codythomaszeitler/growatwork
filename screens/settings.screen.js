@@ -90,7 +90,7 @@ export class SettingsScreen extends Component {
       >
         <View
           style={{
-            flex: 1
+            flex: .5
           }}
         ></View>
         <View
@@ -110,8 +110,7 @@ export class SettingsScreen extends Component {
         </View>
         <View
           style={{
-            flex: 3,
-            width: 400
+            flex: 5,
           }}
         >
           <Card>
