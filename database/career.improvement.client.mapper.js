@@ -9,6 +9,8 @@ export class CareerImprovementClientMapper {
       contents.username
     );
     careerImprovementClient.id = contents.id;
+    careerImprovementClient.type = contents.type;
+
     return careerImprovementClient;
   }
 
@@ -16,7 +18,8 @@ export class CareerImprovementClientMapper {
     return {
       input: {
         username: inMemoryModel.getUsername(),
-        email: inMemoryModel.getEmail()
+        email: inMemoryModel.getEmail(),
+        type: inMemoryModel.type
       }
     };
   }

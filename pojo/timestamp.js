@@ -15,7 +15,7 @@ const months = [
 Object.freeze(months);
 
 export class Timestamp {
-  constructor(year, month, day) {
+  constructor(year, month, day, hour=0, minute=0, second=0) {
     if (!year) {
       throw new Error("Cannot create a timestamp without a year");
     }
@@ -37,15 +37,20 @@ export class Timestamp {
     this.year = year;
     this.month = this.properlyCapitalizeMonth(month);
     this.day = day;
+    this.hour = hour;
+    this.minute = minute;
+    this.second = second;
   }
 
   parseMonthFromInteger(monthIndex) {
-    if (typeof monthIndex === 'string') {
+    if (typeof monthIndex === "string") {
       return monthIndex;
     }
 
     if (monthIndex < 1 || monthIndex > 12) {
-      throw new Error("The given month index [" + monthIndex + "] is not within [1-12]");
+      throw new Error(
+        "The given month index [" + monthIndex + "] is not within [1-12]"
+      );
     }
 
     monthIndex--;
@@ -65,8 +70,18 @@ export class Timestamp {
     const areYearsEqual = this.getYear() === object.getYear();
     const areMonthsEqual = this.getMonth() === object.getMonth();
     const areDaysEqual = this.getDay() === object.getDay();
+    const areHoursEqual = this.getHour() === object.getHour();
+    const areMinutesEqual = this.getMinute() === object.getMinute();
+    const areSecondsEqual = this.getSecond() === object.getSecond();
 
-    return areYearsEqual && areMonthsEqual && areDaysEqual;
+    return (
+      areYearsEqual &&
+      areMonthsEqual &&
+      areDaysEqual &&
+      areHoursEqual &&
+      areMinutesEqual &&
+      areSecondsEqual
+    );
   }
 
   copy() {
@@ -94,6 +109,18 @@ export class Timestamp {
     return this.day;
   }
 
+  getHour() {
+    return this.hour;
+  }
+
+  getMinute() {
+    return this.minute;
+  }
+
+  getSecond() {
+    return this.second;
+  }
+
   isBefore(comparison) {
     const thisDate = this.toDate();
     const comparisonDate = comparison.toDate();
@@ -109,11 +136,22 @@ export class Timestamp {
   }
 
   static fromDate(date) {
-    return new Timestamp(date.getFullYear(), months[date.getMonth()], date.getDate());
+    return new Timestamp(
+      date.getFullYear(),
+      months[date.getMonth()],
+      date.getDate()
+    );
   }
 
   toDate() {
-    return new Date(this.year, this.getMonthIndex(this.month), this.day);
+    return new Date(
+      this.year,
+      this.getMonthIndex(this.month),
+      this.day,
+      this.hour,
+      this.minute,
+      this.second
+    );
   }
 
   getMonthIndex(month) {

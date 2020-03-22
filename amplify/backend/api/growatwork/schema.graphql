@@ -13,6 +13,6 @@ type Achievement @model @auth(rules: [{ allow: owner, operations: [create, read,
 }
 
 type Timestamp {
-  utc: AWSDate!
+  utc: AWSDateTime!
   timezone: String!
 }

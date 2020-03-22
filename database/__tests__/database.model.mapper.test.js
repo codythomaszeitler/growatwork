@@ -17,25 +17,27 @@ describe("Database Model Mapper for Achievement", () => {
     const testObject = new DatabaseModelMapper();
     const databaseModel = testObject.toDatabaseModel(inMemory);
 
-    expect(databaseModel.body.careerImprovementClientId).toBe(
+    expect(databaseModel.input.achievementCareerImprovementClientId).toBe(
       inMemory.careerImprovementClientId
     );
-    expect(databaseModel.body.accomplishment).toBe(
-      inMemory.getAccomplishment()
-    );
-    expect(databaseModel.body.accomplishedOn).toBe(
-      "Wed Jan 01 2020 00:00:00 GMT-0700 (Mountain Standard Time)"
+    expect(databaseModel.input.achievement).toBe(inMemory.getAccomplishment());
+    expect(databaseModel.input.accomplishedOn.utc).toBe(
+      "2020-01-01T00:00:00.000-07:00"
     );
   });
 
   it("should convert from database to in memory", () => {
     const databaseModel = {
-      body: {
-        careerImprovementClientId: 1000,
-        accomplishment: "Test Hard Work Entry",
-        accomplishedOn:
-          "Wed Jan 01 2020 00:00:00 GMT-0700 (Mountain Standard Time)",
-        type : 'achievement'
+      data: {
+        createAchievement: {
+          careerImprovementClientId: 1000,
+          achievement: "Test Hard Work Entry",
+          accomplishedOn: {
+            utc: "2020-01-01T00:00:00.000-07:00",
+            zone: "America/Phoenix"
+          },
+          type: "achievement"
+        }
       }
     };
 
@@ -49,45 +51,52 @@ describe("Database Model Mapper for Achievement", () => {
     expected.careerImprovementClientId =
       databaseModel.careerImprovementClientId;
 
-    expect(inMemoryModel.equals(expected)).toBe(true);
+    expect(inMemoryModel[0].equals(expected)).toBe(true);
   });
 });
 
 describe("Database Model Mapper for Career Improvement Client", () => {
-
-  it('converting from in memory to database', () => {
-    const careerImprovementClient = new CareerImprovementClient("codyzeitler12@gmail.com", "username");
+  it("converting from in memory to database", () => {
+    const careerImprovementClient = new CareerImprovementClient(
+      "codyzeitler12@gmail.com",
+      "username"
+    );
 
     const testObject = new DatabaseModelMapper();
     const databaseModel = testObject.toDatabaseModel(careerImprovementClient);
 
     const expected = {
-      body : {
-        username : "username", 
-        email : "codyzeitler12@gmail.com",
-        type : 'careerimprovementclient'
+      input: {
+        username: "username",
+        email: "codyzeitler12@gmail.com",
+        type: "careerimprovementclient"
       }
-    }
+    };
 
-    expect(databaseModel.body.username).toBe(expected.body.username);
-    expect(databaseModel.body.email).toBe(expected.body.email);
-    expect(databaseModel.body.type).toBe(expected.body.type);
+    expect(databaseModel.input.username).toBe(expected.input.username);
+    expect(databaseModel.input.email).toBe(expected.input.email);
+    expect(databaseModel.input.type).toBe(expected.input.type);
   });
 
-  it('should convert from database to in memory', () => {
+  it("should convert from database to in memory", () => {
     const databaseModel = {
-      body : {
-        username : "username", 
-        email : "codyzeitler12@gmail.com",
-        type : 'careerimprovementclient'
+      data: {
+        listCareerImprovementClients: {
+          items: [
+            {
+              username: "username",
+              email: "codyzeitler12@gmail.com",
+              type: "careerimprovementclient"
+            }
+          ]
+        }
       }
-    }
+    };
 
     const testObject = new DatabaseModelMapper();
     const inMemoryModel = testObject.toInMemoryModel(databaseModel);
 
-    expect(databaseModel.body.username).toEqual(inMemoryModel.getUsername());
-    expect(databaseModel.body.email).toEqual(inMemoryModel.getEmail());
-
+    expect("username").toEqual(inMemoryModel.getUsername());
+    expect("codyzeitler12@gmail.com").toEqual(inMemoryModel.getEmail());
   });
 });

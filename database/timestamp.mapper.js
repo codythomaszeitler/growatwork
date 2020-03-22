@@ -6,7 +6,7 @@ export class TimestampMapper {
     const datetime = DateTime.fromJSDate(timestamp.toDate());
 
     const databaseModel = {
-        utc : datetime.toISODate(),
+        utc : datetime.toISO(),
         timezone : datetime.zoneName
     }
     return databaseModel;
@@ -17,7 +17,7 @@ export class TimestampMapper {
       zone : databaseModel.timezone
     });
 
-    const timestamp = new Timestamp(datetime.year, datetime.month, datetime.day);
+    const timestamp = new Timestamp(datetime.year, datetime.month, datetime.day, datetime.hour, datetime.minute, datetime.second);
     return timestamp;
   }
 }

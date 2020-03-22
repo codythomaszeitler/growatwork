@@ -8,8 +8,18 @@ export class DatabaseModelMapper {
   }
 
   toInMemoryModel(databaseModel) {
+    const getType = () => {
+      let type = null;
+      if (databaseModel.data.createAchievement) {
+        type = "achievement";
+      } else if (databaseModel.data.listCareerImprovementClients) {
+        type = "careerimprovementclient";
+      }
+      return type;
+    };
+
     const factory = new MapperFactory();
-    const mapper = factory.create(databaseModel.body.type);
+    const mapper = factory.create(getType());
     return mapper.toInMemoryModel(databaseModel);
   }
 }
