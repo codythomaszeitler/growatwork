@@ -52,7 +52,6 @@ class Database {
   }
 
   async onLog(event) {
-    console.log(event);
     const achievement = event.logged;
     achievement.achievementCareerImprovementClientId = event.careerImprovementClient.id;
     await this.create(event.logged);

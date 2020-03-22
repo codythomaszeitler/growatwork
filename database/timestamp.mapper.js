@@ -17,7 +17,7 @@ export class TimestampMapper {
       zone : databaseModel.timezone
     });
 
-    const timestamp = new Timestamp(datetime.year, datetime.month, datetime.day, datetime.hour, datetime.minute, datetime.second);
+    const timestamp = new Timestamp(datetime.year, datetime.month, datetime.day, datetime.hour, datetime.minute, datetime.second, datetime.millisecond);
     return timestamp;
   }
 }

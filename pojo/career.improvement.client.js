@@ -50,7 +50,15 @@ export class CareerImprovementClient {
     }
     this.checkForDuplicate(hardWorkEntry);
 
-    this.hardWorkEntries.unshift(hardWorkEntry.copy());
+    let insertionIndex = this.hardWorkEntries.length;
+    for (let i = 0; i < this.hardWorkEntries.length; i++) {
+      if (!hardWorkEntry.isAfter(this.hardWorkEntries[i])) {
+        insertionIndex = i;
+        break;
+      }
+    }
+
+    this.hardWorkEntries.splice(insertionIndex, 0, hardWorkEntry.copy());
     this.emitOnLogEvent(hardWorkEntry.copy());
   }
 

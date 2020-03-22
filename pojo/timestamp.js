@@ -1,3 +1,5 @@
+import {DateTime} from "luxon";
+
 const months = [
   "January",
   "February",
@@ -15,7 +17,7 @@ const months = [
 Object.freeze(months);
 
 export class Timestamp {
-  constructor(year, month, day, hour=0, minute=0, second=0) {
+  constructor(year, month, day, hour=0, minute=0, second=0, millisecond=0) {
     if (!year) {
       throw new Error("Cannot create a timestamp without a year");
     }
@@ -40,6 +42,7 @@ export class Timestamp {
     this.hour = hour;
     this.minute = minute;
     this.second = second;
+    this.millisecond = millisecond;
   }
 
   parseMonthFromInteger(monthIndex) {
@@ -59,7 +62,8 @@ export class Timestamp {
   }
 
   toString() {
-    return this.toDate().toLocaleDateString();
+    const luxonDateTime = DateTime.fromJSDate(this.toDate());
+    return luxonDateTime.toString();
   }
 
   equals(object) {
@@ -73,6 +77,7 @@ export class Timestamp {
     const areHoursEqual = this.getHour() === object.getHour();
     const areMinutesEqual = this.getMinute() === object.getMinute();
     const areSecondsEqual = this.getSecond() === object.getSecond();
+    const areMillisecondsEqual = this.getMillisecond() === object.getMillisecond();
 
     return (
       areYearsEqual &&
@@ -80,12 +85,13 @@ export class Timestamp {
       areDaysEqual &&
       areHoursEqual &&
       areMinutesEqual &&
-      areSecondsEqual
+      areSecondsEqual &&
+      areMillisecondsEqual
     );
   }
 
   copy() {
-    return new Timestamp(this.year, this.month, this.day, this.hour, this.minute, this.second);
+    return new Timestamp(this.year, this.month, this.day, this.hour, this.minute, this.second, this.millisecond);
   }
 
   properlyCapitalizeMonth(month) {
@@ -120,6 +126,10 @@ export class Timestamp {
   getSecond() {
     return this.second;
   }
+  
+  getMillisecond() {
+    return this.millisecond;
+  }
 
   isBefore(comparison) {
     const thisDate = this.toDate();
@@ -150,7 +160,8 @@ export class Timestamp {
       this.day,
       this.hour,
       this.minute,
-      this.second
+      this.second,
+      this.millisecond
     );
   }
 
@@ -167,7 +178,8 @@ export class Timestamp {
       todayAsDate.getDate(),
       todayAsDate.getHours(),
       todayAsDate.getMinutes(),
-      todayAsDate.getSeconds()
+      todayAsDate.getSeconds(),
+      todayAsDate.getMilliseconds()
     );
 
     return timestamp;

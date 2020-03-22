@@ -23,6 +23,42 @@ describe("Career Improvement Client", () => {
     expect(entries).toContainEqual(new HardWorkEntry("Third!", timestamp));
   });
 
+  it('should get hard work in order from earliest to latest when they are added in order', () => {
+    const first = new HardWorkEntry("First", new Timestamp(2018, "January", 1, 1, 1, 1));
+    const second = new HardWorkEntry("Second", new Timestamp(2018, "January", 1, 2, 1, 1));
+    const third = new HardWorkEntry("Third", new Timestamp(2018, "January", 1, 3, 1, 1));
+
+    testObject.log(first);
+    testObject.log(second);
+    testObject.log(third);
+
+    const entries = testObject.getHardWork();
+    expect(entries.length).toBe(3);
+
+    expect(entries[0]).toEqual(first);
+    expect(entries[1]).toEqual(second);
+    expect(entries[2]).toEqual(third);
+
+  });
+
+  it('should get hard work in order from earliest to latest even when added out of order', () => {
+    const first = new HardWorkEntry("First", new Timestamp(2018, "January", 1, 1, 1, 1));
+    const second = new HardWorkEntry("Second", new Timestamp(2018, "January", 1, 2, 1, 1));
+    const third = new HardWorkEntry("Third", new Timestamp(2018, "January", 1, 3, 1, 1));
+
+    testObject.log(second);
+    testObject.log(first);
+    testObject.log(third);
+
+    const entries = testObject.getHardWork();
+    expect(entries.length).toBe(3);
+
+    expect(entries[0]).toEqual(first);
+    expect(entries[1]).toEqual(second);
+    expect(entries[2]).toEqual(third);
+
+  });
+
   it('should be able to get achievements within two timestamp ranges', () => {
     const fromTimestamp = new Timestamp(2019, 'January', 1);
     const toTimestamp = new Timestamp(2019, 'January', 31);

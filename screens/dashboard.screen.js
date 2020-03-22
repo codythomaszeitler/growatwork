@@ -11,8 +11,10 @@ export class DashboardScreen extends Component {
     const client = datastore().get();
     client.addOnLogListener(this);
 
+    this.generateUniqueKey = this.generateUniqueKey.bind(this);
+
     this.state = {
-      entries: client.getHardWork(),
+      entries: client.getHardWork().reverse(),
       modalVisible: !this.hasAchievements()
     };
   }
@@ -41,12 +43,16 @@ export class DashboardScreen extends Component {
     client.log(entry);
   }
 
+  generateUniqueKey(accomplishment) {
+    return accomplishment.getAccomplishment() + accomplishment.getAccomplishedOn().toString(); 
+   }
+
   render() {
     return (
       <View>
         <FlatList
           data={this.state.entries}
-          keyExtractor={item => item.accomplishment}
+          keyExtractor={(item) => {return this.generateUniqueKey(item)}}
           renderItem={({ item }) => (
             <HardWorkEntryScreenSegment
               hardWorkEntry={item}
