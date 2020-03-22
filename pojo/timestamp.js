@@ -85,7 +85,7 @@ export class Timestamp {
   }
 
   copy() {
-    return new Timestamp(this.year, this.month, this.day);
+    return new Timestamp(this.year, this.month, this.day, this.hour, this.minute, this.second);
   }
 
   properlyCapitalizeMonth(month) {
@@ -164,7 +164,10 @@ export class Timestamp {
     const timestamp = new Timestamp(
       todayAsDate.getFullYear(),
       months[todayAsDate.getMonth()],
-      todayAsDate.getDate()
+      todayAsDate.getDate(),
+      todayAsDate.getHours(),
+      todayAsDate.getMinutes(),
+      todayAsDate.getSeconds()
     );
 
     return timestamp;
