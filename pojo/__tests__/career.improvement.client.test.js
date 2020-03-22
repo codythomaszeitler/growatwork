@@ -56,7 +56,6 @@ describe("Career Improvement Client", () => {
     expect(entries[0]).toEqual(first);
     expect(entries[1]).toEqual(second);
     expect(entries[2]).toEqual(third);
-
   });
 
   it('should be able to get achievements within two timestamp ranges', () => {
@@ -71,6 +70,46 @@ describe("Career Improvement Client", () => {
 
     const achievements = testObject.getAchievements(fromTimestamp, toTimestamp);
     expect(achievements.length).toBe(3);
+  });
+
+  it('should be able to remove an accomplishment from the client', () => {
+    const first = new HardWorkEntry("First", new Timestamp(2018, "January", 1, 1, 1, 1));
+    const second = new HardWorkEntry("Second", new Timestamp(2018, "January", 1, 2, 1, 1));
+    const third = new HardWorkEntry("Third", new Timestamp(2018, "January", 1, 3, 1, 1));
+
+    testObject.log(second);
+    testObject.log(first);
+    testObject.log(third);
+
+    testObject.remove(second);
+    const entries = testObject.getHardWork();
+
+    expect(entries.length).toBe(2);
+
+    expect(entries[0].equals(first)).toBe(true);
+    expect(entries[1].equals(third)).toBe(true);
+  });
+
+  it('should fire an event when an accomplishment is removed from the client', () => {
+    const first = new HardWorkEntry("First", new Timestamp(2018, "January", 1, 1, 1, 1));
+    const second = new HardWorkEntry("Second", new Timestamp(2018, "January", 1, 2, 1, 1));
+    const third = new HardWorkEntry("Third", new Timestamp(2018, "January", 1, 3, 1, 1));
+
+    testObject.log(second);
+    testObject.log(first);
+    testObject.log(third);
+
+
+    let caughtEvent;
+    const listener = {
+      onLogRemoved : function(removeAccomplishmentEvent) {
+        caughtEvent = removeAccomplishmentEvent;
+      }
+    };
+    testObject.addOnLogRemovedListener(listener);
+    testObject.remove(second);
+
+    expect(caughtEvent.removed.equals(second)).toBe(true);
   });
 
   it('should be able to get the earliest achievment', () => {

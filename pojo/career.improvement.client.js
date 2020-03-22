@@ -5,12 +5,20 @@ class OnLogEvent {
   }
 }
 
+class OnLogRemovedEvent {
+  constructor(entry, careerImprovementClient) {
+    this.removed = entry.copy();
+    this.careerImprovementClient = careerImprovementClient;
+  }
+}
+
 export const type = "careerimprovementclient";
 
 export class CareerImprovementClient {
   constructor(email, username) {
     this.hardWorkEntries = [];
-    this.listeners = [];
+    this.onLogAddListeners = [];
+    this.onLogRemovedListeners = [];
     this.type = type;
     this.email = email;
     this.username = username;
@@ -63,8 +71,8 @@ export class CareerImprovementClient {
   }
 
   emitOnLogEvent(hardWorkEntry) {
-    for (let i = 0; i < this.listeners.length; i++) {
-      const listener = this.listeners[i];
+    for (let i = 0; i < this.onLogAddListeners.length; i++) {
+      const listener = this.onLogAddListeners[i];
       listener.onLog(new OnLogEvent(hardWorkEntry, this));
     }
   }
@@ -74,13 +82,38 @@ export class CareerImprovementClient {
       throw new Error("Cannot add a listener that does not exist");
     }
 
-    this.listeners.push(listener);
+    this.onLogAddListeners.push(listener);
   }
 
   checkForDuplicate(toCheck) {
     if (this.contains(toCheck)) {
       throw new Error("Cannot add the same hard work entry twice");
     }
+  }
+
+  remove(hardWorkEntry) {
+
+    let deletionIndex = -1;
+    for (let i = 0; i < this.hardWorkEntries.length; i++) {
+      if (hardWorkEntry.equals(this.hardWorkEntries[i])) {
+        deletionIndex = i;
+        break;
+      }
+    }
+
+    this.hardWorkEntries.splice(deletionIndex, 1);
+    this.emitOnLogRemovedEvent(hardWorkEntry);
+  }
+
+  emitOnLogRemovedEvent(hardWorkEntry) {
+    for (let i = 0; i < this.onLogRemovedListeners.length; i++) {
+      const listener = this.onLogRemovedListeners[i];
+      listener.onLogRemoved(new OnLogRemovedEvent(hardWorkEntry, this));
+    }
+  }
+
+  addOnLogRemovedListener(listener) {
+    this.onLogRemovedListeners.push(listener);
   }
 
   getHardWork() {

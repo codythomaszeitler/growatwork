@@ -35,6 +35,7 @@ export class LoadingScreen extends Component {
 
     datastore().set(careerImprovementClient);
     careerImprovementClient.addOnLogListener(database());
+    careerImprovementClient.addOnLogRemovedListener(database());
 
     this.props.navigation.navigate("Dashboard");
   }

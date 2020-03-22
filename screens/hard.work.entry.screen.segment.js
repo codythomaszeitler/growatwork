@@ -1,7 +1,13 @@
 import React, { Component } from "react";
-import { View, Image } from "react-native";
+import { View } from "react-native";
 import { ListItem } from "react-native-elements";
 import logo from "../checkbox.png";
+
+class OnPressEvent {
+  constructor(accomplishment) {
+    this.accomplishment = accomplishment.copy();
+  }
+}
 
 export class HardWorkEntryScreenSegment extends Component {
   constructor(props) {
@@ -10,10 +16,15 @@ export class HardWorkEntryScreenSegment extends Component {
     this.generateUniqueKey = this.generateUniqueKey.bind(this);
     this.getDateView = this.getDateView.bind(this);
     this.onPress = this.onPress.bind(this);
+
+    this.onPressListeners = [this.props.onPressListener];
   }
 
-  onPress(event) {
-    console.log(event);
+  onPress() {
+    for (let i = 0; i < this.onPressListeners.length; i++) {
+      const listener = this.onPressListeners[i];
+      listener.onPress(new OnPressEvent(this.props.hardWorkEntry));
+    }
   }
 
   generateUniqueKey() {
@@ -36,25 +47,25 @@ export class HardWorkEntryScreenSegment extends Component {
           paddingHorizontal: 10
         }}
       >
-        <ListItem
-          key={this.generateUniqueKey(this.props.hardWorkEntry)}
-          title={this.props.hardWorkEntry.getAccomplishment()}
-          titleStyle={{
-            marginLeft: 15
-          }}
-          onPress={this.onPress}
-          leftAvatar={{ source: logo }}
-          subtitle={this.getDateView(
-            this.props.hardWorkEntry.getAccomplishedOn()
-          )}
-          bottomDivider
-          chevron
-          friction={90}
-          tension={100}
-          subtitleStyle={{
-            marginLeft: 35
-          }}
-        />
+          <ListItem
+            key={this.generateUniqueKey(this.props.hardWorkEntry)}
+            title={this.props.hardWorkEntry.getAccomplishment()}
+            titleStyle={{
+              marginLeft: 15
+            }}
+            onPress={this.onPress}
+            leftAvatar={{ source: logo }}
+            subtitle={this.getDateView(
+              this.props.hardWorkEntry.getAccomplishedOn()
+            )}
+            bottomDivider
+            chevron
+            friction={90}
+            tension={100}
+            subtitleStyle={{
+              marginLeft: 35
+            }}
+          />
       </View>
     );
   }

@@ -1,39 +1,53 @@
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import Amplify, { API, graphqlOperation } from "aws-amplify";
 import { DatabaseModelMapper } from "./database.model.mapper";
-import * as mutations from '../graphql/mutations';
+import * as mutations from "../graphql/mutations";
 
 class Database {
   constructor() {
     this.mapper = new DatabaseModelMapper();
   }
 
-  async read(query, filter={}) {
+  async read(query, filter = {}) {
     const readResults = await API.graphql(graphqlOperation(query, filter));
     return readResults;
+  }
+
+  async delete(inMemory) {
+    const operation = this.getDeleteOperation(inMemory.type);
+    const params = {
+      input: {
+        id: inMemory.id
+      }
+    };
+    await API.graphql(graphqlOperation(operation, params));
+  }
+
+  getDeleteOperation(type) {
+    let deleteGraphQlOperation = "";
+    if (type === "achievement") {
+      deleteGraphQlOperation = mutations.deleteAchievement;
+    } else if (type === "careerimprovementclient") {
+      deleteGraphQlOperation = mutations.deleteCareerImprovementClient;
+    }
+    return deleteGraphQlOperation;
   }
 
   async create(inMemory) {
     const databaseModel = this.mapper.toDatabaseModel(inMemory);
 
     const operation = this.getCreateOperation(inMemory.type);
-    try {
-      await API.graphql(graphqlOperation(operation, databaseModel));
-    } catch (e) {
-      console.log(e);
-    }
+    await API.graphql(graphqlOperation(operation, databaseModel));
   }
 
   getCreateOperation(type) {
-    let createGraphQlOperation = '';
-    if (type === 'achievement') {
+    let createGraphQlOperation = "";
+    if (type === "achievement") {
       createGraphQlOperation = mutations.createAchievement;
-    } else if (type === 'careerimprovementclient') {
+    } else if (type === "careerimprovementclient") {
       createGraphQlOperation = mutations.createCareerImprovementClient;
     }
     return createGraphQlOperation;
   }
-
-  update(inMemory) {}
 
   getAPIName() {
     return "database";
@@ -53,8 +67,13 @@ class Database {
 
   async onLog(event) {
     const achievement = event.logged;
-    achievement.achievementCareerImprovementClientId = event.careerImprovementClient.id;
+    achievement.achievementCareerImprovementClientId =
+      event.careerImprovementClient.id;
     await this.create(event.logged);
+  }
+
+  async onLogRemoved(event) {
+    await this.delete(event.removed);
   }
 }
 
