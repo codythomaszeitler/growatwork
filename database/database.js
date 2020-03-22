@@ -8,7 +8,8 @@ class Database {
   }
 
   async read(query, filter={}) {
-    return await API.graphql(graphqlOperation(query));
+    const readResults = await API.graphql(graphqlOperation(query, filter));
+    return readResults;
   }
 
   async create(inMemory) {
@@ -51,6 +52,9 @@ class Database {
   }
 
   async onLog(event) {
+    console.log(event);
+    const achievement = event.logged;
+    achievement.achievementCareerImprovementClientId = event.careerImprovementClient.id;
     await this.create(event.logged);
   }
 }

@@ -36,7 +36,9 @@ export class HardWorkEntry {
   }
 
   copy() {
-    return new HardWorkEntry(this.getAccomplishment(), this.getAccomplishedOn());
+    const copied = new HardWorkEntry(this.getAccomplishment(), this.getAccomplishedOn()); 
+    copied.id = copied;
+    return copied;
   }
 
   getAccomplishment() {

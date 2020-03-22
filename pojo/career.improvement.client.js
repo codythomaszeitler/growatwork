@@ -1,6 +1,7 @@
 class OnLogEvent {
-  constructor(entry) {
+  constructor(entry, careerImprovementClient) {
     this.logged = entry.copy();
+    this.careerImprovementClient = careerImprovementClient;
   }
 }
 
@@ -13,6 +14,7 @@ export class CareerImprovementClient {
     this.type = type;
     this.email = email;
     this.username = username;
+    this.id = null;
   }
 
   getUsername() {
@@ -55,7 +57,7 @@ export class CareerImprovementClient {
   emitOnLogEvent(hardWorkEntry) {
     for (let i = 0; i < this.listeners.length; i++) {
       const listener = this.listeners[i];
-      listener.onLog(new OnLogEvent(hardWorkEntry));
+      listener.onLog(new OnLogEvent(hardWorkEntry, this));
     }
   }
 

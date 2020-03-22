@@ -38,7 +38,6 @@ export class DashboardScreen extends Component {
 
   add(entry) {
     const client = datastore().get();
-    entry.achievementCareerImprovementClientId = client.id;
     client.log(entry);
   }
 
