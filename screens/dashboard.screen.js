@@ -4,6 +4,7 @@ import { Text, Button, Card, Icon, Input } from "react-native-elements";
 import { HardWorkEntryScreenSegment } from "./hard.work.entry.screen.segment";
 import { datastore } from "../datastore/datastore";
 import { HardWorkEntry } from "../pojo/hard.work.entry";
+import { ChangeAccomplishmentService } from "../service/change.accomplishment.service";
 
 export class DashboardScreen extends Component {
   constructor(props) {
@@ -19,14 +20,16 @@ export class DashboardScreen extends Component {
     this.onBack = this.onBack.bind(this);
     this.onSave = this.onSave.bind(this);
     this.onDelete = this.onDelete.bind(this);
-    this.onAccomplishmentTextChange = this.onAccomplishmentTextChange.bind(this);
+    this.onAccomplishmentTextChange = this.onAccomplishmentTextChange.bind(
+      this
+    );
 
     this.state = {
       entries: this.client.getHardWork().reverse(),
       modalVisible: false,
-      accomplishmentText : '',
-      defaultValue : '',
-      accomplishment : null
+      accomplishmentText: "",
+      defaultValue: "",
+      accomplishment: null
     };
   }
 
@@ -51,11 +54,10 @@ export class DashboardScreen extends Component {
   }
 
   onLogRemoved(event) {
-
     console.log(this.client.getHardWork());
 
     this.setState({
-      entries : this.client.getHardWork().reverse()
+      entries: this.client.getHardWork().reverse()
     });
   }
 
@@ -70,51 +72,58 @@ export class DashboardScreen extends Component {
     );
   }
 
-  onSave() {
+  async onSave() {
     const accomplishment = this.state.accomplishment.copy();
     const text = this.state.accomplishmentText;
 
-    this.client.remove(accomplishment);
-
-    const newAccomplishment = new HardWorkEntry(text, accomplishment.getAccomplishedOn());
-    this.client.log(newAccomplishment);
-
-    this.setState({
-      modalVisible : false,
-      defaultValue : '',
-      accomplishment : null
-    });
+    try {
+      const changeAccomplishmentService = new ChangeAccomplishmentService(
+        database()
+      );
+      await changeAccomplishmentService.change(
+        this.client,
+        accomplishment,
+        text
+      );
+      this.setState({
+        modalVisible: false,
+        defaultValue: "",
+        accomplishment: null
+      });
+    } catch (e) {
+      Alert.alert('Could not change accomplishment', e.message);
+    }
   }
 
   onDelete() {
     const accomplishment = this.state.accomplishment.copy();
     this.client.remove(accomplishment);
     this.setState({
-      modalVisible : false,
-      defaultValue : '',
-      accomplishment : null
+      modalVisible: false,
+      defaultValue: "",
+      accomplishment: null
     });
   }
 
   onPress(event) {
     this.setState({
       modalVisible: true,
-      defaultValue : event.accomplishment.getAccomplishment(),
-      accomplishment : event.accomplishment
+      defaultValue: event.accomplishment.getAccomplishment(),
+      accomplishment: event.accomplishment
     });
   }
 
   onBack() {
     this.setState({
-      modalVisible : false,
-      defaultValue : '',
-      accomplishment : null
+      modalVisible: false,
+      defaultValue: "",
+      accomplishment: null
     });
   }
 
   onAccomplishmentTextChange(accomplishmentText) {
     this.setState({
-      accomplishmentText : accomplishmentText
+      accomplishmentText: accomplishmentText
     });
   }
 
@@ -180,9 +189,11 @@ export class DashboardScreen extends Component {
                   title="Save"
                 />
               </Card>
-              <View style={{
-                flex : .2
-              }}></View>
+              <View
+                style={{
+                  flex: 0.2
+                }}
+              ></View>
               <Card>
                 <Button
                   buttonStyle={{
@@ -196,10 +207,12 @@ export class DashboardScreen extends Component {
                 />
               </Card>
             </View>
-            <View style={{
-              flex : 1,
-              alignSelf : 'stretch'
-            }}>
+            <View
+              style={{
+                flex: 1,
+                alignSelf: "stretch"
+              }}
+            >
               <Card>
                 <Button
                   buttonStyle={{
@@ -213,8 +226,7 @@ export class DashboardScreen extends Component {
                 />
               </Card>
             </View>
-            <View style={{flex: 1}}
-            ></View>
+            <View style={{ flex: 1 }}></View>
           </View>
         </Modal>
         <FlatList
