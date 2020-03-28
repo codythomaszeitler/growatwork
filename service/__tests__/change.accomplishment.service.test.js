@@ -53,7 +53,7 @@ describe('Change Accomplishment Service', () => {
             caughtException = e;
         }
 
-        expect(caughtException.message).toBe('Could not read accomplishments from database');
+        expect(caughtException.message).toBe("Could not find accomplishments from database because of [NOTCONNECTED]");
     });
 
     it('should throw an exception if the delete call to the database fails', async () => {
@@ -74,7 +74,7 @@ describe('Change Accomplishment Service', () => {
             caughtException = e;
         }
 
-        expect(caughtException.message).toBe('Could not delete accomplishment from database');
+        expect(caughtException.message).toBe("Delete call to database failed");
     });
 
     it('should throw an exception if the create call to the database fails', async () => {
@@ -109,6 +109,6 @@ describe('Change Accomplishment Service', () => {
             caughtException = e;
         }
 
-        expect(caughtException.message).toBe('Could not find accomplishment [' + accomplishment.toString() + '] within the database');
+        expect(caughtException.message).toBe('Could not find an accomplishment matching [' + accomplishment.toString() + '] within the database');
     });
 });
