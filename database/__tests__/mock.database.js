@@ -78,15 +78,23 @@ export class MockDatabase {
   }
 
   delete(inMemoryObjects) {
+    if (!Array.isArray(inMemoryObjects)) {
+      this.deleteInMemoryObject(inMemoryObjects);
+    }
+
     for (let i = 0; i < inMemoryObjects.length; i++) {
       const inMemory = inMemoryObjects[i];
-      if (inMemory.type === HardWorkEntry.getType()) {
-        this.database.data.listAchievements.items = this.database.data.listAchievements.items.filter(
-          function(accomplishment) {
-            return accomplishment.id !== inMemory.id;
-          }
-        );
-      }
+      this.deleteInMemoryObject(inMemory);
+    }
+  }
+
+  deleteInMemoryObject(inMemory) {
+    if (inMemory.type === HardWorkEntry.getType()) {
+      this.database.data.listAchievements.items = this.database.data.listAchievements.items.filter(
+        function(accomplishment) {
+          return accomplishment.id !== inMemory.id;
+        }
+      );
     }
   }
 }
