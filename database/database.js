@@ -2,6 +2,17 @@ import Amplify, { API, graphqlOperation } from "aws-amplify";
 import { DatabaseModelMapper } from "./database.model.mapper";
 import * as mutations from "../graphql/mutations";
 
+export class Query {
+  constructor(graphQl, params) {
+      this.graphQl = graphQl;
+      this.params = params;
+  }
+
+  toString() {
+      return this.graphQl + JSON.stringify(this.params);
+  }
+}
+
 class Database {
   constructor() {
     this.mapper = new DatabaseModelMapper();

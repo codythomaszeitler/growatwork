@@ -1,10 +1,23 @@
 import { AchievementMapper } from "./achievement.mapper";
+import {Query} from '../database/database';
 import * as queries from "../graphql/queries";
 
 export class AchievementFinder {
   constructor(database) {
     this.database = database;
     this.numRecordsPerQuery = 100000;
+  }
+
+  async findByAccomplishment(toFind) {
+    const query = new Query(queries.listAchievements);
+    const readResults = await this.database.read(query);
+
+    const mapper = new AchievementMapper();
+    const accomplishments = mapper.toInMemoryModel(readResults); 
+
+    return accomplishments.filter(function(accomplishment) {
+      return accomplishment.equals(toFind);
+    });
   }
 
   async findByUsername(username) {
