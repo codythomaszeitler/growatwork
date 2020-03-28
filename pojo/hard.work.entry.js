@@ -12,8 +12,12 @@ export class HardWorkEntry {
     }
 
     this.accomplishment = accomplishment;
-    this.timestamp = timestamp;
+    this.timestamp = timestamp.copy();
     this.type = HardWorkEntry.getType();
+  }
+
+  toString() {
+    return this.accomplishment + this.timestamp.toString();
   }
 
   static getType() {

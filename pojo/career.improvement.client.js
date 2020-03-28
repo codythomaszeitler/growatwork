@@ -12,17 +12,19 @@ class OnLogRemovedEvent {
   }
 }
 
-export const type = "careerimprovementclient";
-
 export class CareerImprovementClient {
   constructor(email, username) {
     this.hardWorkEntries = [];
     this.onLogAddListeners = [];
     this.onLogRemovedListeners = [];
-    this.type = type;
+    this.type = CareerImprovementClient.getType();
     this.email = email;
     this.username = username;
     this.id = null;
+  }
+
+  static getType() {
+    return "careerimprovementclient";
   }
 
   getUsername() {

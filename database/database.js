@@ -1,6 +1,8 @@
-import Amplify, { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import { DatabaseModelMapper } from "./database.model.mapper";
 import * as mutations from "../graphql/mutations";
+import {HardWorkEntry} from '../pojo/hard.work.entry';
+import {CareerImprovementClient} from '../pojo/career.improvement.client';
 
 export class Query {
   constructor(graphQl, params) {
@@ -35,9 +37,9 @@ class Database {
 
   getDeleteOperation(type) {
     let deleteGraphQlOperation = "";
-    if (type === "achievement") {
+    if (type === HardWorkEntry.getType()) {
       deleteGraphQlOperation = mutations.deleteAchievement;
-    } else if (type === "careerimprovementclient") {
+    } else if (type === CareerImprovementClient.getType()) {
       deleteGraphQlOperation = mutations.deleteCareerImprovementClient;
     }
     return deleteGraphQlOperation;
@@ -52,7 +54,7 @@ class Database {
 
   getCreateOperation(type) {
     let createGraphQlOperation = "";
-    if (type === "achievement") {
+    if (type === HardWorkEntry.getType()) {
       createGraphQlOperation = mutations.createAchievement;
     } else if (type === "careerimprovementclient") {
       createGraphQlOperation = mutations.createCareerImprovementClient;
