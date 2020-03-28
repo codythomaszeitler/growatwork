@@ -1,4 +1,5 @@
 import { CareerImprovementClientMapper } from "./career.improvement.client.mapper";
+import {Query} from "./database";
 import * as queries from '../graphql/queries';
 
 export class CareerImprovementClientFinder {
@@ -7,9 +8,11 @@ export class CareerImprovementClientFinder {
   }
 
   async findByUsername(username) {
+    const query = new Query(queries.listCareerImprovementClients);
+
     let readResults;
     try {
-      readResults = await this.database.read(queries.listCareerImprovementClients);
+      readResults = await this.database.read(query);
     } catch (e) {
       console.log(e);
     }

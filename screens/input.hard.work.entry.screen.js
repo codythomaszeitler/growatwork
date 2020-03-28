@@ -5,8 +5,13 @@ import { datastore } from "../datastore/datastore";
 import { HardWorkEntry } from "../pojo/hard.work.entry";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Timestamp } from "../pojo/timestamp";
-import { Keyboard } from 'react-native'
-import Toast from 'react-native-root-toast';
+import { Keyboard } from "react-native";
+import Toast from "react-native-root-toast";
+import {
+  LogAccomplishmentService
+} from "../service/log.accomplishment.service";
+import { database } from "../database/database";
+import {Alert} from 'react-native';
 
 export class InputHardWorkEntryScreen extends Component {
   constructor(props) {
@@ -28,7 +33,7 @@ export class InputHardWorkEntryScreen extends Component {
     });
   }
 
-  onPress() {
+  async onPress() {
     if (!this.state.accomplishment) {
       return;
     }
@@ -38,22 +43,26 @@ export class InputHardWorkEntryScreen extends Component {
       Timestamp.today()
     );
 
-    const client = datastore().get();
-    if (!client.contains(newEntry)) {
-      client.log(newEntry);
+    try {
+      const client = datastore().get();
+
+      const logAccomplishmentService = new LogAccomplishmentService(database());
+      await logAccomplishmentService.log(client, newEntry);
       Keyboard.dismiss();
 
-      Toast.show('Accomplishment Successfully Added!', {
+      Toast.show("Accomplishment Successfully Added!", {
         duration: Toast.durations.LONG,
         position: Toast.positions.TOP,
         shadow: true,
         animation: true,
         hideOnPress: true,
         delay: 0,
-        backgroundColor	: '#1ec96b',
-        opacity : 1
-    });
-    this.myTextInput.current.clear();
+        backgroundColor: "#1ec96b",
+        opacity: 1
+      });
+      this.myTextInput.current.clear();
+    } catch (e) {
+      Alert.alert('Could not log accomplishment', e.message);
     }
   }
 

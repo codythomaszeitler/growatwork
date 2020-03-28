@@ -1,5 +1,5 @@
 import { AchievementMapper } from "./achievement.mapper";
-import {Query} from '../database/database';
+import { Query } from "../database/database";
 import * as queries from "../graphql/queries";
 
 export class AchievementFinder {
@@ -10,10 +10,23 @@ export class AchievementFinder {
 
   async findByAccomplishment(toFind) {
     const query = new Query(queries.listAchievements);
-    const readResults = await this.database.read(query);
+    let readResults;
+
+    try {
+      readResults = await this.database.read(query);
+    } catch (e) {
+      throw new Error(
+        "Could not find accomplishments from database because of [" +
+          e.message +
+          "]"
+      );
+    }
+    if (!readResults) {
+      throw new Error('Database read with query [queries.listAchievements] returned nothing');
+    }
 
     const mapper = new AchievementMapper();
-    const accomplishments = mapper.toInMemoryModel(readResults); 
+    const accomplishments = mapper.toInMemoryModel(readResults);
 
     return accomplishments.filter(function(accomplishment) {
       return accomplishment.equals(toFind);
@@ -36,22 +49,21 @@ export class AchievementFinder {
   }
 
   async readAllAchievements() {
-      const achievements = [];
+    const achievements = [];
 
-      let nextToken = undefined;
-      do {
-        let readResults = await this.database.read(queries.listAchievements, {
-          limit: this.numRecordsPerQuery,
-          nextToken : nextToken
-        });
-  
-        achievements.push(
-          ...readResults.data.listAchievements.items
-        );
-  
-        nextToken = readResults.data.listAchievements.nextToken;
-      } while (nextToken);
+    let nextToken = undefined;
+    do {
+      const query = new Query(queries.listAchievements, {
+        limit : this.numRecordsPerQuery,
+        nextToken : nextToken
+      });
+      let readResults = await this.database.read(query);
 
-      return achievements;
+      achievements.push(...readResults.data.listAchievements.items);
+
+      nextToken = readResults.data.listAchievements.nextToken;
+    } while (nextToken);
+
+    return achievements;
   }
 }

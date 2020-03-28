@@ -1,34 +1,65 @@
+import {TimestampMapper} from '../timestamp.mapper';
+import {HardWorkEntry} from '../../pojo/hard.work.entry';
+
 import * as queries from "../../graphql/queries";
-import { DatabaseModelMapper } from "../database.model.mapper";
 
 import { Query } from "../../database/database";
 export {Query};
 export class MockDatabase {
   constructor() {
     this.created = [];
-    this.readResults = {};
+    this.readResults = {
+    };
+
+    this.database = {
+      data : {
+        listAchievements : {
+          items : []
+        }
+      }
+    }
   }
 
   create(inMemory) {
     this.created.push(inMemory);
-
-    const mapper = new DatabaseModelMapper();
-
-    if (inMemory.type === "achievement") {
-      const query = new Query(queries.listAchievements);
-      this.readResults[query.toString()] = mapper.toDatabaseModel(inMemory);
+    if (inMemory.type === HardWorkEntry.getType()) {
+      this.database.data.listAchievements.items.push(...this.toDatabaseItem(inMemory));
     }
   }
 
+  toDatabaseItem(inMemoryObjects) {
+    let converted = null;
+    if (!Array.isArray(inMemoryObjects)) {
+      if ('achievement' === inMemoryObjects.type) {
+        const mapper = new AccomplishmentDatabaseReturnMapper();
+        converted = [mapper.toListAccomplishments(inMemoryObjects)];
+      }
+    }
+    return converted;
+  }
+
   read(query) {
-    return this.readResults[query.toString()];
+    let readResults = null;
+    if (query.graphQl === queries.listAchievements) {
+      const listAchievements = this.database.data.listAchievements;
+      readResults = {
+        data : {
+          listAchievements : JSON.parse(JSON.stringify(listAchievements))
+        }
+      }
+
+    }
+    return readResults;
   }
 
   setReadReturn(query, inMemoryReturnValue) {
-    const mapper = new DatabaseModelMapper();
-    const databaseRepresentation = mapper.toDatabaseModel(inMemoryReturnValue);
+    if (inMemoryReturnValue.type === "achievement") {
+      if (!this.readResults[query.toString()]) {
+        this.readResults[query.toString()] = []
+      }
 
-    this.readResults[query.toString()] = databaseRepresentation;
+      this.readResults[query.toString()].push(...this.toListDatabaseReturn(inMemoryReturnValue));
+    }
   }
 
   contains(inMemory) {
@@ -41,4 +72,29 @@ export class MockDatabase {
     }
     return contains;
   }
+}
+
+class AccomplishmentDatabaseReturnMapper {
+    toListAccomplishments(accomplishments) {
+      if (!Array.isArray(accomplishments)) {
+        return this.toAccomplishmentDatabaseReturn(accomplishments);
+      }
+
+      const converted = [];
+      for (let i = 0; i < accomplishments; i++) {
+        converted.push(this.toAccomplishmentDatabaseReturn(accomplishments[i]));
+      }
+      return converted;
+    }
+
+    toAccomplishmentDatabaseReturn(accomplishment) {
+      const timestampMapper = new TimestampMapper();
+      const timestampAsDatabase = timestampMapper.toDatabaseModel(accomplishment.getAccomplishedOn());
+
+      return {
+        accomplishedOn : timestampAsDatabase,
+        achievement : accomplishment.getAccomplishment(),
+        id : accomplishment.id
+      }
+    }
 }

@@ -13,7 +13,11 @@ export class HardWorkEntry {
 
     this.accomplishment = accomplishment;
     this.timestamp = timestamp;
-    this.type = 'achievement';
+    this.type = HardWorkEntry.getType();
+  }
+
+  static getType() {
+    return 'achievement';
   }
 
   isBefore(comparison) {

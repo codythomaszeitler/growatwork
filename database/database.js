@@ -18,8 +18,8 @@ class Database {
     this.mapper = new DatabaseModelMapper();
   }
 
-  async read(query, filter = {}) {
-    const readResults = await API.graphql(graphqlOperation(query, filter));
+  async read(query) {
+    const readResults = await API.graphql(graphqlOperation(query.graphQl, query.params));
     return readResults;
   }
 

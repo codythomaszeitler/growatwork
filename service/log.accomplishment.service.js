@@ -5,9 +5,15 @@ export class LogAccomplishmentService {
     this.database = database;
   }
 
-  log(careerImprovementClient, accomplishment) {
+  async log(careerImprovementClient, accomplishment) {
     const finder = new AchievementFinder(this.database);
-    const accomplishments = finder.findByAccomplishment(accomplishment);
+    let accomplishments;
+    try {
+      accomplishments = await finder.findByAccomplishment(accomplishment);
+    } catch (e) {
+      throw new Error('Could not log accomplishment because of [' + e.message + ']');
+    }
+
     if (accomplishments.length >= 1) {
       throw new Error(
         "Accomplishment [" +
