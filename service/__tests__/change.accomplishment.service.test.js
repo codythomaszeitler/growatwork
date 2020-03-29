@@ -95,7 +95,7 @@ describe('Change Accomplishment Service', () => {
             caughtException = e;
         }
 
-        expect(caughtException.message).toBe('Could not create accomplishment, database call failed');
+        expect(caughtException.message).toBe("Could not change accomplishment because of [NOTCONNECTED]");
     });
 
     it('should throw an exception if the original accomplishment given does not exist within the database', async () => {

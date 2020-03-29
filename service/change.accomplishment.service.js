@@ -19,7 +19,7 @@ export class ChangeAccomplishmentService {
         try {
             await logAccomplishmentService.log(careerImprovementClient, changed);
         } catch (e) {
-            throw new Error('Could not create accomplishment, database call failed');
+            throw new Error('Could not change accomplishment because of [' + e.message + ']');
         }
     }
 }

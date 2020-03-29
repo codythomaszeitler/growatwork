@@ -21,6 +21,8 @@ export class CareerImprovementClient {
     this.email = email;
     this.username = username;
     this.id = null;
+    this.currentOnLogListenerId = 0;
+    this.currentOnLogRemoveListenerId = 0;
   }
 
   static getType() {
@@ -84,7 +86,15 @@ export class CareerImprovementClient {
       throw new Error("Cannot add a listener that does not exist");
     }
 
+    listener.__onLogListenerId = this.currentOnLogListenerId;
+    this.currentOnLogListenerId++;
     this.onLogAddListeners.push(listener);
+  }
+
+  removeOnLogListener(listener){ 
+    this.onLogAddListeners = this.onLogAddListeners.filter(function(registered) {
+      return registered.__onLogListenerId !== listener.__onLogListenerId;
+    });
   }
 
   checkForDuplicate(toCheck) {
@@ -115,7 +125,15 @@ export class CareerImprovementClient {
   }
 
   addOnLogRemovedListener(listener) {
+    listener.__onLogRemovedListenerId = this.currentOnLogRemoveListenerId;
+    this.currentOnLogRemoveListenerId++;
     this.onLogRemovedListeners.push(listener);
+  }
+
+  removeOnLogRemovedListener(listener) {
+    this.onLogRemovedListeners = this.onLogRemovedListeners.filter(function(registered) {
+      return listener.__onLogRemovedListenerId !== registered.__onLogRemovedListenerId;
+    });
   }
 
   getHardWork() {
@@ -126,8 +144,16 @@ export class CareerImprovementClient {
     const withinBoundary = [];
 
     const achievements = this.getHardWork();
+
+    console.log('Trying to find all hard work entries between [' + fromTimestamp.toDate().getTime() + '] and [' + toTimestamp.toDate().getTime() + ']');
+
     for (let i = 0; i < achievements.length; i++) {
       const achievement = achievements[i];
+
+      console.log('Current: ' + achievement.getAccomplishedOn().toDate().getTime());
+
+      console.log('Is before: ' + fromTimestamp.isBefore(achievement.getAccomplishedOn()));
+      console.log('Is After: ' + toTimestamp.isAfter(achievement.getAccomplishedOn()));
 
       if (
         fromTimestamp.isBefore(achievement.getAccomplishedOn()) &&

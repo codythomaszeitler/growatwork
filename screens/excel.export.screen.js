@@ -128,9 +128,12 @@ export class ExcelExportScreen extends Component {
   }
 
   getSelectedAchievements() {
+    const startOfDay = this.state.fromTimestamp.startOfDay();
+    const endOfDay = this.state.toTimestamp.endOfDay();
+
     return datastore()
       .get()
-      .getAchievements(this.state.fromTimestamp, this.state.toTimestamp);
+      .getAchievements(startOfDay, endOfDay);
   }
 
   render() {

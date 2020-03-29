@@ -5,6 +5,8 @@ import { HardWorkEntryScreenSegment } from "./hard.work.entry.screen.segment";
 import { datastore } from "../datastore/datastore";
 import { HardWorkEntry } from "../pojo/hard.work.entry";
 import { ChangeAccomplishmentService } from "../service/change.accomplishment.service";
+import { DeleteAccomplishmentService } from "../service/delete.accomplishment.service";
+import { database } from "../database/database";
 
 export class DashboardScreen extends Component {
   constructor(props) {
@@ -29,7 +31,8 @@ export class DashboardScreen extends Component {
       modalVisible: false,
       accomplishmentText: "",
       defaultValue: "",
-      accomplishment: null
+      accomplishment: null,
+      isSavedButtonDisabled : false
     };
   }
 
@@ -42,20 +45,24 @@ export class DashboardScreen extends Component {
     }
   }
 
+  componentWillUnmount() {
+    console.log("dashboard component unmounted");
+    this.client.removeOnLogRemovedListener(this);
+    this.client.removeOnLogListener(this);
+  }
+
   hasAchievements() {
     const client = datastore().get();
     return client.getHardWork().length !== 0;
   }
 
-  onLog(event) {
+  onLog() {
     this.setState({
       entries: this.client.getHardWork().reverse()
     });
   }
 
-  onLogRemoved(event) {
-    console.log(this.client.getHardWork());
-
+  onLogRemoved() {
     this.setState({
       entries: this.client.getHardWork().reverse()
     });
@@ -73,8 +80,21 @@ export class DashboardScreen extends Component {
   }
 
   async onSave() {
+    this.setState({
+      isSavedButtonDisabled : true
+    });
     const accomplishment = this.state.accomplishment.copy();
     const text = this.state.accomplishmentText;
+
+    if (text.length === 0 || text === accomplishment.getAccomplishment()) {
+      this.setState({
+        modalVisible: false,
+        defaultValue: "",
+        accomplishment: null,
+        isSavedButtonDisabled : false 
+      });
+      return;
+    }
 
     try {
       const changeAccomplishmentService = new ChangeAccomplishmentService(
@@ -88,28 +108,39 @@ export class DashboardScreen extends Component {
       this.setState({
         modalVisible: false,
         defaultValue: "",
-        accomplishment: null
+        accomplishment: null,
+        isSavedButtonDisabled : false
       });
     } catch (e) {
-      Alert.alert('Could not change accomplishment', e.message);
+      Alert.alert("Could not change accomplishment", e.message);
+      this.setState({
+        isSavedButtonDisabled : false
+      });
     }
   }
 
-  onDelete() {
+
+  async onDelete() {
     const accomplishment = this.state.accomplishment.copy();
-    this.client.remove(accomplishment);
-    this.setState({
-      modalVisible: false,
-      defaultValue: "",
-      accomplishment: null
-    });
+    const service = new DeleteAccomplishmentService(database());
+    try {
+      await service.delete(this.client, accomplishment);
+      this.setState({
+        modalVisible: false,
+        defaultValue: "",
+        accomplishment: null
+      });
+    } catch (e) {
+      Alert.alert("Could not delete accomplishment", e.message);
+    }
   }
 
   onPress(event) {
     this.setState({
       modalVisible: true,
       defaultValue: event.accomplishment.getAccomplishment(),
-      accomplishment: event.accomplishment
+      accomplishment: event.accomplishment,
+      accomplishmentText: event.accomplishment.getAccomplishment()
     });
   }
 
@@ -186,7 +217,8 @@ export class DashboardScreen extends Component {
                     marginBottom: 0
                   }}
                   onPress={this.onSave}
-                  title="Save"
+                  title="Change"
+                  disabled={this.isSavedButtonDisabled}
                 />
               </Card>
               <View

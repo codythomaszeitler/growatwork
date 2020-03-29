@@ -58,6 +58,6 @@ describe('Achievement Finder', () => {
             caughtException = e;
         }
 
-        expect(caughtException.message).toBe('Database read with query [queries.listAchievements] returned nothing');
+        expect(caughtException.message).toBe("Could not find accomplishments from database because of [Cannot read property 'data' of null]");
     });
 });

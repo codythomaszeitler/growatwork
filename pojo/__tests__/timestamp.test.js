@@ -14,6 +14,30 @@ describe("Timestamp", () => {
     expect(testObject.getMonth()).toBe('January');
   });
 
+  it("should be able to move itself to end of day", () => {
+    const testObject = new Timestamp(2019, "January", 1);
+    const endOfDay = testObject.endOfDay();
+    expect(endOfDay.getYear()).toBe(2019);
+    expect(endOfDay.getMonth()).toBe("January");
+    expect(endOfDay.getDay()).toBe(1);
+    expect(endOfDay.getHour()).toBe(23);
+    expect(endOfDay.getMinute()).toBe(59);
+    expect(endOfDay.getSecond()).toBe(59);
+    expect(endOfDay.getMillisecond()).toBe(999);
+  });
+
+  it("should be able to move itself to start of day", () => {
+    const testObject = new Timestamp(2019, "January", 1,5,5,5,5);
+    const startOfDay = testObject.startOfDay();
+    expect(startOfDay.getYear()).toBe(2019);
+    expect(startOfDay.getMonth()).toBe("January");
+    expect(startOfDay.getDay()).toBe(1);
+    expect(startOfDay.getHour()).toBe(0);
+    expect(startOfDay.getMinute()).toBe(0);
+    expect(startOfDay.getSecond()).toBe(0);
+    expect(startOfDay.getMillisecond()).toBe(0);
+  });
+
   it("should throw an exception if the month integer is below 0", () => {
 
     let caughtException = null;

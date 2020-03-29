@@ -90,6 +90,14 @@ export class Timestamp {
     );
   }
 
+  startOfDay() {
+    return new Timestamp(this.year, this.month, this.day);
+  }
+
+  endOfDay() {
+    return new Timestamp(this.year, this.month, this.day, 23, 59, 59, 999);
+  }
+
   copy() {
     return new Timestamp(this.year, this.month, this.day, this.hour, this.minute, this.second, this.millisecond);
   }

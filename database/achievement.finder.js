@@ -9,11 +9,15 @@ export class AchievementFinder {
   }
 
   async findByAccomplishment(toFind) {
-    const query = new Query(queries.listAchievements);
     let readResults;
-
     try {
-      readResults = await this.database.read(query);
+      readResults = {
+        data : {
+          listAchievements : {
+            items : await this.readAllAchievements()
+          } 
+        }
+      }
     } catch (e) {
       throw new Error(
         "Could not find accomplishments from database because of [" +
@@ -24,7 +28,6 @@ export class AchievementFinder {
     if (!readResults) {
       throw new Error('Database read with query [queries.listAchievements] returned nothing');
     }
-
     const mapper = new AchievementMapper();
     const accomplishments = mapper.toInMemoryModel(readResults);
 
