@@ -32,7 +32,7 @@ export class DashboardScreen extends Component {
       accomplishmentText: "",
       defaultValue: "",
       accomplishment: null,
-      isSavedButtonDisabled : false
+      isSavedButtonDisabled: false
     };
   }
 
@@ -81,7 +81,7 @@ export class DashboardScreen extends Component {
 
   async onSave() {
     this.setState({
-      isSavedButtonDisabled : true
+      isSavedButtonDisabled: true
     });
     const accomplishment = this.state.accomplishment.copy();
     const text = this.state.accomplishmentText;
@@ -91,34 +91,27 @@ export class DashboardScreen extends Component {
         modalVisible: false,
         defaultValue: "",
         accomplishment: null,
-        isSavedButtonDisabled : false 
+        isSavedButtonDisabled: false
       });
       return;
     }
 
-    try {
-      const changeAccomplishmentService = new ChangeAccomplishmentService(
-        database()
-      );
-      await changeAccomplishmentService.change(
-        this.client,
-        accomplishment,
-        text
-      );
-      this.setState({
-        modalVisible: false,
-        defaultValue: "",
-        accomplishment: null,
-        isSavedButtonDisabled : false
-      });
-    } catch (e) {
-      Alert.alert("Could not change accomplishment", e.message);
-      this.setState({
-        isSavedButtonDisabled : false
-      });
-    }
+    const changeAccomplishmentService = new ChangeAccomplishmentService(
+      database()
+    );
+    changeAccomplishmentService.change(this.client, accomplishment, text).then(
+      function(result) {},
+      function(error) {
+        Alert.alert("Could not change accomplishment", e.message);
+      }
+    );
+    this.setState({
+      modalVisible: false,
+      defaultValue: "",
+      accomplishment: null,
+      isSavedButtonDisabled: false
+    });
   }
-
 
   async onDelete() {
     const accomplishment = this.state.accomplishment.copy();
