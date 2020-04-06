@@ -32,17 +32,21 @@ export class DashboardScreen extends Component {
       accomplishmentText: "",
       defaultValue: "",
       accomplishment: null,
-      isSavedButtonDisabled: false
+      isSavedButtonDisabled: false,
     };
   }
 
   componentDidMount() {
-    if (!this.hasAchievements()) {
-      Alert.alert(
-        "No accomplishments yet!",
-        "Go to the add screen and put your hard work in!"
-      );
-    }
+    // We have to wait for the modal to dissapear from
+    // the loading screen to be able to show the Alert.
+    setTimeout(() => {
+      if (!this.hasAchievements()) {
+        Alert.alert(
+          "No accomplishments yet!",
+          "Go to the add screen and put your hard work in!"
+        );
+      }
+    }, 1000);
   }
 
   componentWillUnmount() {
@@ -58,13 +62,13 @@ export class DashboardScreen extends Component {
 
   onLog() {
     this.setState({
-      entries: this.client.getHardWork().reverse()
+      entries: this.client.getHardWork().reverse(),
     });
   }
 
   onLogRemoved() {
     this.setState({
-      entries: this.client.getHardWork().reverse()
+      entries: this.client.getHardWork().reverse(),
     });
   }
 
@@ -81,7 +85,7 @@ export class DashboardScreen extends Component {
 
   async onSave() {
     this.setState({
-      isSavedButtonDisabled: true
+      isSavedButtonDisabled: true,
     });
     const accomplishment = this.state.accomplishment.copy();
     const text = this.state.accomplishmentText;
@@ -91,7 +95,7 @@ export class DashboardScreen extends Component {
         modalVisible: false,
         defaultValue: "",
         accomplishment: null,
-        isSavedButtonDisabled: false
+        isSavedButtonDisabled: false,
       });
       return;
     }
@@ -100,8 +104,8 @@ export class DashboardScreen extends Component {
       database()
     );
     changeAccomplishmentService.change(this.client, accomplishment, text).then(
-      function(result) {},
-      function(error) {
+      function (result) {},
+      function (error) {
         Alert.alert("Could not change accomplishment", e.message);
       }
     );
@@ -109,7 +113,7 @@ export class DashboardScreen extends Component {
       modalVisible: false,
       defaultValue: "",
       accomplishment: null,
-      isSavedButtonDisabled: false
+      isSavedButtonDisabled: false,
     });
   }
 
@@ -121,7 +125,7 @@ export class DashboardScreen extends Component {
       this.setState({
         modalVisible: false,
         defaultValue: "",
-        accomplishment: null
+        accomplishment: null,
       });
     } catch (e) {
       Alert.alert("Could not delete accomplishment", e.message);
@@ -133,7 +137,7 @@ export class DashboardScreen extends Component {
       modalVisible: true,
       defaultValue: event.accomplishment.getAccomplishment(),
       accomplishment: event.accomplishment,
-      accomplishmentText: event.accomplishment.getAccomplishment()
+      accomplishmentText: event.accomplishment.getAccomplishment(),
     });
   }
 
@@ -141,13 +145,13 @@ export class DashboardScreen extends Component {
     this.setState({
       modalVisible: false,
       defaultValue: "",
-      accomplishment: null
+      accomplishment: null,
     });
   }
 
   onAccomplishmentTextChange(accomplishmentText) {
     this.setState({
-      accomplishmentText: accomplishmentText
+      accomplishmentText: accomplishmentText,
     });
   }
 
@@ -166,24 +170,24 @@ export class DashboardScreen extends Component {
             style={{
               flex: 1,
               justifyContent: "center",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <View
               style={{
-                flex: 0.5
+                flex: 0.5,
               }}
             ></View>
             <View
               style={{
-                flex: 1
+                flex: 1,
               }}
             >
               <Text
                 style={{
                   textAlign: "center",
                   fontFamily: "PingFangTC-Thin",
-                  fontSize: 30
+                  fontSize: 30,
                 }}
               >
                 Accomplishment
@@ -193,7 +197,7 @@ export class DashboardScreen extends Component {
             <View
               style={{
                 alignSelf: "stretch",
-                flex: 4
+                flex: 4,
               }}
             >
               <Card title="Change Accomplishment">
@@ -207,7 +211,7 @@ export class DashboardScreen extends Component {
                     borderRadius: 0,
                     marginLeft: 0,
                     marginRight: 0,
-                    marginBottom: 0
+                    marginBottom: 0,
                   }}
                   onPress={this.onSave}
                   title="Change"
@@ -216,7 +220,7 @@ export class DashboardScreen extends Component {
               </Card>
               <View
                 style={{
-                  flex: 0.2
+                  flex: 0.2,
                 }}
               ></View>
               <Card>
@@ -225,7 +229,7 @@ export class DashboardScreen extends Component {
                     borderRadius: 0,
                     marginLeft: 0,
                     marginRight: 0,
-                    marginBottom: 0
+                    marginBottom: 0,
                   }}
                   onPress={this.onDelete}
                   title="Delete"
@@ -235,7 +239,7 @@ export class DashboardScreen extends Component {
             <View
               style={{
                 flex: 1,
-                alignSelf: "stretch"
+                alignSelf: "stretch",
               }}
             >
               <Card>
@@ -244,7 +248,7 @@ export class DashboardScreen extends Component {
                     borderRadius: 0,
                     marginLeft: 0,
                     marginRight: 0,
-                    marginBottom: 0
+                    marginBottom: 0,
                   }}
                   onPress={this.onBack}
                   title="Back"
@@ -256,7 +260,7 @@ export class DashboardScreen extends Component {
         </Modal>
         <FlatList
           data={this.state.entries}
-          keyExtractor={item => {
+          keyExtractor={(item) => {
             return this.generateUniqueKey(item);
           }}
           renderItem={({ item }) => (

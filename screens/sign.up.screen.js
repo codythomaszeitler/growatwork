@@ -1,20 +1,20 @@
 import React, { Component } from "react";
 import { View, Text, Modal, Alert } from "react-native";
 import { Button, Card, Input, Icon } from "react-native-elements";
-import { Authentication } from "../authentication/auth";
-import { CareerImprovementClient } from "../pojo/career.improvement.client";
-import { database } from "../database/database";
+import { Completed } from "../authentication/authentication.flow";
 
 export class SignUpScreen extends Component {
   constructor(props) {
     super(props);
+
+    this.authenticationFlow = props.navigation.state.params.authenticationFlow;
 
     this.state = {
       modalVisible: false,
       email: "",
       password: "",
       confirmationCode: "",
-      disableConfirmationButton: false
+      disableConfirmationButton: false,
     };
     this.signUp = this.signUp.bind(this);
     this.enterConfirmationCode = this.enterConfirmationCode.bind(this);
@@ -22,7 +22,7 @@ export class SignUpScreen extends Component {
     this.onEmailChange = this.onEmailChange.bind(this);
     this.onPasswordChange = this.onPasswordChange.bind(this);
 
-    this.authentication = new Authentication();
+    this.nextState = null;
   }
 
   async signUp() {
@@ -37,9 +37,13 @@ export class SignUpScreen extends Component {
     }
 
     try {
-      await this.authentication.signUp(this.state.email, this.state.password);
+      this.nextState = await this.authenticationFlow.signUp(
+        this.state.email,
+        this.state.password
+      );
+      console.log(this.nextState);
       this.setState({
-        modalVisible: true
+        modalVisible: true,
       });
     } catch (e) {
       Alert.alert("Sign Up", e.message);
@@ -53,46 +57,45 @@ export class SignUpScreen extends Component {
     }
 
     this.setState({
-      disableConfirmationButton: true
+      disableConfirmationButton: true,
     });
 
-    const responseMessage = await this.authentication.confirmSignUp(
-      this.state.email,
+    console.log(this.nextState);
+    this.nextState = await this.nextState.enterConfirmationCode(
       this.state.confirmationCode
     );
 
-    if (responseMessage === "SUCCESS") {
-      await this.authentication.signIn(this.state.email, this.state.password);
-      const careerImprovementClient = new CareerImprovementClient(
-        this.state.email,
-        await this.authentication.getCurrentUsername()
-      );
-      await database().create(careerImprovementClient);
+    if (this.nextState.step === Completed) {
 
-      this.setState({
-        modalVisible: false
-      });
-      this.props.navigation.navigate("Loading");
-    } else {
-      Alert.alert("Incorrect Confirmation Code", "Please try again");
+      Alert.alert('Sign Up Successful!', null, [{
+        text : 'OK', onPress: () => {
+          this.setState({
+            modalVisible : false,
+          });
+          this.props.navigation.navigate("Login");
+        }
+      }])
+    }
+      else {
+      Alert.alert("Incorrect Confirmation Code", this.nextState.step);
     }
   }
 
   onEmailChange(email) {
     this.setState({
-      email: email
+      email: email,
     });
   }
 
   onPasswordChange(password) {
     this.setState({
-      password: password
+      password: password,
     });
   }
 
   onConfirmationCodeChange(code) {
     this.setState({
-      confirmationCode: code
+      confirmationCode: code,
     });
   }
 
@@ -101,7 +104,7 @@ export class SignUpScreen extends Component {
       <View
         style={{
           flex: 1,
-          justifyContent: "space-around"
+          justifyContent: "space-around",
         }}
       >
         <Modal
@@ -121,7 +124,7 @@ export class SignUpScreen extends Component {
                 borderColor: "gray",
                 height: 50,
                 borderWidth: 1,
-                backgroundColor: "#bfbfbf"
+                backgroundColor: "#bfbfbf",
               }}
               placeholder="   Code"
               onChangeText={this.onConfirmationCodeChange}
@@ -138,7 +141,7 @@ export class SignUpScreen extends Component {
 
           <View
             style={{
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <View></View>
@@ -154,13 +157,13 @@ export class SignUpScreen extends Component {
         </Modal>
         <View
           style={{
-            flex: 0.4
+            flex: 0.4,
           }}
         ></View>
 
         <View
           style={{
-            flex: 1
+            flex: 1,
           }}
         >
           <Text
@@ -168,7 +171,7 @@ export class SignUpScreen extends Component {
               textAlign: "center",
               justifyContent: "flex-start",
               fontFamily: "PingFangTC-Thin",
-              fontSize: 30
+              fontSize: 30,
             }}
           >
             Sign Up
@@ -178,7 +181,7 @@ export class SignUpScreen extends Component {
         <View
           style={{
             flex: 3,
-            alignItems: "stretch"
+            alignItems: "stretch",
           }}
         >
           <Input
@@ -187,7 +190,7 @@ export class SignUpScreen extends Component {
               width: 300,
               borderColor: "gray",
               borderWidth: 1,
-              backgroundColor: "#bfbfbf"
+              backgroundColor: "#bfbfbf",
             }}
             placeholder="  Username"
             autoCapitalize="none"
@@ -202,7 +205,7 @@ export class SignUpScreen extends Component {
               width: 300,
               borderColor: "gray",
               borderWidth: 1,
-              backgroundColor: "#bfbfbf"
+              backgroundColor: "#bfbfbf",
             }}
             placeholder="  Password"
             secureTextEntry={true}
@@ -212,7 +215,7 @@ export class SignUpScreen extends Component {
           <View
             style={{
               flex: 1,
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <Text></Text>
@@ -229,7 +232,7 @@ export class SignUpScreen extends Component {
         <View
           style={{
             flex: 1,
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <Button

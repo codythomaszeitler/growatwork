@@ -1,15 +1,29 @@
 import { CareerImprovementClient } from "../pojo/career.improvement.client";
+import { JS } from "aws-amplify";
 
 export class CareerImprovementClientMapper {
   toInMemoryModel(databaseModel) {
-    const contents = databaseModel.data.listCareerImprovementClients.items[0];
+    const clientsAsGraphQl =
+      databaseModel.data.listCareerImprovementClients.items;
+    if (clientsAsGraphQl.length === 0) {
+      return null;
+    }
 
+    if (clientsAsGraphQl.length > 1) {
+      throw new Error(
+        "Retrieved [" +
+          clientsAsGraphQl.length +
+          "] Career Improvement Clients from the database, " +
+          JSON.stringify(clientsAsGraphQl)
+      );
+    }
+
+    const graphQlClient = clientsAsGraphQl[0];
     const careerImprovementClient = new CareerImprovementClient(
-      contents.email,
-      contents.username
+      graphQlClient.email,
+      graphQlClient.username
     );
-    careerImprovementClient.id = contents.id;
-    careerImprovementClient.type = contents.type;
+    careerImprovementClient.id = graphQlClient.id;
 
     return careerImprovementClient;
   }
@@ -19,8 +33,8 @@ export class CareerImprovementClientMapper {
       input: {
         username: inMemoryModel.getUsername(),
         email: inMemoryModel.getEmail(),
-        type: inMemoryModel.type
-      }
+        id : inMemoryModel.id
+      },
     };
   }
 }

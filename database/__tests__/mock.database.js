@@ -2,6 +2,8 @@ import { TimestampMapper } from "../timestamp.mapper";
 import { HardWorkEntry } from "../../pojo/hard.work.entry";
 import * as queries from "../../graphql/queries";
 import { Query } from "../../database/database";
+import { CareerImprovementClient } from "../../pojo/career.improvement.client";
+import { CareerImprovementClientMapper } from "../career.improvement.client.mapper";
 export { Query };
 
 export class MockDatabase {
@@ -14,7 +16,10 @@ export class MockDatabase {
       data: {
         listAchievements: {
           items: []
-        }
+        },
+        listCareerImprovementClients : {
+          items: []
+        },
       }
     };
   }
@@ -28,16 +33,26 @@ export class MockDatabase {
         ...this.toDatabaseItem(inMemory)
       );
     }
+    if (inMemory.type === CareerImprovementClient.getType()) {
+      this.database.data.listCareerImprovementClients.items.push(
+        ...this.toDatabaseItem(inMemory)
+      );
+    }
   }
 
   toDatabaseItem(inMemoryObjects) {
     let converted = null;
     if (!Array.isArray(inMemoryObjects)) {
-      if ("achievement" === inMemoryObjects.type) {
+      if (HardWorkEntry.getType() === inMemoryObjects.type) {
         const mapper = new AccomplishmentDatabaseReturnMapper();
         converted = [mapper.toListAccomplishments(inMemoryObjects)];
       }
+      if (CareerImprovementClient.getType() === inMemoryObjects.type) {
+        const mapper = new CareerImprovementClientDatabaseReturnMapper();
+        converted = [mapper.toListCareerImprovementClients(inMemoryObjects)];
+      }
     }
+
     return converted;
   }
 
@@ -51,7 +66,25 @@ export class MockDatabase {
         }
       };
     }
+    if (query.graphQl === queries.listCareerImprovementClients) {
+      const listCareerImprovementClients = this.database.data.listCareerImprovementClients;
+      readResults = {
+        data : {
+          listCareerImprovementClients: JSON.parse(JSON.stringify(listCareerImprovementClients))
+        }
+      }
+    }
+
     return readResults;
+  }
+
+  count(query) {
+    let count = 0;
+    if (query.graphQl === queries.listCareerImprovementClients) {
+      const readResults = this.read(query);
+      count = readResults.data.listCareerImprovementClients.items.length;
+    }
+    return count;
   }
 
   setReadReturn(query, inMemoryReturnValue) {
@@ -95,6 +128,30 @@ export class MockDatabase {
           return accomplishment.id !== inMemory.id;
         }
       );
+    }
+  }
+}
+
+class CareerImprovementClientDatabaseReturnMapper {
+
+  toListCareerImprovementClients(clients) {
+    if (!Array.isArray(clients)) {
+      return this.toCareerImprovementClientDatabaseReturn(clients);
+    }
+    const converted = [];
+    for (let i = 0; i < client.length; i++) {
+      converted.push(this.toCareerImprovementClientDatabaseReturn(clients[i]));
+    } 
+    return converted;
+  }
+
+  toCareerImprovementClientDatabaseReturn(client) {
+
+    return {
+      id : client.id,
+      username : client.getUsername(),
+      email : client.getEmail(),
+      achievements : client.getHardWork()
     }
   }
 }

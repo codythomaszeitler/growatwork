@@ -1,7 +1,13 @@
 import { Auth } from "aws-amplify";
 
-export class Authentication {
+export const UserNotFoundCode = "UserNotFoundException";
+export const IncorrectPasswordCode = "NotAuthorizedException";
+export const PasswordResetRequiredCode = "PasswordResetRequiredException";
+export const UserNotConfirmedCode = "UserNotConfirmedException";
+export const SignUpFailedCode = "SignUpFailedException";
+export const IncorrectConfirmationCodeCode = "IncorrectConfirmationException";
 
+export class Authentication {
   async signIn(email, password) {
     if (!email) {
       throw new Error("Cannot sign in without an email");
@@ -10,23 +16,7 @@ export class Authentication {
       throw new Error("Cannot sign in without a password");
     }
 
-    try {
-      await Auth.signIn(email, password);
-    } catch (e) {
-      if (e.code === 'UserNotFoundException') {
-        throw new Error("Cannot find user with given email");
-      }
-
-      if (e.code === 'NotAuthorizedException') {
-        throw new Error("Incorrect email or password");
-      }
-
-      if (e.code === 'UserNotConfirmedException') {
-        throw new Error('You never confirmed your email. Please use the forgot password link to reset your account.');
-      }
-
-      throw new Error(e.message);
-    }
+    await Auth.signIn(email, password);
   }
 
   async signUp(email, password) {
@@ -34,24 +24,16 @@ export class Authentication {
       username: email,
       password,
       attributes: {
-        email // optional
+        email, // optional
       },
-      validationData: [] //optional
+      validationData: [], //optional
     });
   }
 
   async confirmSignUp(email, code) {
-    let message = "NO_RESPONSE";
-
-    try {
-      message = await Auth.confirmSignUp(email, code, {
-        forceAliasCreation: true
-      });
-    } catch (e) {
-      message = e.code;
-    }
-
-    return message;
+    return await Auth.confirmSignUp(email, code, {
+      forceAliasCreation: true,
+    });
   }
 
   async signOut() {
@@ -63,8 +45,8 @@ export class Authentication {
     return await Auth.changePassword(user, oldPassword, newPassword);
   }
 
-  async confirmChangePassword(username, code, newPassword) {
-    await Auth.forgotPasswordSubmit(username, code, newPassword);
+  async forgotPasswordSubmit(username, code, newPassword) {
+    return await Auth.forgotPasswordSubmit(username, code, newPassword);
   }
 
   async getCurrentUsername() {
@@ -74,5 +56,13 @@ export class Authentication {
 
   async sendPasswordResetEmail(username) {
     return await Auth.forgotPassword(username);
+  }
+
+  async forgotPassword(username) {
+    return await this.sendPasswordResetEmail(username);
+  }
+
+  async confirmChangePassword(username, code, password) {
+    return await this.confirmChangePassword(username, code, password);
   }
 }

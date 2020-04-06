@@ -145,15 +145,8 @@ export class CareerImprovementClient {
 
     const achievements = this.getHardWork();
 
-    console.log('Trying to find all hard work entries between [' + fromTimestamp.toDate().getTime() + '] and [' + toTimestamp.toDate().getTime() + ']');
-
     for (let i = 0; i < achievements.length; i++) {
       const achievement = achievements[i];
-
-      console.log('Current: ' + achievement.getAccomplishedOn().toDate().getTime());
-
-      console.log('Is before: ' + fromTimestamp.isBefore(achievement.getAccomplishedOn()));
-      console.log('Is After: ' + toTimestamp.isAfter(achievement.getAccomplishedOn()));
 
       if (
         fromTimestamp.isBefore(achievement.getAccomplishedOn()) &&

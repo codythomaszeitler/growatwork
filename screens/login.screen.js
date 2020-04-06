@@ -1,7 +1,22 @@
 import React, { Component } from "react";
-import { Text, View, Alert } from "react-native";
+import { Text, View, Alert, Modal } from "react-native";
 import { Authentication } from "../authentication/auth";
 import { Input, Icon, Button } from "react-native-elements";
+import { LoadingScreen } from "./loading.screen";
+import { PasswordChangeScreen } from "./password.change.screen";
+import {
+  Completed,
+  ResetPassword,
+  EnterConfirmationCode,
+} from "../authentication/authentication.flow";
+import { AuthenticationFlow } from "../authentication/authentication.flow";
+import { ConfirmationCodeEntryScreen } from "./confirmation.code.entry.screen";
+import { CareerImprovementClientFinder } from "../database/career.improvement.client.finder";
+import { AchievementFinder } from "../database/achievement.finder";
+import { database } from "../database/database";
+import { datastore } from "../datastore/datastore";
+import { CareerImprovementClientEntryGuarantee } from "../database/career.improvement.client.entry.guarantee";
+import { CareerImprovementClient } from "../pojo/career.improvement.client";
 
 export class LoginScreen extends Component {
   constructor(props) {
@@ -11,38 +26,202 @@ export class LoginScreen extends Component {
     this.onPasswordChange = this.onPasswordChange.bind(this);
     this.signUp = this.signUp.bind(this);
     this.forgotPassword = this.forgotPassword.bind(this);
+    this.showLoadingScreen = this.showLoadingScreen.bind(this);
+    this.hideLoadingScreen = this.hideLoadingScreen.bind(this);
+    this.onPasswordChangePress = this.onPasswordChangePress.bind(this);
+    this.onConfirmationCodePress = this.onConfirmationCodePress.bind(this);
 
     this.authentication = new Authentication();
+    this.authenticationFlow = new AuthenticationFlow(this.authentication);
+
+    this.nextStep = null;
 
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      isLoadingScreenVisible: false,
+      isPasswordChangeScreenVisible: false,
+      isConfirmationCodeVisible: false,
+      isModalVisible: false,
     };
+  }
+
+  async onPasswordChangePress(event) {
+    try {
+      this.nextStep = await this.nextStep.resetPassword(event.password);
+      if (this.nextStep.step === EnterConfirmationCode) {
+        this.showConfirmationCodeScreen();
+      }
+    } catch (e) {
+      Alert.alert(e.message);
+    }
+  }
+
+  onPasswordChangeMismatchedEvent() {
+    Alert.alert('Passwords Did Not Match');
+  }
+
+  onPasswordViolatingPolicyEvent(event) {
+    Alert.alert(event.message);
+  }
+
+  async onConfirmationCodePress(event) {
+    try {
+      this.nextStep = await this.nextStep.enterConfirmationCode(event.code);
+
+      Alert.alert(
+        "Password Changed Successfully!",
+        "Please login with the new credentials",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              this.hideConfirmationCodeScreen();
+            },
+          },
+        ]
+      );
+    } catch (e) {
+      Alert.alert(e.message);
+    }
+  }
+
+  onNoConfirmationCodeEnteredEvent(event) {
+    Alert.alert(event.message);
   }
 
   async signIn() {
     try {
-      await this.authentication.signIn(this.state.email, this.state.password);
-      this.props.navigation.navigate("Loading");
+      this.showLoadingScreen();
+      this.nextStep = await this.authenticationFlow.signIn(
+        this.state.email,
+        this.state.password
+      );
+
+      if (this.nextStep.step === Completed) {
+        console.log('starting load');
+        await this.load();
+        this.hideLoadingScreen();
+        this.props.navigation.navigate("Dashboard");
+      } else if (this.nextStep.step === ResetPassword) {
+        this.showPasswordChangeScreen();
+      } else if (this.nextStep.step === EnterConfirmationCode) {
+        this.showConfirmationCodeScreen();
+      } else {
+        throw new Error("Unexpected error occurred");
+      }
     } catch (e) {
-      Alert.alert("Cannot Sign In", e.message);
+      let message = e.message ? e.message : e;
+
+      Alert.alert("Cannot Sign In", message, [
+        {
+          text: "OK",
+          onPress: () => {
+            this.hideLoadingScreen();
+          },
+        },
+      ]);
     }
+  }
+
+  async onSuccessfulSignUp() {
+    await this.signIn();
+  }
+
+  showLoadingScreen() {
+    this.setState({
+      isLoadingScreenVisible: true,
+      isModalVisible: true,
+    });
+  }
+
+  hideLoadingScreen() {
+    this.setState({
+      isLoadingScreenVisible: false,
+      isModalVisible: false,
+    });
+  }
+
+  showPasswordChangeScreen() {
+    this.setState({
+      isModalVisible: true,
+      isPasswordChangeScreenVisible: true,
+      isLoadingScreenVisible: false,
+      isConfirmationCodeVisible: false,
+    });
+  }
+
+  hidePasswordChangeScreen() {
+    this.setState({
+      isModalVisible: false,
+      isPasswordChangeScreenVisible: false,
+    });
+  }
+
+  hideModal() {
+    this.setState({
+      isModalVisible: false,
+      isPasswordChangeScreenVisible: false,
+      isConfirmationCodeVisible: false,
+      isLoadingScreenVisible: false,
+    });
+  }
+
+  showConfirmationCodeScreen() {
+    this.setState({
+      isModalVisible: true,
+      isConfirmationCodeVisible: true,
+      isPasswordChangeScreenVisible: false,
+      isLoadingScreenVisible: false,
+    });
+  }
+
+  hideConfirmationCodeScreen() {
+    this.setState({
+      isModalVisible: false,
+      isConfirmationCodeVisible: false,
+    });
+  }
+
+  async load() {
+    const careerImprovementClientFinder = new CareerImprovementClientFinder(
+      database()
+    );
+    const username = await this.authentication.getCurrentUsername();
+    let careerImprovementClient = await careerImprovementClientFinder.findByUsername(
+      username
+    );
+
+    if (!careerImprovementClient) {
+      careerImprovementClient = new CareerImprovementClient(this.state.email, username);
+      await database().create(careerImprovementClient);
+    }
+
+    const achievementFinder = new AchievementFinder(database());
+    const achievements = await achievementFinder.findByUsername(username);
+
+    for (let i = 0; i < achievements.length; i++) {
+      careerImprovementClient.log(achievements[i]);
+    }
+    datastore().set(careerImprovementClient);
   }
 
   onEmailChange(email) {
     this.setState({
-      email: email
+      email: email,
     });
   }
 
   onPasswordChange(password) {
     this.setState({
-      password: password
+      password: password,
     });
   }
 
   async signUp() {
-    this.props.navigation.navigate("SignUp");
+    this.props.navigation.navigate("SignUp", {
+      authenticationFlow: this.authenticationFlow
+    });
   }
 
   async forgotPassword() {
@@ -60,17 +239,30 @@ export class LoginScreen extends Component {
           flex: 1,
           flexDirection: "column",
           justifyContent: "space-around",
-          alignItems: "stretch"
+          alignItems: "stretch",
         }}
       >
-        <View style ={{
-          flex : .4
-        }}
-        
+        <Modal animationType="fade" visible={this.state.isModalVisible}>
+          {this.state.isLoadingScreenVisible && <LoadingScreen></LoadingScreen>}
+          {this.state.isPasswordChangeScreenVisible && (
+            <PasswordChangeScreen listener={this}></PasswordChangeScreen>
+          )}
+          {this.state.isConfirmationCodeVisible && (
+            <ConfirmationCodeEntryScreen
+              listener={this}
+            ></ConfirmationCodeEntryScreen>
+          )}
+        </Modal>
+        <View
+          style={{
+            flex: 0.4,
+          }}
         ></View>
-        <View style={{
-          flex : 1
-        }}>
+        <View
+          style={{
+            flex: 1,
+          }}
+        >
           <Text
             style={{
               textAlign: "center",
@@ -83,14 +275,14 @@ export class LoginScreen extends Component {
         </View>
         <View
           style={{
-            flex: 3
+            flex: 3,
           }}
         >
           <Input
             style={{
               borderColor: "gray",
               borderWidth: 1,
-              backgroundColor: "#bfbfbf"
+              backgroundColor: "#bfbfbf",
             }}
             placeholder="  Username"
             autoCapitalize="none"
@@ -103,7 +295,7 @@ export class LoginScreen extends Component {
             style={{
               borderColor: "gray",
               borderWidth: 1,
-              backgroundColor: "#bfbfbf"
+              backgroundColor: "#bfbfbf",
             }}
             placeholder="  Password"
             secureTextEntry={true}
@@ -114,7 +306,7 @@ export class LoginScreen extends Component {
           <View
             style={{
               alignItems: "center",
-              flex: 1
+              flex: 1,
             }}
           >
             <Button
@@ -129,7 +321,7 @@ export class LoginScreen extends Component {
         <View
           style={{
             alignItems: "center",
-            flex: 1
+            flex: 1,
           }}
         >
           <Button

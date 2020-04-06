@@ -10,12 +10,7 @@ export class CareerImprovementClientFinder {
   async findByUsername(username) {
     const query = new Query(queries.listCareerImprovementClients);
 
-    let readResults;
-    try {
-      readResults = await this.database.read(query);
-    } catch (e) {
-      console.log(e);
-    }
+    let readResults = await this.database.read(query);
     const mapper = new CareerImprovementClientMapper();
     return mapper.toInMemoryModel(readResults);
   }

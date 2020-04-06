@@ -62,7 +62,7 @@
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base)"
     ],
-    "testPathIgnorePatterns" : ["<rootDir>/database/__tests__/mock.database.js"]
+    "testPathIgnorePatterns" : ["<rootDir>/database/__tests__/mock.database.js", "<rootDir>/authentication/__tests__/mock.authentication.js"]
   },
   "private": true
 }

@@ -1,44 +1,7 @@
 import React, { Component } from "react";
 import { ActivityIndicator, View, Text } from "react-native";
-import { datastore } from "../datastore/datastore";
-import { CareerImprovementClientFinder } from "../database/career.improvement.client.finder";
-import { Authentication } from "../authentication/auth";
-import { database } from "../database/database";
-import { AchievementFinder } from "../database/achievement.finder";
 
 export class LoadingScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.authentication = new Authentication();
-  }
-
-  async componentDidMount() {
-    const careerImprovementClientFinder = new CareerImprovementClientFinder(
-      database()
-    );
-    const username = await this.authentication.getCurrentUsername();
-    const careerImprovementClient = await careerImprovementClientFinder.findByUsername(
-      username
-    );
-
-    const achievementFinder = new AchievementFinder(database());
-    let achievements;
-    try {
-      achievements = await achievementFinder.findByUsername(username);
-    } catch (e) {
-      console.log(e);
-    }
-
-    for (let i = 0; i < achievements.length; i++) {
-      careerImprovementClient.log(achievements[i]);
-    }
-
-    datastore().set(careerImprovementClient);
-    // careerImprovementClient.addOnLogListener(database());
-    // careerImprovementClient.addOnLogRemovedListener(database());
-
-    this.props.navigation.navigate("Dashboard");
-  }
 
   render() {
     return (
