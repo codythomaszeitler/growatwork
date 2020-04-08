@@ -39,7 +39,7 @@ export class AuthenticationFlow {
 
       const nextStep = new NextStep(EnterConfirmationCode);
       nextStep.enterConfirmationCode = async (code) => {
-        await this.authentication.forgotPasswordSubmit(username, code, newPassword);
+        await this.authentication.forgotPasswordSubmit(username, code, newPassword.get());
         const nextStep = new NextStep(Completed);
         return nextStep;
       };
