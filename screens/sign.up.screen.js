@@ -60,25 +60,29 @@ export class SignUpScreen extends Component {
       disableConfirmationButton: true,
     });
 
-    console.log(this.nextState);
-    this.nextState = await this.nextState.enterConfirmationCode(
-      this.state.confirmationCode
-    );
+    try {
+      this.nextState = await this.nextState.enterConfirmationCode(
+        this.state.confirmationCode
+      );
+      if (this.nextState.step === Completed) {
 
-    if (this.nextState.step === Completed) {
+        Alert.alert('Sign Up Successful!', null, [{
+          text : 'OK', onPress: () => {
+            this.setState({
+              modalVisible : false,
+            });
+            this.props.navigation.navigate("Login");
+          }
+        }])
+      }
+        else {
+        Alert.alert("Incorrect Confirmation Code", this.nextState.step);
+      }
+    } catch (e) {
+      Alert.alert(e.message);
+    }
 
-      Alert.alert('Sign Up Successful!', null, [{
-        text : 'OK', onPress: () => {
-          this.setState({
-            modalVisible : false,
-          });
-          this.props.navigation.navigate("Login");
-        }
-      }])
-    }
-      else {
-      Alert.alert("Incorrect Confirmation Code", this.nextState.step);
-    }
+
   }
 
   onEmailChange(email) {

@@ -3,7 +3,6 @@ import { View, FlatList, Modal, Alert } from "react-native";
 import { Text, Button, Card, Icon, Input } from "react-native-elements";
 import { HardWorkEntryScreenSegment } from "./hard.work.entry.screen.segment";
 import { datastore } from "../datastore/datastore";
-import { HardWorkEntry } from "../pojo/hard.work.entry";
 import { ChangeAccomplishmentService } from "../service/change.accomplishment.service";
 import { DeleteAccomplishmentService } from "../service/delete.accomplishment.service";
 import { database } from "../database/database";

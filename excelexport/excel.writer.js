@@ -12,7 +12,6 @@ export class AchievementExcelWriter {
         const csvWriter = {
             write : async function(csvContents) {
                 let fileUri = FileSystem.documentDirectory + filePath;
-                console.log(csvContents);
                 await FileSystem.writeAsStringAsync(fileUri, csvContents);
             }
         }

@@ -52,6 +52,7 @@ export class AuthenticationFlow {
       await this.notifySignInListeners(username);
       nextStep = new NextStep(Completed);
     } catch (e) {
+      console.log('In sign in: ' + JSON.stringify(e));
       if (e.code === UserNotFoundCode) {
         throw new Error("Username Not Found");
       }
@@ -63,8 +64,9 @@ export class AuthenticationFlow {
         nextStep.resetPassword = resetPassword;
       }
       else if (e.code === UserNotConfirmedCode) {
+        console.log('we are in here');
         nextStep = new NextStep(EnterConfirmationCode);
-        await this.authentication.resendSignUp(username);
+        await this.authentication.sendPasswordResetEmail(username);
         nextStep.enterConfirmationCode = async (code) => {
           await this.authentication.confirmSignUp(username, code);
           const nextStep = new NextStep(Completed);
