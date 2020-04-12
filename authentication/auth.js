@@ -65,4 +65,8 @@ export class Authentication {
   async confirmChangePassword(username, code, password) {
     return await this.confirmChangePassword(username, code, password);
   }
+
+  async resendSignUp(username) {
+    return await Auth.resendSignUp(username);
+  }
 }

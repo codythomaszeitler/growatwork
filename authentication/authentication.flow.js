@@ -66,7 +66,7 @@ export class AuthenticationFlow {
       else if (e.code === UserNotConfirmedCode) {
         console.log('we are in here');
         nextStep = new NextStep(EnterConfirmationCode);
-        await this.authentication.sendPasswordResetEmail(username);
+        await this.authentication.resendSignUp(username);
         nextStep.enterConfirmationCode = async (code) => {
           await this.authentication.confirmSignUp(username, code);
           const nextStep = new NextStep(Completed);

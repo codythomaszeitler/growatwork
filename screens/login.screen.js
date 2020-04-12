@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, Alert, Modal } from "react-native";
-import { Authentication } from "../authentication/auth";
+import { Authentication, UserNotConfirmedCode } from "../authentication/auth";
 import { Input, Icon, Button } from "react-native-elements";
 import { LoadingScreen } from "./loading.screen";
 import { PasswordChangeScreen } from "./password.change.screen";
@@ -112,7 +112,6 @@ export class LoginScreen extends Component {
         throw new Error("Unexpected error occurred");
       }
     } catch (e) {
-      console.log(e);
       let message = e.message ? e.message : e;
 
       Alert.alert("Cannot Sign In", message, [
