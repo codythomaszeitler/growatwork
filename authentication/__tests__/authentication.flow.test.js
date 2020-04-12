@@ -1,7 +1,8 @@
 import {AuthenticationFlow} from '../authentication.flow';
-import {UserNotFoundCode, IncorrectPasswordCode, PasswordResetRequiredCode, UserNotConfirmedCode, IncorrectConfirmationCodeCode, SignUpFailedCode} from '../auth';
+import {UserNotFoundCode, IncorrectPasswordCode, PasswordResetRequiredCode, UserNotConfirmedCode, SignUpFailedCode} from '../auth';
 import {Completed, ResetPassword, EnterConfirmationCode, PasswordRetryLimitExceededCode} from '../authentication.flow';
 import {MockAuthentication} from './mock.authentication';
+import {Password} from '../password';
 
 
 describe('Authentication Flow', () => {
@@ -72,7 +73,7 @@ describe('Authentication Flow', () => {
         let nextStep = await testObject.signIn('cody', 'password');
         expect(nextStep.step).toBe(ResetPassword);
 
-        let newPassword = 'newpassword';
+        let newPassword = new Password('newpassword');
         nextStep = await nextStep.resetPassword(newPassword);
         expect(nextStep.step).toBe(EnterConfirmationCode);
 

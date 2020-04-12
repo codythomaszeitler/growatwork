@@ -97,10 +97,8 @@ export class LoginScreen extends Component {
         this.state.email,
         this.state.password
       );
-      console.log(this.nextStep);
 
       if (this.nextStep.step === Completed) {
-        console.log('starting load');
         await this.load();
         this.hideLoadingScreen();
         this.props.navigation.navigate("Dashboard");

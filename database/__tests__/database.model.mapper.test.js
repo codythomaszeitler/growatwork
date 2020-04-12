@@ -75,7 +75,6 @@ describe("Database Model Mapper for Career Improvement Client", () => {
 
     expect(databaseModel.input.username).toBe(expected.input.username);
     expect(databaseModel.input.email).toBe(expected.input.email);
-    expect(databaseModel.input.type).toBe(expected.input.type);
   });
 
   it("should convert from database to in memory", () => {

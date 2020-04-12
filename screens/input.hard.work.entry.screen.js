@@ -16,7 +16,6 @@ import {Alert} from 'react-native';
 export class InputHardWorkEntryScreen extends Component {
   constructor(props) {
     super(props);
-    this.props = props;
 
     this.onChangeText = this.onChangeText.bind(this);
     this.onPress = this.onPress.bind(this);

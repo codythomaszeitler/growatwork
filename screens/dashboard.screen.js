@@ -49,7 +49,6 @@ export class DashboardScreen extends Component {
   }
 
   componentWillUnmount() {
-    console.log("dashboard component unmounted");
     this.client.removeOnLogRemovedListener(this);
     this.client.removeOnLogListener(this);
   }
