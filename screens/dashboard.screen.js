@@ -32,6 +32,7 @@ export class DashboardScreen extends Component {
       defaultValue: "",
       accomplishment: null,
       isSavedButtonDisabled: false,
+      isDeleteButtonDisabled: false
     };
   }
 
@@ -84,6 +85,7 @@ export class DashboardScreen extends Component {
   async onSave() {
     this.setState({
       isSavedButtonDisabled: true,
+      isDeleteButtonDisabled: true,
     });
     const accomplishment = this.state.accomplishment.copy();
     const text = this.state.accomplishmentText;
@@ -111,6 +113,7 @@ export class DashboardScreen extends Component {
       defaultValue: "",
       accomplishment: null,
       isSavedButtonDisabled: false,
+      isDeleteButtonDisabled: false
     });
   }
 
@@ -212,7 +215,7 @@ export class DashboardScreen extends Component {
                   }}
                   onPress={this.onSave}
                   title="Change"
-                  disabled={this.isSavedButtonDisabled}
+                  disabled={this.state.isSavedButtonDisabled}
                 />
               </Card>
               <View
@@ -229,6 +232,7 @@ export class DashboardScreen extends Component {
                     marginBottom: 0,
                   }}
                   onPress={this.onDelete}
+                  disabled={this.state.isDeleteButtonDisabled}
                   title="Delete"
                 />
               </Card>

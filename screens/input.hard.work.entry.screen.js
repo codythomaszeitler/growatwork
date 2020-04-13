@@ -21,6 +21,7 @@ export class InputHardWorkEntryScreen extends Component {
 
     this.state = {
       accomplishment: "",
+      isAddButtonDisabled : false
     };
   }
 
@@ -34,6 +35,10 @@ export class InputHardWorkEntryScreen extends Component {
     if (!this.state.accomplishment) {
       return;
     }
+
+    this.setState({
+      isAddButtonDisabled : true
+    });
 
     const newEntry = new HardWorkEntry(
       this.state.accomplishment,
@@ -64,6 +69,10 @@ export class InputHardWorkEntryScreen extends Component {
     } catch (e) {
       Alert.alert("Could not log accomplishment", e.message);
     }
+
+    this.setState({
+      isAddButtonDisabled : false
+    });
   }
 
   render() {
@@ -106,6 +115,7 @@ export class InputHardWorkEntryScreen extends Component {
           <Button style={{
             width : 250
           }}
+          disabled={this.state.isAddButtonDisabled}
           iconRight title="Add" onPress={this.onPress} />
         </View>
       </View>
