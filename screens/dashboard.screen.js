@@ -101,12 +101,11 @@ export class DashboardScreen extends Component {
     const changeAccomplishmentService = new ChangeAccomplishmentService(
       database()
     );
-    changeAccomplishmentService.change(this.client, accomplishment, text).then(
-      function (result) {},
-      function (error) {
+    try {
+      await changeAccomplishmentService.change(this.client, accomplishment, text);
+    } catch (e) {
         Alert.alert("Could not change accomplishment", e.message);
-      }
-    );
+    }
     this.setState({
       modalVisible: false,
       defaultValue: "",

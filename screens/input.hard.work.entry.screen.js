@@ -59,6 +59,9 @@ export class InputHardWorkEntryScreen extends Component {
         backgroundColor: "#1ec96b",
         opacity: 1
       });
+      this.setState({
+        accomplishment : ''
+      });
       this.myTextInput.current.clear();
     } catch (e) {
       Alert.alert('Could not log accomplishment', e.message);

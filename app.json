@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Blank Template",
+    "name": "Grow and Thrive",
     "slug": "growatwork",
     "privacy": "public",
     "sdkVersion": "36.0.0",
@@ -9,9 +9,9 @@
       "android",
       "web"
     ],
-    "version": "1.0.3",
+    "version": "1.0.5",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/growandthrive.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -26,7 +26,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "zsi.growandthriveatwork"
-    }
+    },
   },
   "packagerOpts": {
     "config": "./metro.config.js"

@@ -15,7 +15,6 @@ import { CareerImprovementClientFinder } from "../database/career.improvement.cl
 import { AchievementFinder } from "../database/achievement.finder";
 import { database } from "../database/database";
 import { datastore } from "../datastore/datastore";
-import { CareerImprovementClientEntryGuarantee } from "../database/career.improvement.client.entry.guarantee";
 import { CareerImprovementClient } from "../pojo/career.improvement.client";
 
 export class LoginScreen extends Component {
