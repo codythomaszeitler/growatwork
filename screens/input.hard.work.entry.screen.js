@@ -7,11 +7,9 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Timestamp } from "../pojo/timestamp";
 import { Keyboard } from "react-native";
 import Toast from "react-native-root-toast";
-import {
-  LogAccomplishmentService
-} from "../service/log.accomplishment.service";
+import { LogAccomplishmentService } from "../service/log.accomplishment.service";
 import { database } from "../database/database";
-import {Alert} from 'react-native';
+import { Alert } from "react-native";
 
 export class InputHardWorkEntryScreen extends Component {
   constructor(props) {
@@ -22,13 +20,13 @@ export class InputHardWorkEntryScreen extends Component {
     this.myTextInput = React.createRef();
 
     this.state = {
-      accomplishment: ""
+      accomplishment: "",
     };
   }
 
   onChangeText(event) {
     this.setState({
-      accomplishment: event
+      accomplishment: event,
     });
   }
 
@@ -57,14 +55,14 @@ export class InputHardWorkEntryScreen extends Component {
         hideOnPress: true,
         delay: 0,
         backgroundColor: "#1ec96b",
-        opacity: 1
+        opacity: 1,
       });
       this.setState({
-        accomplishment : ''
+        accomplishment: "",
       });
       this.myTextInput.current.clear();
     } catch (e) {
-      Alert.alert('Could not log accomplishment', e.message);
+      Alert.alert("Could not log accomplishment", e.message);
     }
   }
 
@@ -73,37 +71,43 @@ export class InputHardWorkEntryScreen extends Component {
       <View
         style={{
           backgroundColor: "#ffffff",
+          justifyContent : 'space-evenly',
           flexDirection: "space-evenly",
-          alignItems: "center"
+          alignItems: "stretch",
+          flex: 1,
         }}
       >
-        <Text></Text>
-        <Text></Text>
-        <Input
-          style={{
-            multiline: true,
-            textAlignVertical: "top",
-            flex: 5
-          }}
-          ref={this.myTextInput}
-          leftIcon={<Icon name="edit" size={18} color="blue" />}
-          onChangeText={this.onChangeText}
-          placeholder=" What you did today!"
-        />
-        <Text></Text>
-        <Text></Text>
-        <Text></Text>
-        <Text></Text>
+        <View style={{
+          flex : .25
+        }}>
 
-        <Button
-          style={{
-            flex: 5,
-            width: 250
+        </View>
+        <View>
+          <Input
+            style={{
+              multiline: true,
+              textAlignVertical: "top",
+              flex: 4,
+            }}
+            ref={this.myTextInput}
+            leftIcon={<Icon name="edit" size={18} color="blue" />}
+            onChangeText={this.onChangeText}
+            placeholder=" What you did today!"
+          />
+        </View>
+        <View style={{
+          flex : .3 
+        }}>
+        </View>
+        <View style={{
+          alignItems : 'center',
+          flex : 2,
+        }}>
+          <Button style={{
+            width : 250
           }}
-          iconRight
-          title="Add"
-          onPress={this.onPress}
-        />
+          iconRight title="Add" onPress={this.onPress} />
+        </View>
       </View>
     );
   }
