@@ -15,6 +15,8 @@ export class ExcelExportScreen extends Component {
     super(props);
     this.props = props;
 
+    this.client = datastore().get();
+
     this.onExcelStartPress = this.onExcelStartPress.bind(this);
     this.onFromChange = this.onFromChange.bind(this);
     this.onToChange = this.onToChange.bind(this);
@@ -29,14 +31,13 @@ export class ExcelExportScreen extends Component {
       selectedFromDate: new Date(),
       toTimestamp: this.getStartingTo(),
       fromTimestamp: this.getStartingFrom(),
-      modalVisible: false
+      modalVisible: false,
+      destinationEmail: this.client.getEmail(),
     };
   }
 
   getStartingTo() {
-    let earliestAchievement = datastore()
-      .get()
-      .getEarliestAchievement();
+    let earliestAchievement = this.client.getEarliestAchievement();
 
     let earliest;
     if (earliestAchievement) {
@@ -49,9 +50,7 @@ export class ExcelExportScreen extends Component {
   }
 
   getStartingFrom() {
-    let latestAchievement = datastore()
-      .get()
-      .getLatestAchievement();
+    let latestAchievement = this.client.getLatestAchievement();
 
     if (latestAchievement) {
       latest = latestAchievement.getAccomplishedOn();
@@ -64,23 +63,31 @@ export class ExcelExportScreen extends Component {
 
   onEmailDestinationChange(email) {
     this.setState({
-      destinationEmail: email
+      destinationEmail: email,
     });
   }
 
   async onExportViaEmail() {
-    const excelWriter = new AchievementExcelWriter();
-    await excelWriter.write("yourhardwork.csv", this.getSelectedAchievements());
-    await MailComposer.composeAsync({
-      recipients: [this.state.destinationEmail],
-      subject: this.parseSubjectLine(),
-      attachments: [FileSystem.documentDirectory + "yourhardwork.csv"]
-    });
+    try {
+      const excelWriter = new AchievementExcelWriter();
+      await excelWriter.write(
+        "yourhardwork.csv",
+        this.getSelectedAchievements()
+      );
+      await MailComposer.composeAsync({
+        recipients: [this.state.destinationEmail],
+        subject: this.parseSubjectLine(),
+        attachments: [FileSystem.documentDirectory + "yourhardwork.csv"],
+      });
+      this.turnOff();
+    } catch (e) {
+      Alert.alert("Could not export", e.message);
+    }
   }
 
   setModalVisible(visible) {
     this.setState({
-      modalVisible: visible
+      modalVisible: visible,
     });
   }
 
@@ -97,7 +104,7 @@ export class ExcelExportScreen extends Component {
 
     this.setState({
       fromTimestamp: Timestamp.fromDate(fromDate),
-      selectedFromDate: fromDate
+      selectedFromDate: fromDate,
     });
   }
 
@@ -105,7 +112,7 @@ export class ExcelExportScreen extends Component {
     const toDate = new Date(event.nativeEvent.timestamp);
     this.setState({
       toTimestamp: Timestamp.fromDate(toDate),
-      selectedToDate: toDate
+      selectedToDate: toDate,
     });
   }
 
@@ -131,9 +138,7 @@ export class ExcelExportScreen extends Component {
     const startOfDay = this.state.fromTimestamp.startOfDay();
     const endOfDay = this.state.toTimestamp.endOfDay();
 
-    return datastore()
-      .get()
-      .getAchievements(startOfDay, endOfDay);
+    return datastore().get().getAchievements(startOfDay, endOfDay);
   }
 
   render() {
@@ -142,7 +147,7 @@ export class ExcelExportScreen extends Component {
         testID="scrollView"
         style={{
           flex: 1,
-          backgroundColor: "#ffffff"
+          backgroundColor: "#ffffff",
         }}
       >
         <Modal
@@ -159,11 +164,13 @@ export class ExcelExportScreen extends Component {
 
           <Card title="Export via Email">
             <Text style={{ marginBottom: 10 }}>
-              Export the achievements within the selected ranged to the given email address!
+              Export the achievements within the selected ranged to the given
+              email address!
             </Text>
             <Input
               testID="DestinationEmailInput"
               placeholder="E-mail"
+              defaultValue={this.state.destinationEmail}
               onChangeText={this.onEmailDestinationChange}
             ></Input>
             <Text></Text>
@@ -173,7 +180,7 @@ export class ExcelExportScreen extends Component {
                 borderRadius: 0,
                 marginLeft: 0,
                 marginRight: 0,
-                marginBottom: 0
+                marginBottom: 0,
               }}
               onPress={this.onExportViaEmail}
               testID="ExportViaEmail"
@@ -191,7 +198,7 @@ export class ExcelExportScreen extends Component {
                 borderRadius: 0,
                 marginLeft: 0,
                 marginRight: 0,
-                marginBottom: 0
+                marginBottom: 0,
               }}
               title="Cancel"
               onPress={this.turnOff}
@@ -204,7 +211,7 @@ export class ExcelExportScreen extends Component {
         <Button
           style={{
             flexGrow: 0.5,
-            alignItems: "center"
+            alignItems: "center",
           }}
           testID="Export"
           title="Export"
@@ -217,7 +224,7 @@ export class ExcelExportScreen extends Component {
           style={{
             fontSize: 20,
             fontFamily: "PingFangTC-Thin",
-            marginLeft: 30
+            marginLeft: 30,
           }}
         >
           {" "}
@@ -237,7 +244,7 @@ export class ExcelExportScreen extends Component {
           style={{
             fontSize: 20,
             fontFamily: "PingFangTC-Thin",
-            marginLeft: 30
+            marginLeft: 30,
           }}
         >
           {" "}
