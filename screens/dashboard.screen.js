@@ -118,6 +118,11 @@ export class DashboardScreen extends Component {
   }
 
   async onDelete() {
+    this.setState({
+      isSavedButtonDisabled: true,
+      isDeleteButtonDisabled: true,
+    }); 
+
     const accomplishment = this.state.accomplishment.copy();
     const service = new DeleteAccomplishmentService(database());
     try {
@@ -130,6 +135,11 @@ export class DashboardScreen extends Component {
     } catch (e) {
       Alert.alert("Could not delete accomplishment", e.message);
     }
+
+    this.setState({
+      isSavedButtonDisabled: false,
+      isDeleteButtonDisabled: false,
+    });
   }
 
   onPress(event) {
