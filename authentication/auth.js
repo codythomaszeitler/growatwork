@@ -62,9 +62,9 @@ export class Authentication {
     return await this.sendPasswordResetEmail(username);
   }
 
-  async confirmChangePassword(username, code, password) {
-    return await this.confirmChangePassword(username, code, password);
-  }
+  async forgotPasswordSubmit(username, code, newPassword) {
+    return await Auth.forgotPasswordSubmit(username, code, newPassword);
+  } 
 
   async resendSignUp(username) {
     return await Auth.resendSignUp(username);

@@ -70,7 +70,7 @@ export class ForgotPasswordScreen extends Component {
     }
 
     try {
-      await this.authentication.confirmChangePassword(
+      await this.authentication.forgotPasswordSubmit(
         this.state.email,
         this.state.confirmationCode,
         this.state.newPassword
@@ -94,7 +94,7 @@ export class ForgotPasswordScreen extends Component {
     }
 
     try {
-        await this.authentication.sendPasswordResetEmail(
+        await this.authentication.forgotPassword(
           this.state.email
         );
       this.setState({

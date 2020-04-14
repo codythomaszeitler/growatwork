@@ -26,18 +26,21 @@ export class ExcelExportScreen extends Component {
     this.onEmailDestinationChange = this.onEmailDestinationChange.bind(this);
     this.onExportViaEmail = this.onExportViaEmail.bind(this);
 
+    const fromTimestamp = this.getStartingFrom();
+    const toTimestamp = this.getStartingTo();
+
     this.state = {
-      selectedToDate: new Date(),
-      selectedFromDate: new Date(),
-      toTimestamp: this.getStartingTo(),
-      fromTimestamp: this.getStartingFrom(),
+      selectedToDate: toTimestamp.toDate(),
+      selectedFromDate: fromTimestamp.toDate(),
+      toTimestamp: toTimestamp,
+      fromTimestamp: fromTimestamp,
       modalVisible: false,
       destinationEmail: this.client.getEmail(),
     };
   }
 
   getStartingTo() {
-    let earliestAchievement = this.client.getEarliestAchievement();
+    let earliestAchievement = this.client.getLatestAchievement();
 
     let earliest;
     if (earliestAchievement) {
@@ -50,7 +53,7 @@ export class ExcelExportScreen extends Component {
   }
 
   getStartingFrom() {
-    let latestAchievement = this.client.getLatestAchievement();
+    let latestAchievement = this.client.getEarliestAchievement();
 
     if (latestAchievement) {
       latest = latestAchievement.getAccomplishedOn();
