@@ -285,7 +285,6 @@ export class LoginScreen extends Component {
             placeholder="  Username"
             autoCapitalize="none"
             keyboardType="email-address"
-            autoFocus={true}
             onChangeText={this.onEmailChange}
             leftIcon={<Icon name="email" size={20} color="blue" />}
           />

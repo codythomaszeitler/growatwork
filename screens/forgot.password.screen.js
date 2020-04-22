@@ -145,13 +145,14 @@ export class ForgotPasswordScreen extends Component {
             <Input
               placeholder="Confirmation Code"
               onChangeText={this.onConfirmationCodeChange}
+              placeholderTextColor="#E0E0E0"
               secureTextEntry={true}
               value={this.state.confirmationCode}
               leftIcon={<Icon name="email" size={20} color="blue" />}
-
             />
             <Input
               placeholder="New Password"
+              placeholderTextColor="#E0E0E0"
               onChangeText={this.onNewPasswordChange}
               secureTextEntry={true}
               value={this.state.newPassword}
@@ -160,6 +161,7 @@ export class ForgotPasswordScreen extends Component {
             />
             <Input
               placeholder="Confirm New Password"
+              placeholderTextColor="#E0E0E0"
               onChangeText={this.onReenterNewPasswordChange}
               secureTextEntry={true}
               value={this.state.copyNewPassword}

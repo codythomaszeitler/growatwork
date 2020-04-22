@@ -125,18 +125,21 @@ export class SettingsScreen extends Component {
             </Text>
             <Input
               placeholder="Old Password"
+              placeholderTextColor="#E0E0E0"
               onChangeText={this.onOldPasswordChange}
               secureTextEntry={true}
               value={this.state.oldPassword}
             />
             <Input
               placeholder="New Password"
+              placeholderTextColor="#E0E0E0"
               onChangeText={this.onNewPasswordChange}
               secureTextEntry={true}
               value={this.state.newPassword}
             />
             <Input
               placeholder="Confirm New Password"
+              placeholderTextColor="#E0E0E0"
               onChangeText={this.onReenterNewPasswordChange}
               secureTextEntry={true}
               value={this.state.copyNewPassword}
