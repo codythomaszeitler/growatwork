@@ -69,8 +69,8 @@ export class InitialScreen extends Component {
               fontSize: 20,
             }}
           >
-            {"   "}
-            {"\u00A9"} Cody Zeitler
+            {"  "}
+            {"\u00A9"} Copyright 2020 Cody Zeitler
           </Text>
         </View>
       </View>
