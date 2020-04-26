@@ -16,15 +16,22 @@ export class InitialScreen extends Component {
           flexDirection: "column",
           justifyContent: "space-around",
           alignItems: "center",
-          backgroundColor: "#ffffff"
+          backgroundColor: "#ffffff",
         }}
       >
-        <View>
+        <View style={{
+          flex : 1
+        }}>
+
+        </View>
+        <View style={{
+          flex : 1
+        }}>
           <Text
             style={{
               fontSize: 30,
               textAlign: "center",
-              fontFamily: "PingFangTC-Thin"
+              fontFamily: "PingFangTC-Thin",
             }}
           >
             Grow and Thrive
@@ -33,19 +40,39 @@ export class InitialScreen extends Component {
             style={{
               fontSize: 30,
               textAlign: "center",
-              fontFamily: "PingFangTC-Thin"
+              fontFamily: "PingFangTC-Thin",
             }}
           >
             at Work
           </Text>
         </View>
-
-        <Button
-          title="Let's get started!"
-          onPress={this.toLoginScreen}
-          type='outline'
-          raised
-        ></Button>
+        <View style={{
+          flex: 3
+        }}>
+        </View>
+        <View style={{
+          flex : 1
+        }}>
+          <Button
+            title="Let's get started!"
+            onPress={this.toLoginScreen}
+            type="outline"
+            raised
+          ></Button>
+        </View>
+        <View style={{
+          flex : 1
+        }}>
+          <Text
+            style={{
+              color: "#A0A0A0",
+              fontSize: 20,
+            }}
+          >
+            {"   "}
+            {"\u00A9"} Cody Zeitler
+          </Text>
+        </View>
       </View>
     );
   }
