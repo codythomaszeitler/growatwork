@@ -32,7 +32,7 @@ export class DashboardScreen extends Component {
       defaultValue: "",
       accomplishment: null,
       isSavedButtonDisabled: false,
-      isDeleteButtonDisabled: false
+      isDeleteButtonDisabled: false,
     };
   }
 
@@ -104,16 +104,20 @@ export class DashboardScreen extends Component {
       database()
     );
     try {
-      await changeAccomplishmentService.change(this.client, accomplishment, text);
+      await changeAccomplishmentService.change(
+        this.client,
+        accomplishment,
+        text
+      );
     } catch (e) {
-        Alert.alert("Could not change accomplishment", e.message);
+      Alert.alert("Could not change accomplishment", e.message);
     }
     this.setState({
       modalVisible: false,
       defaultValue: "",
       accomplishment: null,
       isSavedButtonDisabled: false,
-      isDeleteButtonDisabled: false
+      isDeleteButtonDisabled: false,
     });
   }
 
@@ -121,7 +125,7 @@ export class DashboardScreen extends Component {
     this.setState({
       isSavedButtonDisabled: true,
       isDeleteButtonDisabled: true,
-    }); 
+    });
 
     const accomplishment = this.state.accomplishment.copy();
     const service = new DeleteAccomplishmentService(database());
@@ -281,6 +285,7 @@ export class DashboardScreen extends Component {
             ></HardWorkEntryScreenSegment>
           )}
         ></FlatList>
+
       </View>
     );
   }

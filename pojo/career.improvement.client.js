@@ -12,6 +12,16 @@ class OnLogRemovedEvent {
   }
 }
 
+class OnBossAddedEvent {
+  constructor(boss) {
+    this.boss = boss;
+  }
+
+  getBoss() {
+    return this.boss;
+  }
+}
+
 export class CareerImprovementClient {
   constructor(email, username) {
     this.hardWorkEntries = [];
@@ -37,8 +47,31 @@ export class CareerImprovementClient {
     return this.email;
   }
 
-  equals(object) {
-    return true;
+  addSuperior(superior) {
+    const hasSuperior = () => {
+      let hasSuperior = false;
+      for (let i = 0; i < this.superiors.length; i++) {
+        hasSuperior = superior.getName() === this.superiors[i].getName();
+      }
+      return hasSuperior;
+    };
+
+    if (hasSuperior(superior)) {
+      throw new Error(
+        "Boss [" +
+          superior.getName() +
+          "] already existed on client [" +
+          this.getUsername() +
+          "]"
+      );
+    }
+
+    this.superiors.push(superior);
+
+    for (let i = 0; i < this.onAddBossAddedListeners.length; i++) {
+      const event = new OnBossAddedEvent(superior);
+      this.onAddBossAddedListeners[i].onBossAdded(event);
+    }
   }
 
   contains(toCheck) {
@@ -91,8 +124,10 @@ export class CareerImprovementClient {
     this.onLogAddListeners.push(listener);
   }
 
-  removeOnLogListener(listener){ 
-    this.onLogAddListeners = this.onLogAddListeners.filter(function(registered) {
+  removeOnLogListener(listener) {
+    this.onLogAddListeners = this.onLogAddListeners.filter(function (
+      registered
+    ) {
       return registered.__onLogListenerId !== listener.__onLogListenerId;
     });
   }
@@ -104,7 +139,6 @@ export class CareerImprovementClient {
   }
 
   remove(hardWorkEntry) {
-
     let deletionIndex = -1;
     for (let i = 0; i < this.hardWorkEntries.length; i++) {
       if (hardWorkEntry.equals(this.hardWorkEntries[i])) {
@@ -131,8 +165,13 @@ export class CareerImprovementClient {
   }
 
   removeOnLogRemovedListener(listener) {
-    this.onLogRemovedListeners = this.onLogRemovedListeners.filter(function(registered) {
-      return listener.__onLogRemovedListenerId !== registered.__onLogRemovedListenerId;
+    this.onLogRemovedListeners = this.onLogRemovedListeners.filter(function (
+      registered
+    ) {
+      return (
+        listener.__onLogRemovedListenerId !==
+        registered.__onLogRemovedListenerId
+      );
     });
   }
 

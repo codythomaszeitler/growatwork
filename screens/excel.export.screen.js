@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Text, Modal, View, TouchableHighlight } from "react-native";
-import { Button, Card, Icon, Input } from "react-native-elements";
+import { Text, Modal } from "react-native";
+import { Button, Card, Icon, Input, CheckBox } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Divider } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
@@ -161,6 +161,7 @@ export class ExcelExportScreen extends Component {
             Alert.alert("Modal has been closed.");
           }}
         >
+          <ScrollView>
           <Text></Text>
           <Text></Text>
           <Text></Text>
@@ -193,6 +194,72 @@ export class ExcelExportScreen extends Component {
 
           <Text></Text>
           <Text></Text>
+          <Card>
+              <CheckBox
+                center
+                title="All"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={true}
+              />
+              <CheckBox
+                center
+                title="Long Term Goal"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={false}
+              />
+              <CheckBox
+                center
+                title="Long Term Goal"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={false}
+              />
+              <CheckBox
+                center
+                title="Long Term Goal"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={false}
+              />
+              <CheckBox
+                center
+                title="Long Term Goal"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={false}
+              />
+              <CheckBox
+                center
+                title="Long Term Goal"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={false}
+              />
+              <CheckBox
+                center
+                title="Long Term Goal"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={false}
+              />
+              <CheckBox
+                center
+                title="Long Term Goal"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={false}
+              />
+              <CheckBox
+                center
+                title="Long Term Goal"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={false}
+              />
+          </Card>
+          <Text></Text>
           <Text></Text>
 
           <Card>
@@ -207,6 +274,10 @@ export class ExcelExportScreen extends Component {
               onPress={this.turnOff}
             />
           </Card>
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
+          </ScrollView>
         </Modal>
         <Divider style={{ backgroundColor: "black" }} />
 

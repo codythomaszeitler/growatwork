@@ -7,9 +7,11 @@ import React, { Component } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import { Header } from "react-native-elements";
-import {SettingsScreen} from './settings.screen';
+import { SettingsScreen } from "./settings.screen";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { LongTermScreen } from "./long.term.screen";
+import { AddBossScreen } from "./add.boss.screen";
 
 const Tab = createBottomTabNavigator();
 function DashboardTabs() {
@@ -28,14 +30,14 @@ function DashboardTabs() {
                 name={"ios-checkmark"}
               />
             </View>
-          )
+          ),
         }}
       />
       <Tab.Screen
         name="Add"
         component={InputHardWorkEntryScreen}
         options={{
-          tabBarLabel: "Add",
+          tabBarLabel: "Log",
           tabBarIcon: ({ tintColor }) => (
             <View>
               <Icon
@@ -44,25 +46,41 @@ function DashboardTabs() {
                 name={"ios-add-circle-outline"}
               />
             </View>
-          )
+          ),
         }}
       />
       <Tab.Screen
-        name="ExcelExport"
-        component={ExcelExportScreen}
+        name="Long Term"
+        component={LongTermScreen}
         options={{
-          tabBarLabel: "Excel Export",
+          tabBarLabel: "Weekly Progress",
           tabBarIcon: ({ tintColor }) => (
             <View>
               <Icon
                 style={[{ color: tintColor }]}
                 size={25}
-                name={"ios-arrow-dropdown-circle"}
+                name={"ios-checkmark"}
               />
             </View>
-          )
+          ),
         }}
-      ></Tab.Screen>
+      />
+      <Tab.Screen
+        name="Add Long Term Goals"
+        component={AddBossScreen}
+        options={{
+          tabBarLabel: "Goals",
+          tabBarIcon: ({ tintColor }) => (
+            <View>
+              <Icon
+                style={[{ color: tintColor }]}
+                size={25}
+                name={"ios-add-circle-outline"}
+              />
+            </View>
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 }
@@ -73,43 +91,45 @@ export class DashboardNavigation extends Component {
     this.props = props;
 
     this.state = {
-      modalVisible : false
-    }
+      modalVisible: false,
+    };
   }
 
   render() {
     return (
       <NavigationContainer>
-        <Modal animationType="slide"
-        transparent={false}
-        visible={this.state.modalVisible}>
-          <SettingsScreen onCloseCall={() => {
-            this.setState({
-              modalVisible : false
-            });
-          }}
-          onLogOutCall={() => {
-            this.setState({
-              modalVisible : false
-            });
-            this.props.navigation.navigate('Login');
-          }}
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+        >
+          <SettingsScreen
+            onCloseCall={() => {
+              this.setState({
+                modalVisible: false,
+              });
+            }}
+            onLogOutCall={() => {
+              this.setState({
+                modalVisible: false,
+              });
+              this.props.navigation.navigate("Login");
+            }}
           ></SettingsScreen>
-
         </Modal>
         <Header
           centerComponent={{
             text: "Grow and Thrive at Work",
-            style: { color: "#4d7bd1", fontSize: 18 }
+            style: { color: "#4d7bd1", fontSize: 18 },
           }}
-          rightComponent={{ 
+          rightComponent={{
             icon: "menu",
             color: "#4d7bd1",
             onPress: () => {
               this.setState({
-                modalVisible : true
+                modalVisible: true,
               });
-            }
+            },
           }}
           backgroundColor={"#ffffff"}
         />
