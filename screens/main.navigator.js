@@ -1,8 +1,7 @@
 // import { createBottomTabNavigator } from "react-navigation-tabs";
 import { DashboardScreen } from "./dashboard.screen";
-import { ExcelExportScreen } from "./excel.export.screen";
 import { InputHardWorkEntryScreen } from "./input.hard.work.entry.screen";
-import { View, Modal, Text } from "react-native";
+import { View, Modal } from "react-native";
 import React, { Component } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
@@ -10,8 +9,8 @@ import { Header } from "react-native-elements";
 import { SettingsScreen } from "./settings.screen";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { LongTermScreen } from "./long.term.screen";
-import { AddBossScreen } from "./add.boss.screen";
+import { GoalsScreen } from "./goals.screen";
+import {AddGoalScreen} from './add.goal.screen';
 
 const Tab = createBottomTabNavigator();
 function DashboardTabs() {
@@ -51,7 +50,7 @@ function DashboardTabs() {
       />
       <Tab.Screen
         name="Long Term"
-        component={LongTermScreen}
+        component={GoalsScreen}
         options={{
           tabBarLabel: "Weekly Progress",
           tabBarIcon: ({ tintColor }) => (
@@ -66,8 +65,8 @@ function DashboardTabs() {
         }}
       />
       <Tab.Screen
-        name="Add Long Term Goals"
-        component={AddBossScreen}
+        name="Goals"
+        component={AddGoalScreen}
         options={{
           tabBarLabel: "Goals",
           tabBarIcon: ({ tintColor }) => (

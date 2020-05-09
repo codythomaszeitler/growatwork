@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { Card, ListItem } from "react-native-elements";
 import logo from "../checkbox.png";
 
-export class LongTermScreenSegment extends Component {
+export class GoalsScreenSegment extends Component {
   constructor(props) {
     super(props);
     this.state = {

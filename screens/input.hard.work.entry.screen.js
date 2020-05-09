@@ -10,7 +10,7 @@ import Toast from "react-native-root-toast";
 import { LogAccomplishmentService } from "../service/log.accomplishment.service";
 import { database } from "../database/database";
 import { Alert } from "react-native";
-import { LongTermScreen } from "./long.term.screen";
+import { GoalsScreen } from "./goals.screen";
 
 export class InputHardWorkEntryScreen extends Component {
   constructor(props) {
@@ -133,7 +133,7 @@ export class InputHardWorkEntryScreen extends Component {
             <Text style={{
               fontSize : 20
             }}>                              Long Term Goals</Text>
-            <LongTermScreen></LongTermScreen>
+            <GoalsScreen></GoalsScreen>
           </View>
           <View style={{
             flex : 1,
