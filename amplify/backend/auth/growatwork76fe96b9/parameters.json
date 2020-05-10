@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "growatworkdc3fe228_identitypool_dc3fe228",
+    "identityPoolName": "growatwork76fe96b9_identitypool_76fe96b9",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "growatdc3fe228",
-    "userPoolName": "growatworkdc3fe228_userpool_dc3fe228",
+    "resourceNameTruncated": "growat76fe96b9",
+    "userPoolName": "growatwork76fe96b9_userpool_76fe96b9",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,9 +28,9 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "growatdc3fe228_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "growat76fe96b9_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "resourceName": "growatworkdc3fe228",
+    "resourceName": "growatwork76fe96b9",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [

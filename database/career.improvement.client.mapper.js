@@ -1,5 +1,6 @@
 import { CareerImprovementClient } from "../pojo/career.improvement.client";
-import { JS } from "aws-amplify";
+import { AccomplishmentMapper } from "./accomplishment.mapper";
+import { GoalMapper } from "./goal.mapper";
 
 export class CareerImprovementClientMapper {
   toInMemoryModel(databaseModel) {
@@ -18,22 +19,46 @@ export class CareerImprovementClientMapper {
       );
     }
 
-    const graphQlClient = clientsAsGraphQl[0];
+    const graphQlResponse = clientsAsGraphQl[0];
     const careerImprovementClient = new CareerImprovementClient(
-      graphQlClient.email,
-      graphQlClient.username
+      graphQlResponse.email,
+      graphQlResponse.username
     );
-    careerImprovementClient.id = graphQlClient.id;
+    careerImprovementClient.id = graphQlResponse.id;
+
+    const accomplishmentsAsDatabase = graphQlResponse.accomplishments;
+    for (let i = 0; i < accomplishmentsAsDatabase.length; i++) {
+      const accomplishmentMapper = new AccomplishmentMapper();
+      const accomplishments = accomplishmentMapper.toInMemoryModel(accomplishmentsAsDatabase[i]);
+      careerImprovementClient.log(accomplishments[0]);
+    }
+
+    const goalsAsDatabase = graphQlResponse.goals;
+    for (let i = 0; i < goalsAsDatabase.length; i++) {
+      const goalMapper = new GoalMapper();
+
+      const goal = goalMapper.toInMemoryModel(goalsAsDatabase[i]);
+      careerImprovementClient.addGoal(goal);
+    }
 
     return careerImprovementClient;
   }
 
   toDatabaseModel(inMemoryModel) {
+
+    const accomplishmentMapper = new AccomplishmentMapper();
+    const accomplishmentsAsDatabase = accomplishmentMapper.toDatabaseModel(inMemoryModel.getHardWork());
+
+    const goalMapper = new GoalMapper();
+    const goalsAsDatabase = goalMapper.toDatabaseModel(inMemoryModel.getGoals());
+
     return {
       input: {
         username: inMemoryModel.getUsername(),
         email: inMemoryModel.getEmail(),
-        id : inMemoryModel.id
+        id : inMemoryModel.id,
+        accomplishments : accomplishmentsAsDatabase,
+        goals : goalsAsDatabase
       },
     };
   }

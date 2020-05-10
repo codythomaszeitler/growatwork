@@ -12,7 +12,6 @@ import {
 import { AuthenticationFlow } from "../authentication/authentication.flow";
 import { ConfirmationCodeEntryScreen } from "./confirmation.code.entry.screen";
 import { CareerImprovementClientFinder } from "../database/career.improvement.client.finder";
-import { AchievementFinder } from "../database/achievement.finder";
 import { database } from "../database/database";
 import { datastore } from "../datastore/datastore";
 import { CareerImprovementClient } from "../pojo/career.improvement.client";
@@ -109,6 +108,7 @@ export class LoginScreen extends Component {
         throw new Error("Unexpected error occurred");
       }
     } catch (e) {
+      console.log(e);
       let message = e.message ? e.message : e;
 
       Alert.alert("Cannot Sign In", message, [
@@ -195,12 +195,12 @@ export class LoginScreen extends Component {
       await database().create(careerImprovementClient);
     }
 
-    const achievementFinder = new AchievementFinder(database());
-    const achievements = await achievementFinder.findByUsername(username);
+    // const achievementFinder = new AchievementFinder(database());
+    // const achievements = await achievementFinder.findByUsername(username);
 
-    for (let i = 0; i < achievements.length; i++) {
-      careerImprovementClient.log(achievements[i]);
-    }
+    // for (let i = 0; i < achievements.length; i++) {
+    //   careerImprovementClient.log(achievements[i]);
+    // }
     datastore().set(careerImprovementClient);
   }
 

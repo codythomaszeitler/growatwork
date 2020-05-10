@@ -12,13 +12,10 @@ class OnLogRemovedEvent {
   }
 }
 
-class OnBossAddedEvent {
-  constructor(boss) {
-    this.boss = boss;
-  }
-
-  getBoss() {
-    return this.boss;
+class OnAssociationEvent {
+  constructor(goal, accomplishment) {
+    this.goal = goal;
+    this.accomplishment = accomplishment;
   }
 }
 
@@ -28,6 +25,7 @@ export class CareerImprovementClient {
     this.onLogAddListeners = [];
     this.onLogRemovedListeners = [];
     this.onGoalAddedListeners = [];
+    this.onAccomplishmentAssociatedListeners = [];
     this.type = CareerImprovementClient.getType();
     this.email = email;
     this.username = username;
@@ -64,9 +62,10 @@ export class CareerImprovementClient {
   }
 
   addGoal(goal) {
+    console.log(goal);
 
     if (this.hasGoal(goal)) {
-      throw new Error('The goal [' + goal.get() + '] has already been added');
+      throw new Error("The goal [" + goal.get() + "] has already been added");
     }
 
     this.goals.push(goal.copy());
@@ -163,10 +162,20 @@ export class CareerImprovementClient {
       }
 
       ref.associate(hardWorkEntry);
+      this.emitOnAccomplishmentAssociatedEvent(ref, hardWorkEntry);
     }
 
     this.hardWorkEntries.splice(insertionIndex, 0, hardWorkEntry.copy());
     this.emitOnLogEvent(hardWorkEntry.copy());
+  }
+
+  emitOnAccomplishmentAssociatedEvent(goal, accomplishment) {
+    for (let i = 0; i < this.onAccomplishmentAssociatedListeners.length; i++) {
+      const listener = this.onAccomplishmentAssociatedListeners[i];
+      listener.onAccomplishmentAssociated(
+        new OnAssociationEvent(goal, accomplishment)
+      );
+    }
   }
 
   emitOnLogEvent(hardWorkEntry) {
@@ -174,6 +183,10 @@ export class CareerImprovementClient {
       const listener = this.onLogAddListeners[i];
       listener.onLog(new OnLogEvent(hardWorkEntry, this));
     }
+  }
+
+  addOnAccomplishmentAssociatedListener(listener) {
+    this.onAccomplishmentAssociatedListeners.push(listener);
   }
 
   addOnLogListener(listener) {

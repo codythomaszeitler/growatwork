@@ -4,7 +4,8 @@ import { Card, Input, Button, Icon, Text } from "react-native-elements";
 import { datastore } from "../datastore/datastore";
 import { Goal } from "../pojo/goal";
 import Toast from "react-native-root-toast";
-
+import { AddGoalService } from "../service/add.goal.service";
+import { database } from "../database/database";
 
 export class AddGoalScreen extends Component {
   constructor(props) {
@@ -22,30 +23,31 @@ export class AddGoalScreen extends Component {
 
   onPress(event) {
     if (!this.state.goalText) {
-        return;
+      return;
     }
 
     const goal = new Goal(this.state.goalText);
 
     try {
-        this.client.addGoal(goal);
+      const service = new AddGoalService(database());
+      service.addGoal(this.client, goal);
 
-        Keyboard.dismiss();
-    
-        Toast.show("Goal Successfully Added!", {
-          duration: Toast.durations.LONG,
-          position: Toast.positions.TOP,
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          backgroundColor: "#1ec96b",
-          opacity: 1,
-        });
-    
-        this.myTextInput.current.clear();
+      Keyboard.dismiss();
+
+      Toast.show("Goal Successfully Added!", {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+        backgroundColor: "#1ec96b",
+        opacity: 1,
+      });
+
+      this.myTextInput.current.clear();
     } catch (e) {
-        Alert.alert('Could not add goal', e.message);
+      Alert.alert("Could not add goal", e.message);
     }
   }
 

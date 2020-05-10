@@ -8,7 +8,7 @@
             "SourceDir": "/",
             "DistributionDir": "/",
             "BuildCommand": "npm run-script build",
-            "StartCommand": "yarn start"
+            "StartCommand": "npm run-script start"
         }
     },
     "providers": [

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { View } from "react-native";
 import { Card, ListItem } from "react-native-elements";
 import logo from "../checkbox.png";
+import { HardWorkEntryScreenSegment } from "./hard.work.entry.screen.segment";
 
 export class GoalsScreenSegment extends Component {
   constructor(props) {
@@ -50,7 +51,9 @@ export class GoalsScreenSegment extends Component {
                 subtitleStyle={{
                   marginLeft: 35,
                 }}
-              />
+              >
+}
+                </ListItem>
             );
           })}
         </Card>

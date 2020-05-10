@@ -25,6 +25,12 @@ class Database {
     return readResults;
   }
 
+  async update(inMemory) {
+    const operation = mutations.updateCareerImprovementClient;
+    const params = this.mapper.toDatabaseModel(inMemory);
+    await API.graphql(graphqlOperation(operation, params));
+  }
+
   async delete(inMemory) {
     const operation = this.getDeleteOperation(inMemory.type);
     const params = {
@@ -76,17 +82,6 @@ class Database {
       databaseTable = "NOT-FOUND";
     }
     return databaseTable;
-  }
-
-  async onLog(event) {
-    const achievement = event.logged;
-    achievement.achievementCareerImprovementClientId =
-      event.careerImprovementClient.id;
-    await this.create(event.logged);
-  }
-
-  async onLogRemoved(event) {
-    await this.delete(event.removed);
   }
 }
 

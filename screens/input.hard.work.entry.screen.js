@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Modal, Alery, Keyboard } from "react-native";
+import { View, Text, Modal, Alert, Keyboard } from "react-native";
 import { Input, Button, Card, ListItem, Header } from "react-native-elements";
 import { datastore } from "../datastore/datastore";
 import { HardWorkEntry } from "../pojo/hard.work.entry";
@@ -9,6 +9,7 @@ import Toast from "react-native-root-toast";
 import { LogAccomplishmentService } from "../service/log.accomplishment.service";
 import { database } from "../database/database";
 import { ScrollView } from "react-native-gesture-handler";
+import {Goal} from '../pojo/goal';
 
 const noGoalSeleceted = "--NONE--";
 
@@ -100,7 +101,7 @@ export class InputHardWorkEntryScreen extends Component {
       const client = datastore().get();
 
       const logAccomplishmentService = new LogAccomplishmentService(database());
-      await logAccomplishmentService.log(client, newEntry);
+      await logAccomplishmentService.log(client, newEntry, new Goal(this.state.selectedGoal));
       Keyboard.dismiss();
 
       Toast.show("Accomplishment Successfully Added!", {
@@ -243,7 +244,7 @@ export class InputHardWorkEntryScreen extends Component {
             </View>
             <Text></Text>
             <Button
-              title="Associate Goal"
+              title="Associate"
               onPress={this.onAssociateGoalPress}
             ></Button>
           </Card>

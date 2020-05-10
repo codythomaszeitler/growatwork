@@ -1,10 +1,9 @@
 {
 	"auth": {
-		"growatworkdc3fe228": {
+		"growatwork76fe96b9": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
-			"dependsOn": [],
-			"customAuth": false
+			"dependsOn": []
 		}
 	},
 	"api": {
@@ -17,7 +16,7 @@
 					"defaultAuthentication": {
 						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
 						"userPoolConfig": {
-							"userPoolId": "authgrowatworkdc3fe228"
+							"userPoolId": "authgrowatwork76fe96b9"
 						}
 					}
 				}

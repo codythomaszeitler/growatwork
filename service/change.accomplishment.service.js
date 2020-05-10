@@ -1,7 +1,4 @@
-import { AchievementFinder } from "../database/achievement.finder";
-import {LogAccomplishmentService} from "./log.accomplishment.service";
 import {HardWorkEntry} from '../pojo/hard.work.entry';
-import {DeleteAccomplishmentService} from './delete.accomplishment.service';
 
 export class ChangeAccomplishmentService {
 
@@ -10,16 +7,9 @@ export class ChangeAccomplishmentService {
     }
 
     async change(careerImprovementClient, original, newAccomplishmentText) {
-        const deleteAccomplishmentService = new DeleteAccomplishmentService(this.database);
-        await deleteAccomplishmentService.delete(careerImprovementClient, original.copy());
+        careerImprovementClient.remove(original);
+        careerImprovementClient.log(new HardWorkEntry(newAccomplishmentText, original.getAccomplishedOn()));
 
-        const logAccomplishmentService = new LogAccomplishmentService(this.database);
-        const changed = new HardWorkEntry(newAccomplishmentText, original.getAccomplishedOn().copy());
-
-        try {
-            await logAccomplishmentService.log(careerImprovementClient, changed);
-        } catch (e) {
-            throw new Error('Could not change accomplishment because of [' + e.message + ']');
-        }
+        this.database.update(careerImprovementClient);
     }
 }

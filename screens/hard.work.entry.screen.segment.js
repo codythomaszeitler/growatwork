@@ -17,7 +17,10 @@ export class HardWorkEntryScreenSegment extends Component {
     this.getDateView = this.getDateView.bind(this);
     this.onPress = this.onPress.bind(this);
 
-    this.onPressListeners = [this.props.onPressListener];
+    this.onPressListeners = [];
+    if (this.props.onPressListener) {
+      this.onPressListeners.push(this.props.onPressListener);
+    }
   }
 
   onPress() {

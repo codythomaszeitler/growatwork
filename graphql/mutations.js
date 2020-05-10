@@ -9,13 +9,18 @@ export const createCareerImprovementClient = `mutation CreateCareerImprovementCl
     id
     username
     email
-    achievements {
-      items {
-        id
-        achievement
-        owner
+    accomplishments {
+      accomplishment
+      accomplishedOn {
+        utc
+        timezone
       }
-      nextToken
+    }
+    goals {
+      goal
+      accomplishments {
+        accomplishment
+      }
     }
     owner
   }
@@ -29,13 +34,18 @@ export const updateCareerImprovementClient = `mutation UpdateCareerImprovementCl
     id
     username
     email
-    achievements {
-      items {
-        id
-        achievement
-        owner
+    accomplishments {
+      accomplishment
+      accomplishedOn {
+        utc
+        timezone
       }
-      nextToken
+    }
+    goals {
+      goal
+      accomplishments {
+        accomplishment
+      }
     }
     owner
   }
@@ -49,85 +59,18 @@ export const deleteCareerImprovementClient = `mutation DeleteCareerImprovementCl
     id
     username
     email
-    achievements {
-      items {
-        id
-        achievement
-        owner
+    accomplishments {
+      accomplishment
+      accomplishedOn {
+        utc
+        timezone
       }
-      nextToken
     }
-    owner
-  }
-}
-`;
-export const createAchievement = `mutation CreateAchievement(
-  $input: CreateAchievementInput!
-  $condition: ModelAchievementConditionInput
-) {
-  createAchievement(input: $input, condition: $condition) {
-    id
-    achievement
-    accomplishedOn {
-      utc
-      timezone
-    }
-    careerImprovementClient {
-      id
-      username
-      email
-      achievements {
-        nextToken
+    goals {
+      goal
+      accomplishments {
+        accomplishment
       }
-      owner
-    }
-    owner
-  }
-}
-`;
-export const updateAchievement = `mutation UpdateAchievement(
-  $input: UpdateAchievementInput!
-  $condition: ModelAchievementConditionInput
-) {
-  updateAchievement(input: $input, condition: $condition) {
-    id
-    achievement
-    accomplishedOn {
-      utc
-      timezone
-    }
-    careerImprovementClient {
-      id
-      username
-      email
-      achievements {
-        nextToken
-      }
-      owner
-    }
-    owner
-  }
-}
-`;
-export const deleteAchievement = `mutation DeleteAchievement(
-  $input: DeleteAchievementInput!
-  $condition: ModelAchievementConditionInput
-) {
-  deleteAchievement(input: $input, condition: $condition) {
-    id
-    achievement
-    accomplishedOn {
-      utc
-      timezone
-    }
-    careerImprovementClient {
-      id
-      username
-      email
-      achievements {
-        nextToken
-      }
-      owner
     }
     owner
   }

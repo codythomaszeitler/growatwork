@@ -6,13 +6,18 @@ export const getCareerImprovementClient = `query GetCareerImprovementClient($id:
     id
     username
     email
-    achievements {
-      items {
-        id
-        achievement
-        owner
+    accomplishments {
+      accomplishment
+      accomplishedOn {
+        utc
+        timezone
       }
-      nextToken
+    }
+    goals {
+      goal
+      accomplishments {
+        accomplishment
+      }
     }
     owner
   }
@@ -32,54 +37,22 @@ export const listCareerImprovementClients = `query ListCareerImprovementClients(
       id
       username
       email
-      achievements {
-        nextToken
+      accomplishments {
+        accomplishment
+        accomplishedOn {
+          utc
+          timezone
+        }
       }
-      owner
-    }
-    nextToken
-  }
-}
-`;
-export const getAchievement = `query GetAchievement($id: ID!) {
-  getAchievement(id: $id) {
-    id
-    achievement
-    accomplishedOn {
-      utc
-      timezone
-    }
-    careerImprovementClient {
-      id
-      username
-      email
-      achievements {
-        nextToken
-      }
-      owner
-    }
-    owner
-  }
-}
-`;
-export const listAchievements = `query ListAchievements(
-  $filter: ModelAchievementFilterInput
-  $limit: Int
-  $nextToken: String
-) {
-  listAchievements(filter: $filter, limit: $limit, nextToken: $nextToken) {
-    items {
-      id
-      achievement
-      accomplishedOn {
-        utc
-        timezone
-      }
-      careerImprovementClient {
-        id
-        username
-        email
-        owner
+      goals {
+        goal
+        accomplishments {
+          accomplishment
+          accomplishedOn {
+            utc
+            timezone
+          }
+        }
       }
       owner
     }

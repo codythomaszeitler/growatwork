@@ -1,4 +1,4 @@
-import { AchievementMapper } from "./achievement.mapper";
+import { AccomplishmentMapper } from "./accomplishment.mapper";
 import { Query } from "../database/database";
 import * as queries from "../graphql/queries";
 
@@ -9,6 +9,7 @@ export class AchievementFinder {
   }
 
   async findByAccomplishment(toFind) {
+
     let readResults;
     try {
       readResults = {
@@ -28,7 +29,7 @@ export class AchievementFinder {
     if (!readResults) {
       throw new Error('Database read with query [queries.listAchievements] returned nothing');
     }
-    const mapper = new AchievementMapper();
+    const mapper = new AccomplishmentMapper();
     const accomplishments = mapper.toInMemoryModel(readResults);
 
     return accomplishments.filter(function(accomplishment) {
@@ -45,7 +46,7 @@ export class AchievementFinder {
       }
     };
 
-    const mapper = new AchievementMapper();
+    const mapper = new AccomplishmentMapper();
     const achievements = mapper.toInMemoryModel(databaseResult);
 
     return achievements;
