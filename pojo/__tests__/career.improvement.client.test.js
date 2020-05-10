@@ -287,4 +287,18 @@ describe("Career Improvement Client", () => {
     }
     expect(caughtException.message).toBe('Goal [Test] was not found');
   });
+
+  it('should throw an exception if a duplicate goal is added', () => {
+
+      testObject.addGoal(new Goal('Duplicate'));
+
+      let caughtException = null;
+      try {
+        testObject.addGoal(new Goal('Duplicate'));
+      } catch (e) {
+        caughtException = e;
+      }
+
+      expect(caughtException.message).toBe('The goal [Duplicate] has already been added');
+  });
 });

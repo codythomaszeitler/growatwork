@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { View } from "react-native";
+import { View, Keyboard, Alert } from "react-native";
 import { Card, Input, Button, Icon, Text } from "react-native-elements";
 import { datastore } from "../datastore/datastore";
 import { Goal } from "../pojo/goal";
+import Toast from "react-native-root-toast";
+
 
 export class AddGoalScreen extends Component {
   constructor(props) {
@@ -11,6 +13,7 @@ export class AddGoalScreen extends Component {
     this.client = datastore().get();
 
     this.onPress = this.onPress.bind(this);
+    this.myTextInput = React.createRef();
 
     this.state = {
       goalText: "",
@@ -18,8 +21,32 @@ export class AddGoalScreen extends Component {
   }
 
   onPress(event) {
+    if (!this.state.goalText) {
+        return;
+    }
+
     const goal = new Goal(this.state.goalText);
-    this.client.addGoal(goal);
+
+    try {
+        this.client.addGoal(goal);
+
+        Keyboard.dismiss();
+    
+        Toast.show("Goal Successfully Added!", {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.TOP,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          backgroundColor: "#1ec96b",
+          opacity: 1,
+        });
+    
+        this.myTextInput.current.clear();
+    } catch (e) {
+        Alert.alert('Could not add goal', e.message);
+    }
   }
 
   render() {
@@ -41,6 +68,7 @@ export class AddGoalScreen extends Component {
                 textAlignVertical: "top",
                 flex: 4,
               }}
+              ref={this.myTextInput}
               onChangeText={(value) => this.setState({ goalText: value })}
               leftIcon={<Icon name="edit" size={18} color="blue" />}
               placeholder=" Long Term Goal"

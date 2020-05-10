@@ -50,7 +50,25 @@ export class CareerImprovementClient {
     return this.email;
   }
 
+  hasGoal(goal) {
+    let hasGoal = false;
+
+    for (let i = 0; i < this.goals.length; i++) {
+      if (this.goals[i].get() === goal.get()) {
+        hasGoal = true;
+        break;
+      }
+    }
+
+    return hasGoal;
+  }
+
   addGoal(goal) {
+
+    if (this.hasGoal(goal)) {
+      throw new Error('The goal [' + goal.get() + '] has already been added');
+    }
+
     this.goals.push(goal.copy());
     for (let i = 0; i < this.onGoalAddedListeners.length; i++) {
       console.log(this.onGoalAddedListeners[i]);

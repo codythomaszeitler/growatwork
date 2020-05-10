@@ -1,20 +1,23 @@
 import React, { Component } from "react";
-import { View, Text, Modal } from "react-native";
-import { Input, Button, Card, ListItem } from "react-native-elements";
+import { View, Text, Modal, Alery, Keyboard } from "react-native";
+import { Input, Button, Card, ListItem, Header } from "react-native-elements";
 import { datastore } from "../datastore/datastore";
 import { HardWorkEntry } from "../pojo/hard.work.entry";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Timestamp } from "../pojo/timestamp";
-import { Keyboard } from "react-native";
 import Toast from "react-native-root-toast";
 import { LogAccomplishmentService } from "../service/log.accomplishment.service";
 import { database } from "../database/database";
-import { Alert } from "react-native";
-import { GoalsScreen } from "./goals.screen";
+import { ScrollView } from "react-native-gesture-handler";
+
+const noGoalSeleceted = "--NONE--";
 
 export class InputHardWorkEntryScreen extends Component {
   constructor(props) {
     super(props);
+
+    this.client = datastore().get();
+    this.client.addOnGoalAddedListener(this);
 
     this.onChangeText = this.onChangeText.bind(this);
     this.onPress = this.onPress.bind(this);
@@ -31,7 +34,22 @@ export class InputHardWorkEntryScreen extends Component {
       isAddButtonDisabled: false,
       modalVisible: false,
       longTermGoal: "",
+      selectedGoal: noGoalSeleceted,
+      goals: this.client.getGoals(),
     };
+  }
+
+  onGoalAdded(event) {
+    this.setState({
+      goals: this.client.getGoals(),
+    });
+  }
+
+  onSelect(event, selectedGoalText) {
+    this.setState({
+      selectedGoal: selectedGoalText,
+      modalVisible : false
+    });
   }
 
   onAssociateGoalPress(event) {
@@ -123,28 +141,56 @@ export class InputHardWorkEntryScreen extends Component {
           <View
             style={{
               flex: 1,
-              alignItems : 'flex-start'
             }}
-          ></View>
-          <View style={{
-            flex : 15,
-            justifyContent : 'flex-start'
-          }}>
-            <Text style={{
-              fontSize : 20
-            }}>                              Long Term Goals</Text>
-            <GoalsScreen></GoalsScreen>
-          </View>
-          <View style={{
-            flex : 1,
-            justifyContent: 'flex-end',
-            alignItems : 'center'
-          }}>
-            <Button
-              title="Back"
-              onPress={this.onAssociateGoalBackButtonPress}
-            ></Button>
-            <Text></Text>
+          >
+            <Header
+              centerComponent={{
+                text: "Select a Goal",
+                style: { color: "#fff", fontSize: 20 },
+              }}
+            ></Header>
+
+            <ScrollView
+              style={{
+                flex: 10,
+              }}
+            >
+              {this.state.goals.map((goal) => {
+                return (
+                  <ChoosableGoalScreenSegment
+                    key={goal.get()}
+                    onSelectListener={this}
+                    goal={goal}
+                  ></ChoosableGoalScreenSegment>
+                );
+              })}
+              <ChoosableGoalScreenSegment
+                key={this.noGoalSeleceted}
+                onSelectListener={this}
+                goal={null}
+              ></ChoosableGoalScreenSegment>
+            </ScrollView>
+
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "flex-end",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                title="Back"
+                onPress={this.onAssociateGoalBackButtonPress}
+                style={{
+                  width: 250,
+                }}
+              ></Button>
+            </View>
+            <View
+              style={{
+                flex: 0.25,
+              }}
+            ></View>
           </View>
         </Modal>
 
@@ -155,7 +201,8 @@ export class InputHardWorkEntryScreen extends Component {
         ></View>
         <View
           style={{
-            flex: 5,
+            flex: 1,
+            justifyContent: "flex-start",
           }}
         >
           <Card>
@@ -171,25 +218,29 @@ export class InputHardWorkEntryScreen extends Component {
               placeholder=" What you did today!"
             />
             <Text></Text>
-            <Button
-              disabled={this.state.isAddButtonDisabled}
-              iconRight
-              title="Add"
-              onPress={this.onPress}
-            />
           </Card>
         </View>
 
-        <View>
+        <View
+          style={{
+            flex: 4,
+            justifyContent: "flex-start",
+          }}
+        >
           <Card>
-            <Text
+            <View
               style={{
-                fontSize: 20,
+                alignItems: "center",
               }}
             >
-              {" "}
-              Implement AI
-            </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                }}
+              >
+                {this.state.selectedGoal}
+              </Text>
+            </View>
             <Text></Text>
             <Button
               title="Associate Goal"
@@ -197,12 +248,60 @@ export class InputHardWorkEntryScreen extends Component {
             ></Button>
           </Card>
         </View>
+
         <View
           style={{
-            flex: 10,
+            flex: 1,
+            alignItems: "center",
           }}
-        ></View>
+        >
+          <Button
+            disabled={this.state.isAddButtonDisabled}
+            iconRight
+            title="Add"
+            onPress={this.onPress}
+            style={{
+              width: 250,
+            }}
+          />
+        </View>
       </View>
+    );
+  }
+}
+
+class ChoosableGoalScreenSegment extends Component {
+  constructor(props) {
+    super(props);
+
+    const parseTitle = (goal) => {
+      let title = noGoalSeleceted;
+      if (goal) {
+        title = props.goal.get();
+      }
+      return title;
+    }
+
+    this.onPress = this.onPress.bind(this);
+    this.listener = props.onSelectListener;
+
+    this.state = {
+      title: parseTitle(props.goal),
+    };
+  }
+
+  onPress(event) {
+    this.listener.onSelect(event, this.state.title);
+  }
+
+  render() {
+    return (
+      <ListItem
+        title={this.state.title}
+        onPress={this.onPress}
+        bottomDivider
+        checkmark
+      ></ListItem>
     );
   }
 }
