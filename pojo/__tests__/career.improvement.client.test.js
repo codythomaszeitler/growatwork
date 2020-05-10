@@ -1,6 +1,7 @@
 import { CareerImprovementClient } from "../career.improvement.client";
 import { HardWorkEntry } from "../hard.work.entry";
 import { Timestamp } from "../timestamp";
+import {Goal} from '../goal';
 
 describe("Career Improvement Client", () => {
   let testObject;
@@ -258,5 +259,32 @@ describe("Career Improvement Client", () => {
     expect(caughtException.message).toBe(
       "Cannot add a listener that does not exist"
     );
+  });
+
+  it('should allow an accomplishment to be associated to an goal', () => {
+    const goal = new Goal('Test');
+    const accomplishment = new HardWorkEntry('Test Test Test', new Timestamp(2010, 2, 2));
+
+    testObject.addGoal(goal.copy());
+    testObject.log(accomplishment, goal.copy());
+
+    const linked = testObject.getGoals()[0];
+
+    const accomplishments = linked.getAssociatedAccomplishments();
+
+    expect(accomplishments[0].equals(accomplishment)).toBe(true);
+  });
+
+  it('should throw an exception if there is no goal within client during log', () => {
+    const goal = new Goal('Test');
+    const accomplishment = new HardWorkEntry('Test Test Test', new Timestamp(2010, 2, 2));
+
+    let caughtException = null;
+    try {
+      testObject.log(accomplishment, goal.copy());
+    } catch (e) {
+      caughtException = e;
+    }
+    expect(caughtException.message).toBe('Goal [Test] was not found');
   });
 });
