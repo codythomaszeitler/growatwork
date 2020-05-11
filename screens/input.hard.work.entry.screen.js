@@ -100,8 +100,13 @@ export class InputHardWorkEntryScreen extends Component {
     try {
       const client = datastore().get();
 
+      let goal = null;
+      if (this.state.selectedGoal !== noGoalSeleceted) {
+        goal = new Goal(this.state.selectedGoal);
+      }
+
       const logAccomplishmentService = new LogAccomplishmentService(database());
-      await logAccomplishmentService.log(client, newEntry, new Goal(this.state.selectedGoal));
+      await logAccomplishmentService.log(client, newEntry, goal);
       Keyboard.dismiss();
 
       Toast.show("Accomplishment Successfully Added!", {
@@ -116,6 +121,7 @@ export class InputHardWorkEntryScreen extends Component {
       });
       this.setState({
         accomplishment: "",
+        selectedGoal : noGoalSeleceted 
       });
       this.myTextInput.current.clear();
     } catch (e) {

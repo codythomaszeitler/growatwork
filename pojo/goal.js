@@ -12,6 +12,17 @@ export class Goal {
     return this.contents;
   }
 
+  hasAccomplishment(accomplishment) {
+    let hasAccomplishment = false;
+    for (let i = 0; i < this.accomplishments.length; i++) {
+      if (this.accomplishments[i].equals(accomplishment)) {
+        hasAccomplishment = true;
+        break;
+      }
+    }
+    return hasAccomplishment;
+  }
+
   equals(object) {
     function contains(accomplishments, accomplishment) {
         let containsAccomplishment = false;
@@ -60,6 +71,12 @@ export class Goal {
     }
 
     this.accomplishments.push(accomplishment.copy());
+  }
+
+  remove(accomplishment) {
+    this.accomplishments = this.accomplishments.filter(function(inner){
+      return !accomplishment.equals(inner);
+    });
   }
 
   getAssociatedAccomplishments() {

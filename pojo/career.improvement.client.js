@@ -25,7 +25,10 @@ export class CareerImprovementClient {
     this.onLogAddListeners = [];
     this.onLogRemovedListeners = [];
     this.onGoalAddedListeners = [];
+    this.onGoalRemovedListeners = [];
+    this.onGoalModifiedListeners = [];
     this.onAccomplishmentAssociatedListeners = [];
+    this.onAccomplishmentDeassociatedListeners = [];
     this.type = CareerImprovementClient.getType();
     this.email = email;
     this.username = username;
@@ -33,6 +36,9 @@ export class CareerImprovementClient {
     this.currentOnLogListenerId = 0;
     this.currentOnLogRemoveListenerId = 0;
     this.currentOnGoalAddedListenerId = 0;
+    this.currentOnGoalRemovedListenerId = 0;
+    this.currentOnAccomplishmentAssociatedListenerId = 0;
+    this.currentOnAccomplishmentDeassociatedListenerId = 0;
     this.goals = [];
   }
 
@@ -62,15 +68,12 @@ export class CareerImprovementClient {
   }
 
   addGoal(goal) {
-    console.log(goal);
-
     if (this.hasGoal(goal)) {
       throw new Error("The goal [" + goal.get() + "] has already been added");
     }
 
     this.goals.push(goal.copy());
     for (let i = 0; i < this.onGoalAddedListeners.length; i++) {
-      console.log(this.onGoalAddedListeners[i]);
       this.onGoalAddedListeners[i].onGoalAdded({
         goal: goal.copy(),
       });
@@ -90,6 +93,35 @@ export class CareerImprovementClient {
       return (
         registered.__onGoalAddedListenerId !== listener.__onGoalAddedListenerId
       );
+    });
+  }
+
+  removeGoal(goal) {
+    const ref = this.getGoalByRef(goal.get());
+    this.goals = this.goals.filter(function (inner) {
+      return goal.get() !== inner.get();
+    });
+
+    this.emitOnGoalRemovedEvent(ref);
+  }
+
+  emitOnGoalRemovedEvent(goal) {
+    for (let i = 0; i < this.onGoalRemovedListeners.length; i++) {
+      this.onGoalRemovedListeners[i].onGoalRemoved({
+        goal: goal,
+      });
+    }
+  }
+
+  addOnGoalRemovedListener(listener) {
+    this.onGoalRemovedListeners.push(listener);
+    listener.__onGoalRemovedListenerId = this.currentOnGoalRemovedListenerId;
+    this.currentOnGoalRemovedListenerId++;
+  }
+
+  removeOnGoalRemovedListener(listener) {
+    this.onGoalRemovedListeners = this.onGoalRemovedListeners.filter(function(inner) {
+      return listener.__onGoalRemovedListenerId !== inner.__onGoalRemovedListenerId;
     });
   }
 
@@ -130,16 +162,6 @@ export class CareerImprovementClient {
   }
 
   log(hardWorkEntry, associatedGoal) {
-    const getGoalByRef = (goalName) => {
-      let ref = null;
-      for (let i = 0; i < this.goals.length; i++) {
-        if (this.goals[i].get() === goalName) {
-          ref = this.goals[i];
-        }
-      }
-      return ref;
-    };
-
     if (!hardWorkEntry) {
       throw new Error(
         "Cannot log without a hard work entry to a career improvement client"
@@ -155,8 +177,10 @@ export class CareerImprovementClient {
       }
     }
 
+
+    this.hardWorkEntries.splice(insertionIndex, 0, hardWorkEntry.copy());
     if (associatedGoal) {
-      const ref = getGoalByRef(associatedGoal.get());
+      const ref = this.getGoalByRef(associatedGoal.get());
       if (!ref) {
         throw new Error("Goal [" + associatedGoal.get() + "] was not found");
       }
@@ -165,8 +189,17 @@ export class CareerImprovementClient {
       this.emitOnAccomplishmentAssociatedEvent(ref, hardWorkEntry);
     }
 
-    this.hardWorkEntries.splice(insertionIndex, 0, hardWorkEntry.copy());
     this.emitOnLogEvent(hardWorkEntry.copy());
+  }
+
+  getGoalByRef(goalName) {
+    let ref = null;
+    for (let i = 0; i < this.goals.length; i++) {
+      if (this.goals[i].get() === goalName) {
+        ref = this.goals[i];
+      }
+    }
+    return ref;
   }
 
   emitOnAccomplishmentAssociatedEvent(goal, accomplishment) {
@@ -187,6 +220,14 @@ export class CareerImprovementClient {
 
   addOnAccomplishmentAssociatedListener(listener) {
     this.onAccomplishmentAssociatedListeners.push(listener);
+    listener.__onAccomplishmentAssociatedListenerId = this.currentOnAccomplishmentAssociatedListenerId;
+    this.currentOnAccomplishmentAssociatedListenerId++;
+  }
+  
+  removeOnAccomplishmentAssociatedListener(listener) {
+    this.onAccomplishmentAssociatedListeners = this.onAccomplishmentAssociatedListeners.filter(function(inner) {
+      return listener.__onAccomplishmentAssociatedListenerId !== inner.__onAccomplishmentAssociatedListenerId;
+    });
   }
 
   addOnLogListener(listener) {
@@ -222,8 +263,36 @@ export class CareerImprovementClient {
       }
     }
 
+    for (let i = 0; i < this.goals.length; i++) {
+      if (this.goals[i].hasAccomplishment(hardWorkEntry)) {
+        this.goals[i].remove(hardWorkEntry);
+        this.emitOnAccomplishmentDeassociatedEvent(this.goals[i], hardWorkEntry);
+      }
+    }
+
     this.hardWorkEntries.splice(deletionIndex, 1);
     this.emitOnLogRemovedEvent(hardWorkEntry);
+  }
+
+  emitOnAccomplishmentDeassociatedEvent(goal, accomplishment) {
+    for (let i = 0; i < this.onAccomplishmentDeassociatedListeners.length; i++) {
+      this.onAccomplishmentDeassociatedListeners[i].onAccomplishmentDeassociated({
+        goal : goal,
+        accomplishment : accomplishment
+      });
+    }
+  }
+
+  addOnAccomplishmentDeassociatedListener(listener) {
+    this.onAccomplishmentDeassociatedListeners.push(listener);
+    listener.__onAccomplishmentDeassociatedListenerId = this.currentOnAccomplishmentDeassociatedListenerId;
+    this.currentOnAccomplishmentDeassociatedListenerId++;
+  }
+
+  removeOnAccomplishmentDeassociatedListener(listener) {
+    this.onAccomplishmentDeassociatedListeners = this.onAccomplishmentDeassociatedListeners.filter(function(inner) {
+      return inner.__onAccomplishmentDeassociatedListenerId !== listener.__onAccomplishmentDeassociatedListenerId;
+    })
   }
 
   emitOnLogRemovedEvent(hardWorkEntry) {

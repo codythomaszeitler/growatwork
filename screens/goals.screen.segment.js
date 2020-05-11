@@ -1,63 +1,76 @@
 import React, { Component } from "react";
-import { View } from "react-native";
-import { Card, ListItem } from "react-native-elements";
-import logo from "../checkbox.png";
+import { Card } from "react-native-elements";
 import { HardWorkEntryScreenSegment } from "./hard.work.entry.screen.segment";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import {datastore} from '../datastore/datastore';
 
 export class GoalsScreenSegment extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      boss : this.props.boss,
-      goals : this.props.boss.getLongTermGoals()
+    this.onPress = this.onPress.bind(this);
+
+    this.client = datastore().get();
+    this.client.addOnAccomplishmentAssociatedListener(this);
+    this.client.addOnAccomplishmentDeassociatedListener(this);
+
+    this.onGoalSegmentPressedListeners = [];
+    if (props.onGoalSegmentPressedListener) {
+      this.onGoalSegmentPressedListeners.push(
+        props.onGoalSegmentPressedListener
+      );
     }
 
-    this.onGoalAdded = this.onGoalAdded.bind(this);
-    this.state.boss.addOnGoalAddedListener(this);
+    this.state = {
+      goal: props.goal,
+    };
   }
 
-  onGoalAdded(event) {
-    const goals = this.state.goals;
-    goals.push(event.getGoal());
-
-    this.setState({
-      goals : goals
-    });
+  componentWillUnmount() {
+    this.client.removeOnAccomplishmentAssociatedListener(this);
+    this.client.removeOnAccomplishmentDeassociatedListener(this);
   }
 
-  generateUniqueKey(goal) {
-    const key = this.props.boss.getName() + goal.get();
-    return key;
+  onAccomplishmentDeassociated(event) {
+    if (event.goal.get() === this.state.goal.get()) {
+      this.setState({
+        goal : event.goal
+      });
+    }
+  }
+
+  onAccomplishmentAssociated(event) {
+    if (event.goal.get() === this.state.goal.get()) {
+      this.setState({
+        goal : event.goal
+      });
+    }
+  }
+
+  onPress(event) {
+    for (let i = 0; i < this.onGoalSegmentPressedListeners.length; i++) {
+      this.onGoalSegmentPressedListeners[i].onGoalSegmentPressed(
+        event,
+        this.state.goal
+      );
+    }
   }
 
   render() {
     return (
-      <View>
-        <Card title={this.props.boss.getName()}>
-          {this.state.goals.map((goal) => {
-            return (
-              <ListItem
-                key={this.generateUniqueKey(goal)}
-                title={goal.get()}
-                titleStyle={{
-                  marginLeft: 15,
-                }}
-                onPress={this.onPress}
-                leftAvatar={{ source: logo }}
-                bottomDivider
-                chevron
-                friction={90}
-                tension={100}
-                subtitleStyle={{
-                  marginLeft: 35,
-                }}
-              >
-}
-                </ListItem>
-            );
-          })}
+      <TouchableOpacity onPress={this.onPress}>
+        <Card title={this.state.goal.get()}>
+          {this.state.goal
+            .getAssociatedAccomplishments()
+            .map((accomplishment) => {
+              return (
+                <HardWorkEntryScreenSegment
+                  key={accomplishment.toString()}
+                  hardWorkEntry={accomplishment}
+                ></HardWorkEntryScreenSegment>
+              );
+            })}
         </Card>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

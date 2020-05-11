@@ -301,4 +301,42 @@ describe("Career Improvement Client", () => {
 
       expect(caughtException.message).toBe('The goal [Duplicate] has already been added');
   });
+
+  it('should be able to remove a goal', () => {
+
+    let caughtEvent = null;
+    const listener = {
+      onGoalRemoved : function(event) {
+        caughtEvent = event;
+      }
+    }
+
+    testObject.addOnGoalRemovedListener(listener);
+
+    testObject.addGoal(new Goal('Test'));
+    testObject.addGoal(new Goal('Another'));
+    testObject.removeGoal(new Goal('Test'));
+
+    expect(testObject.getGoals().length).toBe(1);
+    expect(testObject.getGoals()[0].get()).toBe('Another');
+
+    expect(caughtEvent.goal.get()).toBe('Test');
+
+    testObject.removeOnGoalRemovedListener(listener);
+    testObject.removeGoal(new Goal('Another'));
+    expect(caughtEvent.goal.get()).toBe('Test');
+  });
+
+  it('should remove the accomplishment from the goal when accomplishment is removed', () => {
+    const goal = new Goal('Test');
+    const accomplishment = new HardWorkEntry('Test Test Test', new Timestamp(2010, 2, 2));
+
+    testObject.addGoal(goal.copy());
+    testObject.log(accomplishment, goal.copy());
+
+    testObject.remove(accomplishment);
+
+    const goals = testObject.getGoals();
+    expect(goals[0].getAssociatedAccomplishments().length).toBe(0);
+  });
 });
