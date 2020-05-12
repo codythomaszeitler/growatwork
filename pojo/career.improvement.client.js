@@ -125,6 +125,17 @@ export class CareerImprovementClient {
     });
   }
 
+  getGoalWithAccomplishment(accomplishment) {
+    let found = null;
+    for (let i = 0; i < this.goals.length; i++) {
+      if (this.goals[i].hasAccomplishment(accomplishment)) {
+        found = this.goals[i].copy();
+        break;
+      }
+    }
+    return found;
+  }
+
   getGoal(goal) {
     let found = null;
 
@@ -323,7 +334,7 @@ export class CareerImprovementClient {
     return this.hardWorkEntries.slice();
   }
 
-  getAchievements(fromTimestamp, toTimestamp) {
+  getAchievements(fromTimestamp, toTimestamp, selectByGoals) {
     const withinBoundary = [];
 
     const achievements = this.getHardWork();
@@ -339,7 +350,30 @@ export class CareerImprovementClient {
       }
     }
 
-    return withinBoundary;
+    const goalsContainsAccomplishment = (accomplishment) => {
+      if (selectByGoals.length === 0) {
+        return true;
+      }
+
+      let isWithin = false;
+      for (let i = 0; i < selectByGoals.length; i++) {
+        const byRef = this.getGoalByRef(selectByGoals[i].get());
+        if (byRef.hasAccomplishment(accomplishment)) {
+          isWithin = true;
+          break;
+        }
+      }
+      return isWithin;
+    }
+
+    const filtered = [];
+    for (let i = 0; i < withinBoundary.length; i++) {
+      if (goalsContainsAccomplishment(withinBoundary[i])) { 
+        filtered.push(withinBoundary[i]);
+      }
+    }
+
+    return filtered;
   }
 
   getEarliestAchievement() {

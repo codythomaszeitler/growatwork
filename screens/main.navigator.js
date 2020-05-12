@@ -10,7 +10,7 @@ import { SettingsScreen } from "./settings.screen";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { GoalsScreen } from "./goals.screen";
-import {AddGoalScreen} from './add.goal.screen';
+import {ExcelExportScreen} from './excel.export.screen';
 
 const Tab = createBottomTabNavigator();
 function DashboardTabs() {
@@ -65,21 +65,22 @@ function DashboardTabs() {
         }}
       />
       <Tab.Screen
-        name="Goals"
-        component={AddGoalScreen}
+        name="ExcelExport"
+        component={ExcelExportScreen}
         options={{
-          tabBarLabel: "Goals",
+          tabBarLabel: "Excel Export",
           tabBarIcon: ({ tintColor }) => (
             <View>
               <Icon
                 style={[{ color: tintColor }]}
                 size={25}
-                name={"ios-add-circle-outline"}
+                name={"ios-arrow-dropdown-circle"}
               />
             </View>
-          ),
+          )
         }}
-      />
+      ></Tab.Screen>
+
     </Tab.Navigator>
   );
 }

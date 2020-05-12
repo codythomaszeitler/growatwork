@@ -66,6 +66,9 @@ export class GoalsScreenSegment extends Component {
                 <HardWorkEntryScreenSegment
                   key={accomplishment.toString()}
                   hardWorkEntry={accomplishment}
+                  hideChevron
+                  hideDivider
+                  hideAssociatedGoal
                 ></HardWorkEntryScreenSegment>
               );
             })}

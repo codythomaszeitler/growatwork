@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, Modal } from "react-native";
+import { Text, Modal, Alert } from "react-native";
 import { Button, Card, Icon, Input, CheckBox } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Divider } from "react-native-elements";
@@ -7,6 +7,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Timestamp } from "../pojo/timestamp";
 import { datastore } from "../datastore/datastore";
 import { AchievementExcelWriter } from "../excelexport/excel.writer";
+import {Goal} from '../pojo/goal';
 import * as MailComposer from "expo-mail-composer";
 import * as FileSystem from "expo-file-system";
 
@@ -16,6 +17,8 @@ export class ExcelExportScreen extends Component {
     this.props = props;
 
     this.client = datastore().get();
+    this.client.addOnGoalAddedListener(this);
+    this.client.addOnGoalRemovedListener(this);
 
     this.onExcelStartPress = this.onExcelStartPress.bind(this);
     this.onFromChange = this.onFromChange.bind(this);
@@ -25,9 +28,13 @@ export class ExcelExportScreen extends Component {
     this.onExportViaExcel = this.onExportViaExcel.bind(this);
     this.onEmailDestinationChange = this.onEmailDestinationChange.bind(this);
     this.onExportViaEmail = this.onExportViaEmail.bind(this);
+    this.onGoalAdded = this.onGoalAdded.bind(this);
+    this.onGoalRemoved = this.onGoalRemoved.bind(this);
 
     const fromTimestamp = this.getStartingFrom();
     const toTimestamp = this.getStartingTo();
+
+
 
     this.state = {
       selectedToDate: toTimestamp.toDate(),
@@ -36,7 +43,21 @@ export class ExcelExportScreen extends Component {
       fromTimestamp: fromTimestamp,
       modalVisible: false,
       destinationEmail: this.client.getEmail(),
+      goals: this.client.getGoals(),
+      isAllSelected: false,
     };
+  }
+
+  onGoalAdded(event) {
+    this.setState({
+      goals: this.client.getGoals(),
+    });
+  }
+
+  onGoalRemoved(event) {
+    this.setState({
+      goals: this.client.getGoals(),
+    });
   }
 
   getStartingTo() {
@@ -55,6 +76,7 @@ export class ExcelExportScreen extends Component {
   getStartingFrom() {
     let latestAchievement = this.client.getEarliestAchievement();
 
+    let latest;
     if (latestAchievement) {
       latest = latestAchievement.getAccomplishedOn();
     } else {
@@ -99,6 +121,12 @@ export class ExcelExportScreen extends Component {
   }
 
   onExcelStartPress() {
+    this.selected = [];
+    const goals = this.client.getGoals();
+    for (let i = 0; i < goals.length; i++) {
+      const goal = goals[i];
+      this.selected.push(goal.get());
+    }
     this.setModalVisible(!this.state.modalVisible);
   }
 
@@ -141,7 +169,25 @@ export class ExcelExportScreen extends Component {
     const startOfDay = this.state.fromTimestamp.startOfDay();
     const endOfDay = this.state.toTimestamp.endOfDay();
 
-    return datastore().get().getAchievements(startOfDay, endOfDay);
+    const getCheckedGoals = () => {
+      const checkedGoals = [];
+      for (let i = 0; i < this.selected.length; i++) {
+        checkedGoals.push(new Goal(this.selected[i]));
+      }
+      return checkedGoals;
+    }
+
+    return datastore().get().getAchievements(startOfDay, endOfDay, getCheckedGoals());
+  }
+
+  onGoalChecked(event, goal) {
+    this.selected.push(goal);
+  }
+
+  onGoalUnchecked(event, goal) {
+    this.selected = this.selected.filter(function(inner) {
+      return goal !== inner;
+    });
   }
 
   render() {
@@ -162,121 +208,67 @@ export class ExcelExportScreen extends Component {
           }}
         >
           <ScrollView>
-          <Text></Text>
-          <Text></Text>
-          <Text></Text>
-
-          <Card title="Export via Email">
-            <Text style={{ marginBottom: 10 }}>
-              Export the achievements within the selected ranged to the given
-              email address!
-            </Text>
-            <Input
-              testID="DestinationEmailInput"
-              placeholder="E-mail"
-              defaultValue={this.state.destinationEmail}
-              onChangeText={this.onEmailDestinationChange}
-            ></Input>
             <Text></Text>
-            <Button
-              icon={<Icon name="code" color="#ffffff" />}
-              buttonStyle={{
-                borderRadius: 0,
-                marginLeft: 0,
-                marginRight: 0,
-                marginBottom: 0,
-              }}
-              onPress={this.onExportViaEmail}
-              testID="ExportViaEmail"
-              title="Export"
-            />
-          </Card>
+            <Text></Text>
+            <Text></Text>
 
-          <Text></Text>
-          <Text></Text>
-          <Card>
-              <CheckBox
-                center
-                title="All"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={true}
+            <Card title="Export via Email">
+              <Text style={{ marginBottom: 10 }}>
+                Export the achievements within the selected ranged to the given
+                email address!
+              </Text>
+              <Input
+                testID="DestinationEmailInput"
+                placeholder="E-mail"
+                defaultValue={this.state.destinationEmail}
+                onChangeText={this.onEmailDestinationChange}
+              ></Input>
+              <Text></Text>
+              <Button
+                icon={<Icon name="code" color="#ffffff" />}
+                buttonStyle={{
+                  borderRadius: 0,
+                  marginLeft: 0,
+                  marginRight: 0,
+                  marginBottom: 0,
+                }}
+                onPress={this.onExportViaEmail}
+                testID="ExportViaEmail"
+                title="Export"
               />
-              <CheckBox
-                center
-                title="Long Term Goal"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={false}
-              />
-              <CheckBox
-                center
-                title="Long Term Goal"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={false}
-              />
-              <CheckBox
-                center
-                title="Long Term Goal"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={false}
-              />
-              <CheckBox
-                center
-                title="Long Term Goal"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={false}
-              />
-              <CheckBox
-                center
-                title="Long Term Goal"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={false}
-              />
-              <CheckBox
-                center
-                title="Long Term Goal"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={false}
-              />
-              <CheckBox
-                center
-                title="Long Term Goal"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={false}
-              />
-              <CheckBox
-                center
-                title="Long Term Goal"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={false}
-              />
-          </Card>
-          <Text></Text>
-          <Text></Text>
+            </Card>
 
-          <Card>
-            <Button
-              buttonStyle={{
-                borderRadius: 0,
-                marginLeft: 0,
-                marginRight: 0,
-                marginBottom: 0,
-              }}
-              title="Cancel"
-              onPress={this.turnOff}
-            />
-          </Card>
-          <Text></Text>
-          <Text></Text>
-          <Text></Text>
+            <Text></Text>
+            <Text></Text>
+            <Card>
+              {this.state.goals.map((goal) => {
+                return (
+                  <GoalCheckbox
+                    onCheckboxPressListener={this}
+                    goal={goal}
+                    key={goal.get()}
+                  ></GoalCheckbox>
+                );
+              })}
+            </Card>
+            <Text></Text>
+            <Text></Text>
+
+            <Card>
+              <Button
+                buttonStyle={{
+                  borderRadius: 0,
+                  marginLeft: 0,
+                  marginRight: 0,
+                  marginBottom: 0,
+                }}
+                title="Cancel"
+                onPress={this.turnOff}
+              />
+            </Card>
+            <Text></Text>
+            <Text></Text>
+            <Text></Text>
           </ScrollView>
         </Modal>
         <Divider style={{ backgroundColor: "black" }} />
@@ -331,6 +323,59 @@ export class ExcelExportScreen extends Component {
         ></DateTimePicker>
         <Divider style={{ backgroundColor: "black" }} />
       </ScrollView>
+    );
+  }
+}
+
+class GoalCheckbox extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onCheckboxPressListeners = [];
+    if (props.onCheckboxPressListener) {
+      this.onCheckboxPressListeners.push(props.onCheckboxPressListener);
+    }
+    this.currentCheckboxPressListenerId = 0;
+
+    this.onPress = this.onPress.bind(this);
+
+    this.state = {
+      goal: props.goal,
+      isChecked: true
+    };
+  }
+
+  onPress(event, goal) {
+    const checked = !this.state.isChecked;
+
+    if (checked) {
+      for (let i = 0; i < this.onCheckboxPressListeners.length; i++) {
+        this.onCheckboxPressListeners[i].onGoalChecked(event, this.state.goal.get());
+        this.setState({
+          isChecked : checked
+        });
+      }
+    } else {
+      for (let i = 0; i < this.onCheckboxPressListeners.length; i++) {
+        this.onCheckboxPressListeners[i].onGoalUnchecked(event, this.state.goal.get());
+        this.setState({
+          isChecked : checked
+        });
+      }
+    }
+  }
+
+  render() {
+    return (
+      <CheckBox
+        center
+        onPress={this.onPress}
+        title={this.state.goal.get()}
+        checkedIcon="dot-circle-o"
+        uncheckedIcon="circle-o"
+        checked={this.state.isChecked}
+        onPress={this.onPress}
+      />
     );
   }
 }

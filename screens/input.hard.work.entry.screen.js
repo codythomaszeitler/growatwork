@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { View, Text, Modal, Alert, Keyboard } from "react-native";
+import {
+  View,
+  Text,
+  Modal,
+  Alert,
+  Keyboard
+} from "react-native";
 import { Input, Button, Card, ListItem, Header } from "react-native-elements";
 import { datastore } from "../datastore/datastore";
 import { HardWorkEntry } from "../pojo/hard.work.entry";
@@ -8,10 +14,12 @@ import { Timestamp } from "../pojo/timestamp";
 import Toast from "react-native-root-toast";
 import { LogAccomplishmentService } from "../service/log.accomplishment.service";
 import { database } from "../database/database";
-import { ScrollView } from "react-native-gesture-handler";
-import {Goal} from '../pojo/goal';
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { Goal } from "../pojo/goal";
+import { AddGoalScreen } from "./add.goal.screen";
 
-const noGoalSeleceted = "--NONE--";
+const noGoalSeleceted = "Select a goal...";
+const deselectGoalText = "None";
 
 export class InputHardWorkEntryScreen extends Component {
   constructor(props) {
@@ -47,9 +55,13 @@ export class InputHardWorkEntryScreen extends Component {
   }
 
   onSelect(event, selectedGoalText) {
+    if (selectedGoalText === deselectGoalText) {
+      selectedGoalText = noGoalSeleceted;
+    }
+
     this.setState({
       selectedGoal: selectedGoalText,
-      modalVisible : false
+      modalVisible: false,
     });
   }
 
@@ -121,7 +133,7 @@ export class InputHardWorkEntryScreen extends Component {
       });
       this.setState({
         accomplishment: "",
-        selectedGoal : noGoalSeleceted 
+        selectedGoal: noGoalSeleceted,
       });
       this.myTextInput.current.clear();
     } catch (e) {
@@ -135,12 +147,8 @@ export class InputHardWorkEntryScreen extends Component {
 
   render() {
     return (
-      <View
+      <ScrollView
         style={{
-          backgroundColor: "#ffffff",
-          justifyContent: "space-evenly",
-          flexDirection: "space-evenly",
-          alignItems: "stretch",
           flex: 1,
         }}
       >
@@ -172,7 +180,7 @@ export class InputHardWorkEntryScreen extends Component {
                 );
               })}
               <ChoosableGoalScreenSegment
-                key={this.noGoalSeleceted}
+                key={deselectGoalText}
                 onSelectListener={this}
                 goal={null}
               ></ChoosableGoalScreenSegment>
@@ -200,12 +208,6 @@ export class InputHardWorkEntryScreen extends Component {
             ></View>
           </View>
         </Modal>
-
-        <View
-          style={{
-            flex: 0.5,
-          }}
-        ></View>
         <View
           style={{
             flex: 1,
@@ -224,55 +226,43 @@ export class InputHardWorkEntryScreen extends Component {
               onChangeText={this.onChangeText}
               placeholder=" What you did today!"
             />
+            <TouchableOpacity onPress={this.onAssociateGoalPress} underlayColor='#8ab7ff'>
+              <Card>
+                <View
+                  style={{
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 18,
+                    }}
+                  >
+                    {this.state.selectedGoal}
+                  </Text>
+                </View>
+              </Card>
+            </TouchableOpacity>
             <Text></Text>
-          </Card>
-        </View>
-
-        <View
-          style={{
-            flex: 4,
-            justifyContent: "flex-start",
-          }}
-        >
-          <Card>
             <View
               style={{
                 alignItems: "center",
               }}
             >
-              <Text
+              <Button
+                disabled={this.state.isAddButtonDisabled}
+                iconRight
+                title="Add"
+                onPress={this.onPress}
                 style={{
-                  fontSize: 20,
+                  width: 250,
                 }}
-              >
-                {this.state.selectedGoal}
-              </Text>
+              />
             </View>
-            <Text></Text>
-            <Button
-              title="Associate"
-              onPress={this.onAssociateGoalPress}
-            ></Button>
           </Card>
         </View>
-
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-          }}
-        >
-          <Button
-            disabled={this.state.isAddButtonDisabled}
-            iconRight
-            title="Add"
-            onPress={this.onPress}
-            style={{
-              width: 250,
-            }}
-          />
-        </View>
-      </View>
+        <AddGoalScreen></AddGoalScreen>
+      </ScrollView>
     );
   }
 }
@@ -282,12 +272,12 @@ class ChoosableGoalScreenSegment extends Component {
     super(props);
 
     const parseTitle = (goal) => {
-      let title = noGoalSeleceted;
+      let title = deselectGoalText;
       if (goal) {
         title = props.goal.get();
       }
       return title;
-    }
+    };
 
     this.onPress = this.onPress.bind(this);
     this.listener = props.onSelectListener;

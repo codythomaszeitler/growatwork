@@ -1,7 +1,7 @@
 import { CareerImprovementClient } from "../career.improvement.client";
 import { HardWorkEntry } from "../hard.work.entry";
 import { Timestamp } from "../timestamp";
-import {Goal} from '../goal';
+import { Goal } from "../goal";
 
 describe("Career Improvement Client", () => {
   let testObject;
@@ -261,9 +261,12 @@ describe("Career Improvement Client", () => {
     );
   });
 
-  it('should allow an accomplishment to be associated to an goal', () => {
-    const goal = new Goal('Test');
-    const accomplishment = new HardWorkEntry('Test Test Test', new Timestamp(2010, 2, 2));
+  it("should allow an accomplishment to be associated to an goal", () => {
+    const goal = new Goal("Test");
+    const accomplishment = new HardWorkEntry(
+      "Test Test Test",
+      new Timestamp(2010, 2, 2)
+    );
 
     testObject.addGoal(goal.copy());
     testObject.log(accomplishment, goal.copy());
@@ -275,9 +278,12 @@ describe("Career Improvement Client", () => {
     expect(accomplishments[0].equals(accomplishment)).toBe(true);
   });
 
-  it('should throw an exception if there is no goal within client during log', () => {
-    const goal = new Goal('Test');
-    const accomplishment = new HardWorkEntry('Test Test Test', new Timestamp(2010, 2, 2));
+  it("should throw an exception if there is no goal within client during log", () => {
+    const goal = new Goal("Test");
+    const accomplishment = new HardWorkEntry(
+      "Test Test Test",
+      new Timestamp(2010, 2, 2)
+    );
 
     let caughtException = null;
     try {
@@ -285,51 +291,54 @@ describe("Career Improvement Client", () => {
     } catch (e) {
       caughtException = e;
     }
-    expect(caughtException.message).toBe('Goal [Test] was not found');
+    expect(caughtException.message).toBe("Goal [Test] was not found");
   });
 
-  it('should throw an exception if a duplicate goal is added', () => {
+  it("should throw an exception if a duplicate goal is added", () => {
+    testObject.addGoal(new Goal("Duplicate"));
 
-      testObject.addGoal(new Goal('Duplicate'));
+    let caughtException = null;
+    try {
+      testObject.addGoal(new Goal("Duplicate"));
+    } catch (e) {
+      caughtException = e;
+    }
 
-      let caughtException = null;
-      try {
-        testObject.addGoal(new Goal('Duplicate'));
-      } catch (e) {
-        caughtException = e;
-      }
-
-      expect(caughtException.message).toBe('The goal [Duplicate] has already been added');
+    expect(caughtException.message).toBe(
+      "The goal [Duplicate] has already been added"
+    );
   });
 
-  it('should be able to remove a goal', () => {
-
+  it("should be able to remove a goal", () => {
     let caughtEvent = null;
     const listener = {
-      onGoalRemoved : function(event) {
+      onGoalRemoved: function (event) {
         caughtEvent = event;
-      }
-    }
+      },
+    };
 
     testObject.addOnGoalRemovedListener(listener);
 
-    testObject.addGoal(new Goal('Test'));
-    testObject.addGoal(new Goal('Another'));
-    testObject.removeGoal(new Goal('Test'));
+    testObject.addGoal(new Goal("Test"));
+    testObject.addGoal(new Goal("Another"));
+    testObject.removeGoal(new Goal("Test"));
 
     expect(testObject.getGoals().length).toBe(1);
-    expect(testObject.getGoals()[0].get()).toBe('Another');
+    expect(testObject.getGoals()[0].get()).toBe("Another");
 
-    expect(caughtEvent.goal.get()).toBe('Test');
+    expect(caughtEvent.goal.get()).toBe("Test");
 
     testObject.removeOnGoalRemovedListener(listener);
-    testObject.removeGoal(new Goal('Another'));
-    expect(caughtEvent.goal.get()).toBe('Test');
+    testObject.removeGoal(new Goal("Another"));
+    expect(caughtEvent.goal.get()).toBe("Test");
   });
 
-  it('should remove the accomplishment from the goal when accomplishment is removed', () => {
-    const goal = new Goal('Test');
-    const accomplishment = new HardWorkEntry('Test Test Test', new Timestamp(2010, 2, 2));
+  it("should remove the accomplishment from the goal when accomplishment is removed", () => {
+    const goal = new Goal("Test");
+    const accomplishment = new HardWorkEntry(
+      "Test Test Test",
+      new Timestamp(2010, 2, 2)
+    );
 
     testObject.addGoal(goal.copy());
     testObject.log(accomplishment, goal.copy());
@@ -338,5 +347,27 @@ describe("Career Improvement Client", () => {
 
     const goals = testObject.getGoals();
     expect(goals[0].getAssociatedAccomplishments().length).toBe(0);
+  });
+
+  it("should filter the retrieved accomplishments given a subset of goals", () => {
+    const goal = new Goal("Test");
+    const accomplishment = new HardWorkEntry(
+      "Test Test Test",
+      new Timestamp(2010, 2, 2)
+    );
+    testObject.addGoal(goal.copy());
+    testObject.log(accomplishment, goal.copy());
+    testObject.log(new HardWorkEntry('Cody is cool', new Timestamp(2010, 1, 5)));
+  
+    const accomplishments = testObject.getAchievements(new Timestamp(2010, 1, 1), new Timestamp(2011, 1, 1), [goal.copy()]);
+    expect(accomplishments.length).toBe(1);
+    expect(accomplishments[0].getAccomplishment()).toBe(accomplishment.getAccomplishment());
+  });
+
+  it('shouldn\'t use a filter if the list of goals is empty', () => {
+    testObject.log(new HardWorkEntry('Cody is cool', new Timestamp(2010, 1, 5)));
+
+    const accomplishments = testObject.getAchievements(new Timestamp(2010, 1, 1), new Timestamp(2010, 1, 6), []);
+    expect(accomplishments.length).toBe(1);
   });
 });
