@@ -4,8 +4,15 @@ import { GoalMapper } from "./goal.mapper";
 
 export class CareerImprovementClientMapper {
   toInMemoryModel(databaseModel) {
-    const clientsAsGraphQl =
-      databaseModel.data.listCareerImprovementClients.items;
+    console.log(databaseModel);
+
+    let clientsAsGraphQl = null;
+    if (databaseModel.data.createCareerImprovementClient) {
+      clientsAsGraphQl = [databaseModel.data.createCareerImprovementClient];
+    } else if (databaseModel.data.listCareerImprovementClients.items) {
+      clientsAsGraphQl = databaseModel.data.listCareerImprovementClients.items;
+    }
+
     if (clientsAsGraphQl.length === 0) {
       return null;
     }
@@ -29,7 +36,9 @@ export class CareerImprovementClientMapper {
     const accomplishmentsAsDatabase = graphQlResponse.accomplishments;
     for (let i = 0; i < accomplishmentsAsDatabase.length; i++) {
       const accomplishmentMapper = new AccomplishmentMapper();
-      const accomplishments = accomplishmentMapper.toInMemoryModel(accomplishmentsAsDatabase[i]);
+      const accomplishments = accomplishmentMapper.toInMemoryModel(
+        accomplishmentsAsDatabase[i]
+      );
       careerImprovementClient.log(accomplishments[0]);
     }
 
@@ -45,20 +54,23 @@ export class CareerImprovementClientMapper {
   }
 
   toDatabaseModel(inMemoryModel) {
-
     const accomplishmentMapper = new AccomplishmentMapper();
-    const accomplishmentsAsDatabase = accomplishmentMapper.toDatabaseModel(inMemoryModel.getHardWork());
+    const accomplishmentsAsDatabase = accomplishmentMapper.toDatabaseModel(
+      inMemoryModel.getHardWork()
+    );
 
     const goalMapper = new GoalMapper();
-    const goalsAsDatabase = goalMapper.toDatabaseModel(inMemoryModel.getGoals());
+    const goalsAsDatabase = goalMapper.toDatabaseModel(
+      inMemoryModel.getGoals()
+    );
 
     return {
       input: {
         username: inMemoryModel.getUsername(),
         email: inMemoryModel.getEmail(),
-        id : inMemoryModel.id,
-        accomplishments : accomplishmentsAsDatabase,
-        goals : goalsAsDatabase
+        id: inMemoryModel.id,
+        accomplishments: accomplishmentsAsDatabase,
+        goals: goalsAsDatabase,
       },
     };
   }

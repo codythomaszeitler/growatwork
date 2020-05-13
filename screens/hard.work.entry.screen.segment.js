@@ -19,6 +19,7 @@ export class HardWorkEntryScreenSegment extends Component {
     this.props = props;
     this.generateUniqueKey = this.generateUniqueKey.bind(this);
     this.onGoalRemoved = this.onGoalRemoved.bind(this);
+    this.onPress = this.onPress.bind(this);
 
     this.onPressListeners = [];
     if (this.props.onPressListener) {
@@ -45,11 +46,29 @@ export class HardWorkEntryScreenSegment extends Component {
         this.getDateView(this.props.hardWorkEntry.getAccomplishedOn()) +
         parseAssociatedGoalText(),
       goal: this.client.getGoalWithAccomplishment(this.props.hardWorkEntry),
+      paddingTop : this.getTopPadding(),
+      paddingHorizontal : this.getHorizontalPadding() 
     };
   }
 
   componentWillUnmount() {
     this.client.removeOnGoalRemovedListener(this);
+  }
+
+  getTopPadding() {
+    let topPadding = 10;
+    if (this.props.paddingTop) {
+      topPadding = this.props.paddingTop;
+    }
+    return topPadding;
+  }
+
+  getHorizontalPadding() {
+    let horizontalPadding = 10;
+    if (this.props.paddingHorizontal) {
+      horizontalPadding = this.props.horizontalPadding;
+    }
+    return horizontalPadding;
   }
 
   onGoalRemoved(event) {

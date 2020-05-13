@@ -11,6 +11,7 @@ export class CareerImprovementClientFinder {
     const query = new Query(queries.listCareerImprovementClients);
 
     let readResults = await this.database.read(query);
+    console.log(readResults); 
     const mapper = new CareerImprovementClientMapper();
     return mapper.toInMemoryModel(readResults);
   }

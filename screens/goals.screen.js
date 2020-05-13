@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Modal } from 'react-native';
-import {Button} from 'react-native-elements';
+import { Modal, Alert } from "react-native";
+import { Button } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 import { GoalsScreenSegment } from "./goals.screen.segment";
 import { ModifyGoalScreen } from "./modify.goal.screen";
-import {datastore} from '../datastore/datastore';
+import { datastore } from "../datastore/datastore";
 
 export class GoalsScreen extends Component {
   constructor(props) {
@@ -15,24 +15,32 @@ export class GoalsScreen extends Component {
     this.client.addOnAccomplishmentAssociatedListener(this);
     this.client.addOnGoalRemovedListener(this);
 
+    if (!this.client.hasGoals()) {
+      Alert.alert(
+        "Weekly View",
+        'This view gives you a recap of everything you\'ve done towards your goals this week! Head to the "Log" screen to add some goals!'
+      );
+    }
 
     this.state = {
       goals: this.client.getGoals(),
-      selectedGoal : null,
-      modalVisible : false
+      selectedGoal: null,
+      modalVisible: false,
     };
   }
 
   componentWillUnmount() {
     this.client.removeOnGoalAddedListener(this);
+    this.client.removeOnAccomplishmentAssociatedListener(this);
+    this.client.removeOnGoalRemovedListener(this);
   }
 
   onAccomplishmentAssociated(event) {
     this.setState({
-      goals:[]
+      goals: [],
     });
     this.setState({
-      goals:this.client.getGoals() 
+      goals: this.client.getGoals(),
     });
   }
 
@@ -45,42 +53,51 @@ export class GoalsScreen extends Component {
 
   onGoalRemoved(event) {
     this.setState({
-      goals : this.client.getGoals()
-    })
+      goals: this.client.getGoals(),
+    });
   }
 
   onGoalSegmentPressed(event, goal) {
     this.setState({
-      selectedGoal : goal,
-      modalVisible : true
+      selectedGoal: goal,
+      modalVisible: true,
     });
   }
 
   onSuccessfulGoalDelete(event) {
     this.setState({
-      modalVisible : false
+      modalVisible: false,
     });
   }
 
   render() {
     return (
-        <ScrollView>
-          <Modal visible={this.state.modalVisible} animationType='slide'>
-            <ModifyGoalScreen goal={this.state.selectedGoal} onSuccessfulGoalDeleteListener={this}></ModifyGoalScreen>
-            <Button title='Back' onPress={(event) => { 
+      <ScrollView>
+        <Modal visible={this.state.modalVisible} animationType="slide">
+          <ModifyGoalScreen
+            goal={this.state.selectedGoal}
+            onSuccessfulGoalDeleteListener={this}
+          ></ModifyGoalScreen>
+          <Button
+            title="Back"
+            onPress={(event) => {
               this.setState({
-                modalVisible : false
+                modalVisible: false,
               });
-            }}></Button>
-          </Modal>
+            }}
+          ></Button>
+        </Modal>
 
-          {this.state.goals.map((goal) => {
-            return (
-              <GoalsScreenSegment key={goal.get()} goal={goal} onGoalSegmentPressedListener={this}></GoalsScreenSegment>
-            );
-          })}
-        </ScrollView>
+        {this.state.goals.map((goal) => {
+          return (
+            <GoalsScreenSegment
+              key={goal.get()}
+              goal={goal}
+              onGoalSegmentPressedListener={this}
+            ></GoalsScreenSegment>
+          );
+        })}
+      </ScrollView>
     );
   }
 }
-

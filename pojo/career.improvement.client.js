@@ -1,3 +1,5 @@
+import {Goal} from '../pojo/goal';
+
 class OnLogEvent {
   constructor(entry, careerImprovementClient) {
     this.logged = entry.copy();
@@ -18,6 +20,8 @@ class OnAssociationEvent {
     this.accomplishment = accomplishment;
   }
 }
+
+export const getUnassociated = new Goal('Unassociated');
 
 export class CareerImprovementClient {
   constructor(email, username) {
@@ -157,6 +161,10 @@ export class CareerImprovementClient {
     }
 
     return goals;
+  }
+
+  hasGoals() {
+    return this.goals.length !== 0;
   }
 
   contains(toCheck) {
@@ -350,14 +358,18 @@ export class CareerImprovementClient {
       }
     }
 
-    const goalsContainsAccomplishment = (accomplishment) => {
-      if (selectByGoals.length === 0) {
+    const goalsContainsAccomplishment = (goals, accomplishment) => {
+      if (goals.length === 0) {
         return true;
       }
 
+      goals = goals.filter(function(goal) {
+        return goal.get() !== getUnassociated.get();
+      });
+
       let isWithin = false;
-      for (let i = 0; i < selectByGoals.length; i++) {
-        const byRef = this.getGoalByRef(selectByGoals[i].get());
+      for (let i = 0; i < goals.length; i++) {
+        const byRef = this.getGoalByRef(goals[i].get());
         if (byRef.hasAccomplishment(accomplishment)) {
           isWithin = true;
           break;
@@ -366,10 +378,25 @@ export class CareerImprovementClient {
       return isWithin;
     }
 
+    const containsUnassociated = (goals) => {
+      let containsUnassociated = false;
+      for (let i = 0; i < goals.length; i++) {
+        if (goals[i].get() === getUnassociated.get()) {
+          containsUnassociated = true;
+          break; 
+        }
+      }
+      return containsUnassociated;
+    }
+
     const filtered = [];
     for (let i = 0; i < withinBoundary.length; i++) {
-      if (goalsContainsAccomplishment(withinBoundary[i])) { 
+      if (goalsContainsAccomplishment(selectByGoals, withinBoundary[i])) { 
         filtered.push(withinBoundary[i]);
+      } else if (!goalsContainsAccomplishment(this.goals, withinBoundary[i])) {
+        if (containsUnassociated(selectByGoals)) {
+          filtered.push(withinBoundary[i]);
+        }
       }
     }
 

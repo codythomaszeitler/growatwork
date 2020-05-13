@@ -192,7 +192,7 @@ export class LoginScreen extends Component {
 
     if (!careerImprovementClient) {
       careerImprovementClient = new CareerImprovementClient(this.state.email, username);
-      await database().create(careerImprovementClient);
+      careerImprovementClient = await database().create(careerImprovementClient);
     }
 
     // const achievementFinder = new AchievementFinder(database());

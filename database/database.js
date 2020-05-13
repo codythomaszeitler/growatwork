@@ -3,6 +3,7 @@ import { DatabaseModelMapper } from "./database.model.mapper";
 import * as mutations from "../graphql/mutations";
 import {HardWorkEntry} from '../pojo/hard.work.entry';
 import {CareerImprovementClient} from '../pojo/career.improvement.client';
+import { MapperFactory } from "./mapper.factory";
 
 export class Query {
   constructor(graphQl, params) {
@@ -55,7 +56,12 @@ class Database {
     const databaseModel = this.mapper.toDatabaseModel(inMemory);
 
     const operation = this.getCreateOperation(inMemory.type);
-    await API.graphql(graphqlOperation(operation, databaseModel));
+
+    const mapperFactory = new MapperFactory();
+    const mapper = mapperFactory.create(inMemory.type);
+
+    const createDatabaseResult = await API.graphql(graphqlOperation(operation, databaseModel));
+    return mapper.toInMemoryModel(createDatabaseResult);
   }
 
   getCreateOperation(type) {

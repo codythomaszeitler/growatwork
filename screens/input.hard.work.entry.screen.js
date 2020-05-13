@@ -48,6 +48,10 @@ export class InputHardWorkEntryScreen extends Component {
     };
   }
 
+  componentWillUnmount() {
+    this.client.removeOnGoalAddedListener(this);
+  }
+
   onGoalAdded(event) {
     this.setState({
       goals: this.client.getGoals(),
@@ -297,7 +301,6 @@ class ChoosableGoalScreenSegment extends Component {
         title={this.state.title}
         onPress={this.onPress}
         bottomDivider
-        checkmark
       ></ListItem>
     );
   }

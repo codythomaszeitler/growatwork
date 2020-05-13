@@ -7,9 +7,12 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Timestamp } from "../pojo/timestamp";
 import { datastore } from "../datastore/datastore";
 import { AchievementExcelWriter } from "../excelexport/excel.writer";
-import {Goal} from '../pojo/goal';
+import { Goal } from "../pojo/goal";
 import * as MailComposer from "expo-mail-composer";
 import * as FileSystem from "expo-file-system";
+import { getUnassociated } from "../pojo/career.improvement.client";
+
+const unassociatedSelection = "Unassociated";
 
 export class ExcelExportScreen extends Component {
   constructor(props) {
@@ -34,8 +37,6 @@ export class ExcelExportScreen extends Component {
     const fromTimestamp = this.getStartingFrom();
     const toTimestamp = this.getStartingTo();
 
-
-
     this.state = {
       selectedToDate: toTimestamp.toDate(),
       selectedFromDate: fromTimestamp.toDate(),
@@ -43,20 +44,25 @@ export class ExcelExportScreen extends Component {
       fromTimestamp: fromTimestamp,
       modalVisible: false,
       destinationEmail: this.client.getEmail(),
-      goals: this.client.getGoals(),
+      goals: this.client.getGoals().concat(getUnassociated),
       isAllSelected: false,
     };
   }
 
+  componentWillUnmount() {
+    this.client.removeOnGoalAddedListener(this);
+    this.client.removeOnGoalRemovedListener(this);
+  }
+
   onGoalAdded(event) {
     this.setState({
-      goals: this.client.getGoals(),
+      goals: this.client.getGoals().concat(getUnassociated),
     });
   }
 
   onGoalRemoved(event) {
     this.setState({
-      goals: this.client.getGoals(),
+      goals: this.client.getGoals().concat(getUnassociated),
     });
   }
 
@@ -122,7 +128,7 @@ export class ExcelExportScreen extends Component {
 
   onExcelStartPress() {
     this.selected = [];
-    const goals = this.client.getGoals();
+    const goals = this.state.goals;
     for (let i = 0; i < goals.length; i++) {
       const goal = goals[i];
       this.selected.push(goal.get());
@@ -175,9 +181,11 @@ export class ExcelExportScreen extends Component {
         checkedGoals.push(new Goal(this.selected[i]));
       }
       return checkedGoals;
-    }
+    };
 
-    return datastore().get().getAchievements(startOfDay, endOfDay, getCheckedGoals());
+    return datastore()
+      .get()
+      .getAchievements(startOfDay, endOfDay, getCheckedGoals());
   }
 
   onGoalChecked(event, goal) {
@@ -185,7 +193,7 @@ export class ExcelExportScreen extends Component {
   }
 
   onGoalUnchecked(event, goal) {
-    this.selected = this.selected.filter(function(inner) {
+    this.selected = this.selected.filter(function (inner) {
       return goal !== inner;
     });
   }
@@ -237,20 +245,32 @@ export class ExcelExportScreen extends Component {
                 title="Export"
               />
             </Card>
+            <Text></Text>
+            <Text></Text>
+
+              <Text
+                style={{
+                  fontFamily: "PingFangTC-Thin",
+                  fontSize: 15,
+                  textAlign : 'center'
+                }}
+              >
+                Select Goals to Export
+              </Text>
+              <Card>
+                {this.state.goals.map((goal) => {
+                  return (
+                    <GoalCheckbox
+                      onCheckboxPressListener={this}
+                      goal={goal}
+                      key={goal.get()}
+                    ></GoalCheckbox>
+                  );
+                })}
+              </Card>
 
             <Text></Text>
-            <Text></Text>
-            <Card>
-              {this.state.goals.map((goal) => {
-                return (
-                  <GoalCheckbox
-                    onCheckboxPressListener={this}
-                    goal={goal}
-                    key={goal.get()}
-                  ></GoalCheckbox>
-                );
-              })}
-            </Card>
+
             <Text></Text>
             <Text></Text>
 
@@ -339,9 +359,14 @@ class GoalCheckbox extends Component {
 
     this.onPress = this.onPress.bind(this);
 
+    let goalText = unassociatedSelection;
+    if (props.goal) {
+      goalText = props.goal.get();
+    }
+
     this.state = {
-      goal: props.goal,
-      isChecked: true
+      goalText: goalText,
+      isChecked: true,
     };
   }
 
@@ -350,16 +375,22 @@ class GoalCheckbox extends Component {
 
     if (checked) {
       for (let i = 0; i < this.onCheckboxPressListeners.length; i++) {
-        this.onCheckboxPressListeners[i].onGoalChecked(event, this.state.goal.get());
+        this.onCheckboxPressListeners[i].onGoalChecked(
+          event,
+          this.state.goalText
+        );
         this.setState({
-          isChecked : checked
+          isChecked: checked,
         });
       }
     } else {
       for (let i = 0; i < this.onCheckboxPressListeners.length; i++) {
-        this.onCheckboxPressListeners[i].onGoalUnchecked(event, this.state.goal.get());
+        this.onCheckboxPressListeners[i].onGoalUnchecked(
+          event,
+          this.state.goalText
+        );
         this.setState({
-          isChecked : checked
+          isChecked: checked,
         });
       }
     }
@@ -370,7 +401,7 @@ class GoalCheckbox extends Component {
       <CheckBox
         center
         onPress={this.onPress}
-        title={this.state.goal.get()}
+        title={this.state.goalText}
         checkedIcon="dot-circle-o"
         uncheckedIcon="circle-o"
         checked={this.state.isChecked}

@@ -58,7 +58,9 @@ export class GoalsScreenSegment extends Component {
   render() {
     return (
       <TouchableOpacity onPress={this.onPress}>
-        <Card title={this.state.goal.get()}>
+        <Card title={this.state.goal.get()} titleStyle={{
+          fontFamily: "PingFangTC-Thin"
+        }}>
           {this.state.goal
             .getAssociatedAccomplishments()
             .map((accomplishment) => {
@@ -69,6 +71,7 @@ export class GoalsScreenSegment extends Component {
                   hideChevron
                   hideDivider
                   hideAssociatedGoal
+                  topPadding={0}
                 ></HardWorkEntryScreenSegment>
               );
             })}

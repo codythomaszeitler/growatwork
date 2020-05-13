@@ -10,7 +10,7 @@ import { SettingsScreen } from "./settings.screen";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { GoalsScreen } from "./goals.screen";
-import {ExcelExportScreen} from './excel.export.screen';
+import { ExcelExportScreen } from "./excel.export.screen";
 
 const Tab = createBottomTabNavigator();
 function DashboardTabs() {
@@ -21,6 +21,22 @@ function DashboardTabs() {
         component={DashboardScreen}
         options={{
           tabBarLabel: "Accomplishments",
+          tabBarIcon: ({ tintColor }) => (
+            <View>
+              <Icon
+                style={[{ color: tintColor }]}
+                size={25}
+                name={"ios-checkmark"}
+              />
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Long Term"
+        component={GoalsScreen}
+        options={{
+          tabBarLabel: "Weekly Progress",
           tabBarIcon: ({ tintColor }) => (
             <View>
               <Icon
@@ -49,26 +65,10 @@ function DashboardTabs() {
         }}
       />
       <Tab.Screen
-        name="Long Term"
-        component={GoalsScreen}
-        options={{
-          tabBarLabel: "Weekly Progress",
-          tabBarIcon: ({ tintColor }) => (
-            <View>
-              <Icon
-                style={[{ color: tintColor }]}
-                size={25}
-                name={"ios-checkmark"}
-              />
-            </View>
-          ),
-        }}
-      />
-      <Tab.Screen
         name="ExcelExport"
         component={ExcelExportScreen}
         options={{
-          tabBarLabel: "Excel Export",
+          tabBarLabel: "Export",
           tabBarIcon: ({ tintColor }) => (
             <View>
               <Icon
@@ -77,10 +77,9 @@ function DashboardTabs() {
                 name={"ios-arrow-dropdown-circle"}
               />
             </View>
-          )
+          ),
         }}
       ></Tab.Screen>
-
     </Tab.Navigator>
   );
 }
