@@ -157,7 +157,11 @@ export class Timestamp {
     return new Timestamp(
       date.getFullYear(),
       months[date.getMonth()],
-      date.getDate()
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes(),
+      date.getSeconds(),
+      date.getMilliseconds()
     );
   }
 
@@ -175,6 +179,26 @@ export class Timestamp {
 
   getMonthIndex(month) {
     return months.indexOf(month);
+  }
+
+  getPreviousDayOfWeek(dayOfWeek) {
+    let current = DateTime.fromJSDate(this.toDate());
+
+    while (current.weekdayLong !== dayOfWeek) {
+      current = current.minus({
+        days : 1
+      });
+      if (current.weekdayLong === dayOfWeek) {
+        break;
+      }
+    }
+
+    const timestamp = Timestamp.fromDate(current.toJSDate());
+    timestamp.hour = 0;
+    timestamp.minute = 0;
+    timestamp.second = 0;
+    timestamp.millisecond = 0;
+    return timestamp;
   }
 
   static today() {

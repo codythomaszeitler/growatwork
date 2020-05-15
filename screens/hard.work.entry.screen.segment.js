@@ -14,11 +14,11 @@ export class HardWorkEntryScreenSegment extends Component {
   constructor(props) {
     super(props);
     this.client = datastore().get();
-    this.client.addOnGoalRemovedListener(this);
+    this.client.addOnAccomplishmentAssociatedListener(this);
+    this.client.addOnAccomplishmentDeassociatedListener(this);
 
     this.props = props;
     this.generateUniqueKey = this.generateUniqueKey.bind(this);
-    this.onGoalRemoved = this.onGoalRemoved.bind(this);
     this.onPress = this.onPress.bind(this);
 
     this.onPressListeners = [];
@@ -26,33 +26,35 @@ export class HardWorkEntryScreenSegment extends Component {
       this.onPressListeners.push(this.props.onPressListener);
     }
 
-    const parseAssociatedGoalText = () => {
-      let text = "";
-
-      const goal = this.client.getGoalWithAccomplishment(
-        this.props.hardWorkEntry
-      );
-      if (!this.props.hideAssociatedGoal) {
-        if (goal) {
-          text = " - " + goal.get();
-        }
-      }
-
-      return text;
-    };
-
     this.state = {
       subtitle:
         this.getDateView(this.props.hardWorkEntry.getAccomplishedOn()) +
-        parseAssociatedGoalText(),
+        this.parseAssociatedGoalText(),
       goal: this.client.getGoalWithAccomplishment(this.props.hardWorkEntry),
-      paddingTop : this.getTopPadding(),
-      paddingHorizontal : this.getHorizontalPadding() 
+      paddingTop: this.getTopPadding(),
+      paddingHorizontal: this.getHorizontalPadding(),
+      accomplishment: this.props.hardWorkEntry,
     };
   }
 
+  parseAssociatedGoalText() {
+    let text = "";
+
+    const goal = this.client.getGoalWithAccomplishment(
+      this.props.hardWorkEntry
+    );
+    if (!this.props.hideAssociatedGoal) {
+      if (goal) {
+        text = " - " + goal.get();
+      }
+    }
+
+    return text;
+  }
+
   componentWillUnmount() {
-    this.client.removeOnGoalRemovedListener(this);
+    this.client.removeOnAccomplishmentAssociatedListener(this);
+    this.client.removeOnAccomplishmentDeassociatedListener(this);
   }
 
   getTopPadding() {
@@ -71,15 +73,24 @@ export class HardWorkEntryScreenSegment extends Component {
     return horizontalPadding;
   }
 
-  onGoalRemoved(event) {
-    if (this.state.goal) {
-      if (event.goal.get() === this.state.goal.get()) {
-        this.setState({
-          subtitle: this.getDateView(
-            this.props.hardWorkEntry.getAccomplishedOn()
-          ),
-        });
-      }
+  onAccomplishmentAssociated(event) {
+    if (event.accomplishment.equals(this.state.accomplishment)) {
+      this.setState({
+        subtitle:
+          this.getDateView(this.props.hardWorkEntry.getAccomplishedOn()) +
+          this.parseAssociatedGoalText(),
+        goal: this.client.getGoalWithAccomplishment(this.props.hardWorkEntry),
+      });
+    }
+  }
+
+  onAccomplishmentDeassociated(event) {
+    if (event.accomplishment.equals(this.state.accomplishment)) {
+      this.setState({
+        subtitle:
+          this.getDateView(this.props.hardWorkEntry.getAccomplishedOn()),
+          goal : null
+      });
     }
   }
 

@@ -170,6 +170,21 @@ describe("Timestamp", () => {
     expect(testObject.isAfter(testObject.copy())).toBe(true);
   });
 
+  it('should be able to get the previous day of week', () => {
+    const testObject = new Timestamp(2019, "January", 3);
+
+    const previousMonday = new Timestamp(2018, 'December', 31);
+
+    expect(previousMonday.equals(testObject.getPreviousDayOfWeek('Monday')));
+  });
+
+  it('should be able to get the previous day of week while being on that day', () => {
+    const testObject = new Timestamp(2018, 'December', 31);
+    const previousMonday = new Timestamp(2018, 'December', 31);
+
+    expect(previousMonday.equals(testObject.getPreviousDayOfWeek('Monday')));
+  });
+
   it("should throw an exception if a non 1-12 month given", () => {
     let caughtException = null;
     try {

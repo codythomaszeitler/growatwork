@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { Card } from "react-native-elements";
+import { View } from "react-native";
+import { Card, Text } from "react-native-elements";
 import { HardWorkEntryScreenSegment } from "./hard.work.entry.screen.segment";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import {datastore} from '../datastore/datastore';
+import { datastore } from "../datastore/datastore";
+import { Timestamp } from "../pojo/timestamp";
 
 export class GoalsScreenSegment extends Component {
   constructor(props) {
@@ -12,6 +14,16 @@ export class GoalsScreenSegment extends Component {
     this.client = datastore().get();
     this.client.addOnAccomplishmentAssociatedListener(this);
     this.client.addOnAccomplishmentDeassociatedListener(this);
+
+    this.getAccomplishmentsFromPastWeek = this.getAccomplishmentsFromPastWeek.bind(
+      this
+    );
+    this.onAccomplishmentAssociated = this.onAccomplishmentAssociated.bind(
+      this
+    );
+    this.onAccomplishmentDeassociated = this.onAccomplishmentAssociated.bind(
+      this
+    );
 
     this.onGoalSegmentPressedListeners = [];
     if (props.onGoalSegmentPressedListener) {
@@ -23,6 +35,14 @@ export class GoalsScreenSegment extends Component {
     this.state = {
       goal: props.goal,
     };
+    this.state.accomplishments = this.getAccomplishmentsFromPastWeek();
+  }
+
+  getAccomplishmentsFromPastWeek() {
+    const today = Timestamp.today();
+    const previous = today.getPreviousDayOfWeek("Monday");
+
+    return this.client.getAchievements(previous, today, [this.state.goal]);
   }
 
   componentWillUnmount() {
@@ -33,7 +53,8 @@ export class GoalsScreenSegment extends Component {
   onAccomplishmentDeassociated(event) {
     if (event.goal.get() === this.state.goal.get()) {
       this.setState({
-        goal : event.goal
+        goal: event.goal,
+        accomplishments: this.getAccomplishmentsFromPastWeek(),
       });
     }
   }
@@ -41,7 +62,8 @@ export class GoalsScreenSegment extends Component {
   onAccomplishmentAssociated(event) {
     if (event.goal.get() === this.state.goal.get()) {
       this.setState({
-        goal : event.goal
+        goal: event.goal,
+        accomplishments: this.getAccomplishmentsFromPastWeek(),
       });
     }
   }
@@ -58,23 +80,36 @@ export class GoalsScreenSegment extends Component {
   render() {
     return (
       <TouchableOpacity onPress={this.onPress}>
-        <Card title={this.state.goal.get()} titleStyle={{
-          fontFamily: "PingFangTC-Thin"
-        }}>
-          {this.state.goal
-            .getAssociatedAccomplishments()
-            .map((accomplishment) => {
-              return (
-                <HardWorkEntryScreenSegment
-                  key={accomplishment.toString()}
-                  hardWorkEntry={accomplishment}
-                  hideChevron
-                  hideDivider
-                  hideAssociatedGoal
-                  topPadding={0}
-                ></HardWorkEntryScreenSegment>
-              );
-            })}
+        <Card
+          title={this.state.goal.get()}
+          titleStyle={{
+            fontFamily: "PingFangTC-Thin",
+          }}
+        >
+          <View>
+            {this.state.accomplishments.length === 0 && (
+              <Text
+                style={{
+                  fontFamily: "PingFangTC-Thin",
+                }}
+              >
+                No accomplishments this week!
+              </Text>
+            )}
+            {this.state.accomplishments.length > 0 &&
+              this.state.accomplishments.map((accomplishment) => {
+                return (
+                  <HardWorkEntryScreenSegment
+                    key={accomplishment.toString()}
+                    hardWorkEntry={accomplishment}
+                    hideChevron
+                    hideDivider
+                    hideAssociatedGoal
+                    topPadding={0}
+                  ></HardWorkEntryScreenSegment>
+                );
+              })}
+          </View>
         </Card>
       </TouchableOpacity>
     );

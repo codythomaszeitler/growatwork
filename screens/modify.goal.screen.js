@@ -1,25 +1,66 @@
 import React, { Component } from "react";
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import { Text, Card, Input, Button } from "react-native-elements";
-import {DeleteGoalService} from '../service/delete.goal.service';
-import {database} from '../database/database';
-import {datastore} from '../datastore/datastore';
+import { DeleteGoalService } from "../service/delete.goal.service";
+import {ChangeGoalService} from '../service/change.goal.service';
+import { database } from "../database/database";
+import { datastore } from "../datastore/datastore";
 
 export class ModifyGoalScreen extends Component {
   constructor(props) {
     super(props);
     this.client = datastore().get();
     this.onDelete = this.onDelete.bind(this);
+    this.onGoalTextChange = this.onGoalTextChange.bind(this);
+    this.onChange = this.onChange.bind(this); 
 
     this.onSuccessfulGoalDeleteListeners = [];
     if (props.onSuccessfulGoalDeleteListener) {
-        this.onSuccessfulGoalDeleteListeners.push(props.onSuccessfulGoalDeleteListener);
+      this.onSuccessfulGoalDeleteListeners.push(
+        props.onSuccessfulGoalDeleteListener
+      );
+    }
+    this.onSuccessfulGoalChangedListeners = [];
+    if (props.onSuccessfulGoalChangedListener) {
+      this.onSuccessfulGoalChangedListeners.push(
+        props.onSuccessfulGoalChangedListener
+      );
     }
 
     this.state = {
-        defaultValue : props.goal.get(),
-        goal : props.goal
+      defaultValue: props.goal.get(),
+      goal: props.goal,
+      changeGoalInput: props.goal.get(),
+    };
+  }
+
+  async onChange(event) {
+
+    const input = this.state.changeGoalInput.trim();
+    if (!input) {
+      Alert.alert('Empty Goal', 'Must provide a name');
+      return;
     }
+
+    const service = new ChangeGoalService(database());
+    const changedGoal = await service.changeGoalName(
+      this.client,
+      this.state.goal,
+      this.state.changeGoalInput.trim()
+    );
+
+    for (let i = 0; i < this.onSuccessfulGoalChangedListeners.length; i++) {
+      this.onSuccessfulGoalChangedListeners[i].onSuccessfulGoalChange({
+        original : this.state.goal,
+        changed: changedGoal
+      });
+    }
+  }
+
+  async onGoalTextChange(event) {
+    this.setState({
+      changeGoalInput: event,
+    });
   }
 
   async onDelete(event) {
@@ -27,9 +68,9 @@ export class ModifyGoalScreen extends Component {
     await service.removeGoal(this.client, this.state.goal);
 
     for (let i = 0; i < this.onSuccessfulGoalDeleteListeners.length; i++) {
-        this.onSuccessfulGoalDeleteListeners[i].onSuccessfulGoalDelete({
-            goal : this.state.goal
-        });
+      this.onSuccessfulGoalDeleteListeners[i].onSuccessfulGoalDelete({
+        goal: this.state.goal,
+      });
     }
   }
 
@@ -82,9 +123,8 @@ export class ModifyGoalScreen extends Component {
                 marginRight: 0,
                 marginBottom: 0,
               }}
-              onPress={this.onSave}
+              onPress={this.onChange}
               title="Change"
-              disabled={this.state.isSavedButtonDisabled}
             />
           </Card>
           <View

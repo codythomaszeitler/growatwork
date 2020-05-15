@@ -108,7 +108,6 @@ export class LoginScreen extends Component {
         throw new Error("Unexpected error occurred");
       }
     } catch (e) {
-      console.log(e);
       let message = e.message ? e.message : e;
 
       Alert.alert("Cannot Sign In", message, [
