@@ -4,6 +4,7 @@ import * as mutations from "../graphql/mutations";
 import {HardWorkEntry} from '../pojo/hard.work.entry';
 import {CareerImprovementClient} from '../pojo/career.improvement.client';
 import { MapperFactory } from "./mapper.factory";
+import {InFileDatabase} from './in.file.database';
 
 export class Query {
   constructor(graphQl, params) {
@@ -91,6 +92,15 @@ class Database {
   }
 }
 
+export function configureAWSDatabase() {
+  databaseSingleton = new Database();
+}
+
+export function configureFlatDatabase() {
+  databaseSingleton = new InFileDatabase('growandthrive');
+}
+
+
 let databaseSingleton = null;
 export function database() {
   if (!databaseSingleton) {
@@ -98,3 +108,5 @@ export function database() {
   }
   return databaseSingleton;
 }
+
+

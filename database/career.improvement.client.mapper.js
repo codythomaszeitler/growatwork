@@ -4,7 +4,6 @@ import { GoalMapper } from "./goal.mapper";
 
 export class CareerImprovementClientMapper {
   toInMemoryModel(databaseModel) {
-    console.log(databaseModel);
 
     let clientsAsGraphQl = null;
     if (databaseModel.data.createCareerImprovementClient) {

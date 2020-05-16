@@ -5,7 +5,10 @@ export class GoalMapper {
 
     toInMemoryModel(databaseModel) {
         const accomplishmentMapper = new AccomplishmentMapper();
+
+        console.log('here');
         const accomplishments = accomplishmentMapper.toInMemoryModel(databaseModel.accomplishments);
+        console.log('there');
 
         const goal = new Goal(databaseModel.goal);
         for (let i = 0; i < accomplishments.length; i++) {
@@ -32,6 +35,7 @@ export class GoalMapper {
         for (let i = 0; i < inMemoryModel.length; i++) {
             converted.push(convert(inMemoryModel[i]));
         }
+        console.log(converted); 
         return converted;
     }
 }

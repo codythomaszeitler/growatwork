@@ -26,6 +26,12 @@ export const getUnassociated = new Goal("Unassociated");
 export class CareerImprovementClient {
   constructor(email, username) {
     this.hardWorkEntries = [];
+    this.goals = [];
+    this.type = CareerImprovementClient.getType();
+    this.email = email;
+    this.username = username;
+    this.id = null;
+
     this.onLogAddListeners = [];
     this.onLogRemovedListeners = [];
     this.onGoalAddedListeners = [];
@@ -33,18 +39,13 @@ export class CareerImprovementClient {
     this.onGoalModifiedListeners = [];
     this.onAccomplishmentAssociatedListeners = [];
     this.onAccomplishmentDeassociatedListeners = [];
-    this.type = CareerImprovementClient.getType();
-    this.email = email;
-    this.username = username;
-    this.id = null;
     this.currentOnLogListenerId = 0;
     this.currentOnLogRemoveListenerId = 0;
     this.currentOnGoalAddedListenerId = 0;
     this.currentOnGoalRemovedListenerId = 0;
     this.currentOnAccomplishmentAssociatedListenerId = 0;
     this.currentOnAccomplishmentDeassociatedListenerId = 0;
-    this.goals = [];
-  }
+   }
 
   static getType() {
     return "careerimprovementclient";

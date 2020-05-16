@@ -70,3 +70,39 @@ export class Authentication {
     return await Auth.resendSignUp(username);
   }
 }
+
+export class GuestAuthentication {
+  async signIn(email, password) {
+  }
+
+  async signUp(email, password) {
+  }
+
+  async confirmSignUp(email, code) {
+  }
+
+  async signOut() {
+  }
+
+  async changePassword(oldPassword, newPassword) {
+  }
+
+  async forgotPasswordSubmit(username, code, newPassword) {
+  }
+
+  async getCurrentUsername() {
+    return "Guest";
+  }
+
+  async sendPasswordResetEmail(username) {
+  }
+
+  async forgotPassword(username) {
+  }
+
+  async forgotPasswordSubmit(username, code, newPassword) {
+  } 
+
+  async resendSignUp(username) {
+  }
+}

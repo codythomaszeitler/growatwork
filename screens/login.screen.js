@@ -12,9 +12,14 @@ import {
 import { AuthenticationFlow } from "../authentication/authentication.flow";
 import { ConfirmationCodeEntryScreen } from "./confirmation.code.entry.screen";
 import { CareerImprovementClientFinder } from "../database/career.improvement.client.finder";
-import { database } from "../database/database";
+import {
+  database,
+  configureAWSDatabase,
+  configureFlatDatabase,
+} from "../database/database";
 import { datastore } from "../datastore/datastore";
 import { CareerImprovementClient } from "../pojo/career.improvement.client";
+import { AuthenticationFactory } from "../authentication/auth.factory";
 
 export class LoginScreen extends Component {
   constructor(props) {
@@ -22,6 +27,7 @@ export class LoginScreen extends Component {
     this.signIn = this.signIn.bind(this);
     this.onEmailChange = this.onEmailChange.bind(this);
     this.onPasswordChange = this.onPasswordChange.bind(this);
+    this.guestSignIn = this.guestSignIn.bind(this);
     this.signUp = this.signUp.bind(this);
     this.forgotPassword = this.forgotPassword.bind(this);
     this.showLoadingScreen = this.showLoadingScreen.bind(this);
@@ -29,8 +35,8 @@ export class LoginScreen extends Component {
     this.onPasswordChangePress = this.onPasswordChangePress.bind(this);
     this.onConfirmationCodePress = this.onConfirmationCodePress.bind(this);
 
-    this.authentication = new Authentication();
-    this.authenticationFlow = new AuthenticationFlow(this.authentication);
+    this.authentication = null;
+    this.authenticationFlow = null;
 
     this.nextStep = null;
 
@@ -56,7 +62,7 @@ export class LoginScreen extends Component {
   }
 
   onPasswordChangeMismatchedEvent() {
-    Alert.alert('Passwords Did Not Match');
+    Alert.alert("Passwords Did Not Match");
   }
 
   onPasswordViolatingPolicyEvent(event) {
@@ -88,8 +94,29 @@ export class LoginScreen extends Component {
     Alert.alert(event.message);
   }
 
+  async guestSignIn() {
+    try {
+      const factory = new AuthenticationFactory();
+      this.authentication = factory.create("Guest");
+
+      this.showLoadingScreen();
+      configureFlatDatabase();
+      await this.load();
+      this.hideLoadingScreen();
+      this.props.navigation.navigate("Dashboard");  
+    } catch (e) {
+      console.log(e);
+      this.hideLoadingScreen();
+      Alert.alert('Cannot Sign In', e.message);
+    }
+  }
+
   async signIn() {
     try {
+      const factory = new AuthenticationFactory();
+      this.authentication = factory.create("AWS");
+      this.authenticationFlow = new AuthenticationFlow(this.authentication);
+
       this.showLoadingScreen();
       this.nextStep = await this.authenticationFlow.signIn(
         this.state.email,
@@ -97,6 +124,7 @@ export class LoginScreen extends Component {
       );
 
       if (this.nextStep.step === Completed) {
+        configureAWSDatabase();
         await this.load();
         this.hideLoadingScreen();
         this.props.navigation.navigate("Dashboard");
@@ -184,22 +212,22 @@ export class LoginScreen extends Component {
     const careerImprovementClientFinder = new CareerImprovementClientFinder(
       database()
     );
+
     const username = await this.authentication.getCurrentUsername();
     let careerImprovementClient = await careerImprovementClientFinder.findByUsername(
       username
     );
 
     if (!careerImprovementClient) {
-      careerImprovementClient = new CareerImprovementClient(this.state.email, username);
-      careerImprovementClient = await database().create(careerImprovementClient);
+      careerImprovementClient = new CareerImprovementClient(
+        this.state.email,
+        username
+      );
+      careerImprovementClient = await database().create(
+        careerImprovementClient
+      );
     }
 
-    // const achievementFinder = new AchievementFinder(database());
-    // const achievements = await achievementFinder.findByUsername(username);
-
-    // for (let i = 0; i < achievements.length; i++) {
-    //   careerImprovementClient.log(achievements[i]);
-    // }
     datastore().set(careerImprovementClient);
   }
 
@@ -217,7 +245,7 @@ export class LoginScreen extends Component {
 
   async signUp() {
     this.props.navigation.navigate("SignUp", {
-      authenticationFlow: this.authenticationFlow
+      authenticationFlow: this.authenticationFlow,
     });
   }
 
@@ -323,6 +351,13 @@ export class LoginScreen extends Component {
           <Button
             type="outline"
             raised
+            title="Guest Sign In"
+            onPress={this.guestSignIn}
+          ></Button>
+          <Text></Text>
+          <Button
+            type="outline"
+            raised
             title="Sign Up"
             onPress={this.signUp}
           ></Button>
@@ -334,6 +369,11 @@ export class LoginScreen extends Component {
             onPress={this.forgotPassword}
           ></Button>
         </View>
+        <View
+          style={{
+            flex: 0.5,
+          }}
+        ></View>
       </View>
     );
   }
