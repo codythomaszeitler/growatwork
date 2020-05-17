@@ -1,4 +1,3 @@
-import { Timestamp } from "../pojo/timestamp";
 import { HardWorkEntry } from "../pojo/hard.work.entry";
 import { TimestampMapper } from "./timestamp.mapper";
 
