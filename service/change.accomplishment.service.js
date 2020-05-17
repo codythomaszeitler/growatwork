@@ -8,8 +8,16 @@ export class ChangeAccomplishmentService {
 
     async change(careerImprovementClient, original, newAccomplishmentText) {
         careerImprovementClient.remove(original);
-        careerImprovementClient.log(new HardWorkEntry(newAccomplishmentText, original.getAccomplishedOn()));
 
-        this.database.update(careerImprovementClient);
+        const changed = new HardWorkEntry(newAccomplishmentText, original.getAccomplishedOn());
+        careerImprovementClient.log(changed);
+
+        try {
+            this.database.update(careerImprovementClient);
+        } catch (e) {
+            careerImprovementClient.remove(changed);
+            careerImprovementClient.log(original);
+            throw e;
+        }
     }
 }

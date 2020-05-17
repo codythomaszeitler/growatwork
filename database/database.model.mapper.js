@@ -1,4 +1,5 @@
 import {MapperFactory} from './mapper.factory';
+import { CareerImprovementClient } from '../pojo/career.improvement.client';
 
 export class DatabaseModelMapper {
   toDatabaseModel(inMemoryModel) {
@@ -10,10 +11,8 @@ export class DatabaseModelMapper {
   toInMemoryModel(databaseModel) {
     const getType = () => {
       let type = null;
-      if (databaseModel.data.createAchievement) {
-        type = "achievement";
-      } else if (databaseModel.data.listCareerImprovementClients) {
-        type = "careerimprovementclient";
+      if (databaseModel.data.listCareerImprovementClients) {
+        type = CareerImprovementClient.getType();
       }
       return type;
     };

@@ -1,4 +1,3 @@
-import { AchievementFinder } from "../database/achievement.finder";
 
 export class LogAccomplishmentService {
   constructor(database) {
@@ -7,6 +6,12 @@ export class LogAccomplishmentService {
 
   async log(careerImprovementClient, accomplishment, goal) {
     careerImprovementClient.log(accomplishment, goal);
-    await this.database.update(careerImprovementClient);
+
+    try {
+      await this.database.update(careerImprovementClient);
+    } catch (e) {
+      careerImprovementClient.remove(accomplishment);
+      throw e;
+    }
   }
 }

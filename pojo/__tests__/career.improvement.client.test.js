@@ -166,6 +166,48 @@ describe("Career Improvement Client", () => {
     expect(caughtEvent.removed.equals(second)).toBe(true);
   });
 
+  it("should be able to retrieve goal from accomplishment", () => {
+    const accomplishment = new HardWorkEntry(
+      "First",
+      new Timestamp(2018, "January", 1, 1, 1, 1)
+    );
+    const goal = new Goal("Test");
+    testObject.addGoal(goal);
+    testObject.log(accomplishment, goal);
+
+    const associated = testObject.getAssociatedGoal(accomplishment);
+    expect(associated.equals(testObject.getGoal(goal))).toBeTruthy();
+  });
+
+  it("should return null if the accomplishment does not have an associated goal", () => {
+    const accomplishment = new HardWorkEntry(
+      "First",
+      new Timestamp(2018, "January", 1, 1, 1, 1)
+    );
+
+    testObject.log(accomplishment);
+
+    const associated = testObject.getAssociatedGoal(accomplishment);
+    expect(associated).toBeNull();
+  });
+
+  it("should throw an exception if the accomplishment does not exist within the client", () => {
+    const accomplishment = new HardWorkEntry(
+      "First",
+      new Timestamp(2018, "January", 1, 1, 1, 1)
+    );
+
+    let caughtException = null;
+    try {
+      testObject.getAssociatedGoal(accomplishment);
+    } catch (e) {
+      caughtException = e;
+    }
+    expect(caughtException.message).toBe(
+      "Accomplishment [First] did not exist within client"
+    );
+  });
+
   it("should be able to get the earliest achievment", () => {
     testObject.log(
       new HardWorkEntry("Test Achievement 3", new Timestamp(2019, "January", 5))
@@ -357,17 +399,31 @@ describe("Career Improvement Client", () => {
     );
     testObject.addGoal(goal.copy());
     testObject.log(accomplishment, goal.copy());
-    testObject.log(new HardWorkEntry('Cody is cool', new Timestamp(2010, 1, 5)));
-  
-    const accomplishments = testObject.getAchievements(new Timestamp(2010, 1, 1), new Timestamp(2011, 1, 1), [goal.copy()]);
+    testObject.log(
+      new HardWorkEntry("Cody is cool", new Timestamp(2010, 1, 5))
+    );
+
+    const accomplishments = testObject.getAchievements(
+      new Timestamp(2010, 1, 1),
+      new Timestamp(2011, 1, 1),
+      [goal.copy()]
+    );
     expect(accomplishments.length).toBe(1);
-    expect(accomplishments[0].getAccomplishment()).toBe(accomplishment.getAccomplishment());
+    expect(accomplishments[0].getAccomplishment()).toBe(
+      accomplishment.getAccomplishment()
+    );
   });
 
-  it('shouldn\'t use a filter if the list of goals is empty', () => {
-    testObject.log(new HardWorkEntry('Cody is cool', new Timestamp(2010, 1, 5)));
+  it("shouldn't use a filter if the list of goals is empty", () => {
+    testObject.log(
+      new HardWorkEntry("Cody is cool", new Timestamp(2010, 1, 5))
+    );
 
-    const accomplishments = testObject.getAchievements(new Timestamp(2010, 1, 1), new Timestamp(2010, 1, 6), []);
+    const accomplishments = testObject.getAchievements(
+      new Timestamp(2010, 1, 1),
+      new Timestamp(2010, 1, 6),
+      []
+    );
     expect(accomplishments.length).toBe(1);
   });
 });

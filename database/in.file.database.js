@@ -5,7 +5,6 @@ import { GoalMapper } from "./goal.mapper";
 
 export class InFileCareerImprovementClientMapper {
   toInMemoryModel(databaseModel) {
-    console.log(databaseModel);
     const careerImprovementClient = new CareerImprovementClient(
       databaseModel.email,
       databaseModel.username
@@ -17,16 +16,12 @@ export class InFileCareerImprovementClientMapper {
         databaseModel.accomplishments[i]
       );
 
-      console.log(accomplishment);
       careerImprovementClient.log(accomplishment[0] );
     }
-
-    console.log('we got in here');
 
     for (let i = 0; i < databaseModel.goals.length; i++) {
       const goalMapper = new GoalMapper();
 
-      console.log(databaseModel.goals);
       const goal = goalMapper.toInMemoryModel(databaseModel.goals[i]);
 
       careerImprovementClient.addGoal(goal);
@@ -59,7 +54,6 @@ export class InFileCareerImprovementClientMapper {
       id: inMemory.id,
     };
 
-    console.log(databaseModel);
     return databaseModel;
   }
 }
@@ -77,7 +71,6 @@ export class InFileDatabase {
     const existsCheck = await FileSystem.getInfoAsync(fileUri);
 
     if (!existsCheck.exists) {
-      console.log("file did not exist");
       await FileSystem.writeAsStringAsync(fileUri, "");
     }
   }

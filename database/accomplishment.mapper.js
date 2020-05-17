@@ -30,9 +30,6 @@ export class AccomplishmentMapper {
   }
 
   toInMemoryModel(databaseModel) {
-
-    console.log('database model');
-    console.log(databaseModel);
     if (Array.isArray(databaseModel)) {
       if (databaseModel.length === 0) {
         return [];

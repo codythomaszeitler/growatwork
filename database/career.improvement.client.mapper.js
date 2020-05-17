@@ -4,7 +4,6 @@ import { GoalMapper } from "./goal.mapper";
 
 export class CareerImprovementClientMapper {
   toInMemoryModel(databaseModel) {
-
     let clientsAsGraphQl = null;
     if (databaseModel.data.createCareerImprovementClient) {
       clientsAsGraphQl = [databaseModel.data.createCareerImprovementClient];
@@ -33,20 +32,25 @@ export class CareerImprovementClientMapper {
     careerImprovementClient.id = graphQlResponse.id;
 
     const accomplishmentsAsDatabase = graphQlResponse.accomplishments;
-    for (let i = 0; i < accomplishmentsAsDatabase.length; i++) {
-      const accomplishmentMapper = new AccomplishmentMapper();
-      const accomplishments = accomplishmentMapper.toInMemoryModel(
-        accomplishmentsAsDatabase[i]
-      );
-      careerImprovementClient.log(accomplishments[0]);
+
+    if (accomplishmentsAsDatabase) {
+      for (let i = 0; i < accomplishmentsAsDatabase.length; i++) {
+        const accomplishmentMapper = new AccomplishmentMapper();
+        const accomplishments = accomplishmentMapper.toInMemoryModel(
+          accomplishmentsAsDatabase[i]
+        );
+        careerImprovementClient.log(accomplishments[0]);
+      }
     }
 
     const goalsAsDatabase = graphQlResponse.goals;
-    for (let i = 0; i < goalsAsDatabase.length; i++) {
-      const goalMapper = new GoalMapper();
+    if (goalsAsDatabase) {
+      for (let i = 0; i < goalsAsDatabase.length; i++) {
+        const goalMapper = new GoalMapper();
 
-      const goal = goalMapper.toInMemoryModel(goalsAsDatabase[i]);
-      careerImprovementClient.addGoal(goal);
+        const goal = goalMapper.toInMemoryModel(goalsAsDatabase[i]);
+        careerImprovementClient.addGoal(goal);
+      }
     }
 
     return careerImprovementClient;

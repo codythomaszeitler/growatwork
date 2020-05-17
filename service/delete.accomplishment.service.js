@@ -1,5 +1,3 @@
-import { AchievementFinder } from "../database/achievement.finder";
-
 export class DeleteAccomplishmentService {
   constructor(database) {
     this.database = database;
@@ -7,16 +5,24 @@ export class DeleteAccomplishmentService {
 
   async delete(careerImprovementClient, accomplishment) {
     if (!careerImprovementClient.contains(accomplishment)) {
-      if (accomplishments.length === 0) {
-        throw new Error(
-          "Could not find an accomplishment matching [" +
-            accomplishment.toString() +
-            "] within the database"
-        );
-      }
+      throw new Error(
+        "Could not find an accomplishment matching [" +
+          accomplishment.toString() +
+          "] within the database"
+      );
     }
 
+    const associatedGoal = careerImprovementClient.getAssociatedGoal(accomplishment);
     careerImprovementClient.remove(accomplishment);
-    this.database.update(careerImprovementClient);
+
+    try {
+      this.database.update(careerImprovementClient);
+    } catch (e) {
+      careerImprovementClient.log(
+        accomplishment,
+        associatedGoal
+      );
+      throw e;
+    }
   }
 }

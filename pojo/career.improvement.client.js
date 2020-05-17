@@ -45,7 +45,7 @@ export class CareerImprovementClient {
     this.currentOnGoalRemovedListenerId = 0;
     this.currentOnAccomplishmentAssociatedListenerId = 0;
     this.currentOnAccomplishmentDeassociatedListenerId = 0;
-   }
+  }
 
   static getType() {
     return "careerimprovementclient";
@@ -154,7 +154,7 @@ export class CareerImprovementClient {
 
     for (let i = 0; i < this.goals.length; i++) {
       if (this.goals[i].get() === goal.get()) {
-        found = goal.copy();
+        found = this.goals[i].copy();
         break;
       }
     }
@@ -287,6 +287,14 @@ export class CareerImprovementClient {
   }
 
   remove(hardWorkEntry) {
+    if (!this.contains(hardWorkEntry)) {
+      throw new Error(
+        "Could not find accomplishment [" +
+          hardWorkEntry.getAccomplishment() +
+          "]"
+      );
+    }
+
     let deletionIndex = -1;
     for (let i = 0; i < this.hardWorkEntries.length; i++) {
       if (hardWorkEntry.equals(this.hardWorkEntries[i])) {
@@ -386,7 +394,11 @@ export class CareerImprovementClient {
     }
 
     const goalsContainsAccomplishment = (goals, accomplishment) => {
-      if ((!goals) && goals.length === 0) {
+      if (!goals) {
+        return true;
+      }
+
+      if (goals.length === 0) {
         return true;
       }
 
@@ -463,5 +475,27 @@ export class CareerImprovementClient {
     }
 
     return latestAchievement;
+  }
+
+  getAssociatedGoal(accomplishment) {
+    if (!this.contains(accomplishment)) {
+      throw new Error(
+        "Accomplishment [" +
+          accomplishment.getAccomplishment() +
+          "] did not exist within client"
+      );
+    }
+
+    let associated = null;
+
+    const goals = this.getGoals();
+    for (let i = 0; i < goals.length; i++) {
+      if (goals[i].hasAccomplishment(accomplishment)) {
+        associated = goals[i].copy();
+        break;
+      }
+    }
+
+    return associated;
   }
 }
