@@ -34,7 +34,6 @@ describe('Delete Goal Service', () => {
     });
 
     it('should remove goal with associated accomplishments, should deassociate accomplishment', async () => {
-
         const accomplishments = [];
         for (let i = 0; i < 10; i++) {
             const accomplishment = new HardWorkEntry('Test ' + i, new Timestamp(2010, 1, 1));
@@ -54,6 +53,39 @@ describe('Delete Goal Service', () => {
 
         for (let i = 0; i < accomplishments.length; i++) {
             expect(client.getAssociatedGoal(accomplishments[i])).toBeNull();
+        }
+    });
+
+    it('should revert the remove goal if the call to update fails', async () => {
+        database.update = function() {
+            throw new Error('Update failed');
+        }
+
+        try {
+            await testObject.removeGoal(client, goal);
+            expect(true).toBeFalsy();
+        } catch (e) {
+            expect(client.getGoals().length).toBe(1); 
+        }
+    });
+
+    it('should revert the remove goal if the call to update fails and there are associated accomplishments', async () => {
+        const accomplishment = new HardWorkEntry('Test', new Timestamp(2010, 1, 1));
+        const logAccomplishmentService = new LogAccomplishmentService(database);
+        await logAccomplishmentService.log(client, accomplishment, goal);
+
+        database.update = function() {
+            throw new Error('Update failed');
+        }
+
+        try {
+            await testObject.removeGoal(client, goal);
+            expect(true).toBeFalsy();
+        } catch (e) {
+            expect(client.getGoals().length).toBe(1); 
+
+            const accomplishments = client.getGoal(goal).getAssociatedAccomplishments();
+            expect(accomplishments.length).toBe(1);
         }
     });
 });
