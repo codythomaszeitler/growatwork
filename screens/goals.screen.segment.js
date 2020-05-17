@@ -14,6 +14,7 @@ export class GoalsScreenSegment extends Component {
     this.client = datastore().get();
     this.client.addOnAccomplishmentAssociatedListener(this);
     this.client.addOnAccomplishmentDeassociatedListener(this);
+    this.client.addOnGoalRemovedListener(this);
 
     this.getAccomplishmentsFromPastWeek = this.getAccomplishmentsFromPastWeek.bind(
       this
@@ -21,9 +22,10 @@ export class GoalsScreenSegment extends Component {
     this.onAccomplishmentAssociated = this.onAccomplishmentAssociated.bind(
       this
     );
-    this.onAccomplishmentDeassociated = this.onAccomplishmentAssociated.bind(
+    this.onAccomplishmentDeassociated = this.onAccomplishmentDeassociated.bind(
       this
     );
+    this.onGoalRemoved = this.onGoalRemoved.bind(this);
 
     this.onGoalSegmentPressedListeners = [];
     if (props.onGoalSegmentPressedListener) {
@@ -32,29 +34,44 @@ export class GoalsScreenSegment extends Component {
       );
     }
 
+    this.wasGoalDeleted = false;
+
     this.state = {
       goal: props.goal,
+      accomplishments : this.getAccomplishmentsFromPastWeek(props.goal),
     };
-    this.state.accomplishments = this.getAccomplishmentsFromPastWeek();
-  }
-
-  getAccomplishmentsFromPastWeek() {
-    const today = Timestamp.today();
-    const previous = today.getPreviousDayOfWeek("Monday");
-
-    return this.client.getAchievements(previous, today, [this.state.goal]);
   }
 
   componentWillUnmount() {
     this.client.removeOnAccomplishmentAssociatedListener(this);
     this.client.removeOnAccomplishmentDeassociatedListener(this);
+    this.client.removeOnGoalRemovedListener(this);
+  }
+
+  getAccomplishmentsFromPastWeek(goal) {
+    const today = Timestamp.today();
+    const previous = today.getPreviousDayOfWeek("Monday");
+
+    return this.client.getAchievements(previous, today, [goal]);
+  }
+
+  onGoalRemoved(event) {
+    if (event.goal.get() === this.state.goal.get()) {
+      console.log('goal was deleted');
+      this.wasGoalDeleted = true;
+    }
   }
 
   onAccomplishmentDeassociated(event) {
     if (event.goal.get() === this.state.goal.get()) {
+      console.log(this.wasGoalDeleted);
+      if (this.wasGoalDeleted) {
+        return;
+      }
+
       this.setState({
         goal: event.goal,
-        accomplishments: this.getAccomplishmentsFromPastWeek(),
+        accomplishments: this.getAccomplishmentsFromPastWeek(event.goal),
       });
     }
   }
@@ -63,7 +80,7 @@ export class GoalsScreenSegment extends Component {
     if (event.goal.get() === this.state.goal.get()) {
       this.setState({
         goal: event.goal,
-        accomplishments: this.getAccomplishmentsFromPastWeek(),
+        accomplishments: this.getAccomplishmentsFromPastWeek(event.goal),
       });
     }
   }

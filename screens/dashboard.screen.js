@@ -6,6 +6,7 @@ import { datastore } from "../datastore/datastore";
 import { ChangeAccomplishmentService } from "../service/change.accomplishment.service";
 import { DeleteAccomplishmentService } from "../service/delete.accomplishment.service";
 import { database } from "../database/database";
+import { ScrollView } from "react-native-gesture-handler";
 
 export class DashboardScreen extends Component {
   constructor(props) {

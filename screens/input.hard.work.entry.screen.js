@@ -27,6 +27,7 @@ export class InputHardWorkEntryScreen extends Component {
 
     this.client = datastore().get();
     this.client.addOnGoalAddedListener(this);
+    this.client.addOnGoalRemovedListener(this);
 
     this.onChangeText = this.onChangeText.bind(this);
     this.onPress = this.onPress.bind(this);
@@ -50,11 +51,18 @@ export class InputHardWorkEntryScreen extends Component {
 
   componentWillUnmount() {
     this.client.removeOnGoalAddedListener(this);
+    this.client.removeOnGoalRemovedListener(this);
   }
 
   onGoalAdded(event) {
     this.setState({
       goals: this.client.getGoals(),
+    });
+  }
+
+  onGoalRemoved(event) {
+    this.setState({
+      goals: this.client.getGoals()
     });
   }
 
