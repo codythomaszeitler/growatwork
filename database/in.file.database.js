@@ -21,9 +21,7 @@ export class InFileCareerImprovementClientMapper {
 
     for (let i = 0; i < databaseModel.goals.length; i++) {
       const goalMapper = new GoalMapper();
-
       const goal = goalMapper.toInMemoryModel(databaseModel.goals[i]);
-
       careerImprovementClient.addGoal(goal);
     }
 

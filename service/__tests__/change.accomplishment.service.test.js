@@ -6,6 +6,8 @@ import { MockDatabase, Query } from "../../database/__tests__/mock.database";
 import { ChangeAccomplishmentService } from "../change.accomplishment.service";
 import { CareerImprovementClientMapper } from "../../database/career.improvement.client.mapper";
 import * as queries from "../../graphql/queries";
+import { Goal } from "../../pojo/goal";
+import { AddGoalService } from "../add.goal.service";
 
 describe("Change Accomplishment Service", () => {
   let careerImprovementClient;
@@ -58,7 +60,16 @@ describe("Change Accomplishment Service", () => {
       "Test Accomplishment",
       new Timestamp(2019, "January", 1)
     );
-    await logAccomplishmentService.log(careerImprovementClient, accomplishment);
+    const goal = new Goal("Test");
+
+    const addGoalService = new AddGoalService(database);
+    await addGoalService.addGoal(careerImprovementClient, goal);
+
+    await logAccomplishmentService.log(
+      careerImprovementClient,
+      accomplishment,
+      goal
+    );
 
     database.update = function () {
       throw new Error("Update Failed");
@@ -81,7 +92,49 @@ describe("Change Accomplishment Service", () => {
 
       expect(careerImprovementClient.contains(accomplishment)).toBe(true);
       expect(careerImprovementClient.contains(changed)).toBe(false);
+
+      const accomplishments = careerImprovementClient 
+        .getGoal(goal)
+        .getAssociatedAccomplishments();
+      expect(accomplishments.length).toBe(1);
     }
+  });
+
+  it("should keep the changed accomplishments goal association", async () => {
+    const testObject = new ChangeAccomplishmentService(database);
+    const original = new HardWorkEntry(
+      "Old Accomplishment",
+      new Timestamp(2019, "January", 1)
+    );
+    const goal = new Goal("Goal");
+
+    const addGoalService = new AddGoalService(database);
+    await addGoalService.addGoal(careerImprovementClient, goal);
+
+    const addLogService = new LogAccomplishmentService(database);
+    await addLogService.log(careerImprovementClient, original, goal);
+
+    await testObject.change(
+      careerImprovementClient,
+      original,
+      "New Accomplishment"
+    );
+
+    const expected = new HardWorkEntry(
+      "New Accomplishment",
+      new Timestamp(2019, "January", 1)
+    );
+
+    const mapper = new CareerImprovementClientMapper();
+    const readResults = database.read(
+      new Query(queries.listCareerImprovementClients)
+    );
+    const clientInDatabase = mapper.toInMemoryModel(readResults);
+
+    const accomplishments = clientInDatabase
+      .getGoal(goal)
+      .getAssociatedAccomplishments();
+    expect(accomplishments.length).toBe(1);
   });
 
   it("should throw an exception if the original accomplishment given does not exist within the database", async () => {
@@ -103,9 +156,7 @@ describe("Change Accomplishment Service", () => {
     }
 
     expect(caughtException.message).toBe(
-      "Could not find accomplishment [" +
-        accomplishment.getAccomplishment() +
-        "]"
+      "Accomplishment [Test Accomplishment] did not exist within client"
     );
   });
 });
