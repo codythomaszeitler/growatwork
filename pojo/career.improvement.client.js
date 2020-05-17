@@ -150,10 +150,20 @@ export class CareerImprovementClient {
   }
 
   getGoal(goal) {
+    const getGoalName = () => {
+      let goalName;
+      if (typeof goal === "string") {
+        goalName = goal;
+      } else {
+        goalName = goal.get();
+      }
+      return goalName;
+    };
+
     let found = null;
 
-    for (let i = 0; i < this.goals.length; i++) {
-      if (this.goals[i].get() === goal.get()) {
+    for (let i = 0; i < this.goals.length; i++){
+      if (this.goals[i].get() === getGoalName()) {
         found = this.goals[i].copy();
         break;
       }

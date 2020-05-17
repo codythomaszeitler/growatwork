@@ -1,25 +1,39 @@
-import {Goal} from '../pojo/goal';
+import { Goal } from "../pojo/goal";
 
 export class ChangeGoalService {
+  constructor(database) {
+    this.database = database;
+  }
 
-    constructor(database) {
-        this.database = database;
+  async changeGoalName(careerImprovementClient, goal, newName) {
+    const accomplishments = careerImprovementClient.getGoal(goal).getAssociatedAccomplishments();
+    const deepClean = (goal) => {
+      careerImprovementClient.removeGoal(goal);
+      for (let i = 0; i < accomplishments.length; i++) {
+        careerImprovementClient.remove(accomplishments[i]);
+      }
+    };
+
+    const deepAdd = (goal) => {
+      careerImprovementClient.addGoal(goal);
+      for (let i = 0; i < accomplishments.length; i++) {
+        careerImprovementClient.log(accomplishments[i], goal);
+      }
+    };
+
+    deepClean(goal);
+
+    const changedGoal = new Goal(newName);
+    deepAdd(changedGoal);
+
+    try {
+      this.database.update(careerImprovementClient);
+    } catch (e) {
+      deepClean(changedGoal);
+      deepAdd(goal);
+
+      throw e;
     }
-
-    async changeGoalName(careerImprovementClient, goal, newName) {
-        careerImprovementClient.removeGoal(goal);
-        const accomplishments = goal.getAssociatedAccomplishments();
-        for (let i = 0; i < accomplishments.length; i++) {
-            careerImprovementClient.remove(accomplishments[i]);
-        }
-
-        const changedGoal = new Goal(newName);
-        careerImprovementClient.addGoal(changedGoal);
-        for (let i = 0; i < accomplishments.length; i++) {
-            careerImprovementClient.log(accomplishments[i], changedGoal);
-        }
-
-        this.database.update(careerImprovementClient);
-        return changedGoal;
-    }
+    return changedGoal;
+  }
 }
