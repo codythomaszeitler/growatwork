@@ -21,16 +21,16 @@ export class AddGoalScreen extends Component {
     };
   }
 
-  onPress(event) {
-    if (!this.state.goalText) {
+  async onPress(event) {
+    const goalText = this.state.goalText.trim();
+    if (!goalText) {
       return;
     }
 
-    const goal = new Goal(this.state.goalText);
-
+    const goal = new Goal(goalText);
     try {
       const service = new AddGoalService(database());
-      service.addGoal(this.client, goal);
+      await service.addGoal(this.client, goal);
 
       Keyboard.dismiss();
 

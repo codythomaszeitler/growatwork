@@ -162,7 +162,7 @@ export class CareerImprovementClient {
 
     let found = null;
 
-    for (let i = 0; i < this.goals.length; i++){
+    for (let i = 0; i < this.goals.length; i++) {
       if (this.goals[i].get() === getGoalName()) {
         found = this.goals[i].copy();
         break;
@@ -205,7 +205,10 @@ export class CareerImprovementClient {
         "Cannot log without a hard work entry to a career improvement client"
       );
     }
+
+    console.log('enter checking for duplicate');
     this.checkForDuplicate(hardWorkEntry);
+    console.log('leaving checking for duplicate');
 
     let insertionIndex = this.hardWorkEntries.length;
     for (let i = 0; i < this.hardWorkEntries.length; i++) {
@@ -389,9 +392,7 @@ export class CareerImprovementClient {
 
   getAchievements(fromTimestamp, toTimestamp, selectByGoals) {
     const withinBoundary = [];
-
     const achievements = this.getHardWork();
-
     for (let i = 0; i < achievements.length; i++) {
       const achievement = achievements[i];
 
@@ -443,8 +444,8 @@ export class CareerImprovementClient {
     for (let i = 0; i < withinBoundary.length; i++) {
       if (goalsContainsAccomplishment(selectByGoals, withinBoundary[i])) {
         filtered.push(withinBoundary[i]);
-      } else if (!goalsContainsAccomplishment(this.goals, withinBoundary[i])) {
-        if (containsUnassociated(selectByGoals)) {
+      } else if (containsUnassociated(selectByGoals)) {
+        if (!this.getAssociatedGoal(withinBoundary[i])) {
           filtered.push(withinBoundary[i]);
         }
       }

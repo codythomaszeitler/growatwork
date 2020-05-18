@@ -6,7 +6,7 @@ import { Divider } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 import { Timestamp } from "../pojo/timestamp";
 import { datastore } from "../datastore/datastore";
-import { AchievementExcelWriter } from "../excelexport/excel.writer";
+import { AccomplishmentExcelWriter } from "../excelexport/excel.writer";
 import { Goal } from "../pojo/goal";
 import * as MailComposer from "expo-mail-composer";
 import * as FileSystem from "expo-file-system";
@@ -100,7 +100,7 @@ export class ExcelExportScreen extends Component {
 
   async onExportViaEmail() {
     try {
-      const excelWriter = new AchievementExcelWriter();
+      const excelWriter = new AccomplishmentExcelWriter(this.client);
       await excelWriter.write(
         "yourhardwork.csv",
         this.getSelectedAchievements()
@@ -154,7 +154,7 @@ export class ExcelExportScreen extends Component {
   }
 
   async onExportViaExcel() {
-    const excelWriter = new AchievementExcelWriter();
+    const excelWriter = new AccomplishmentExcelWriter();
     await excelWriter.write("yourhardwork.csv", this.getSelectedAchievements());
   }
 
@@ -230,6 +230,9 @@ export class ExcelExportScreen extends Component {
                 placeholder="E-mail"
                 defaultValue={this.state.destinationEmail}
                 onChangeText={this.onEmailDestinationChange}
+                keyboardType='email-address'
+                autoCorrect={false}
+                autoCapitalize='none'
               ></Input>
               <Text></Text>
               <Button

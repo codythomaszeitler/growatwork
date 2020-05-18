@@ -6,6 +6,12 @@ export class AddGoalService {
 
     async addGoal(careerImprovementClient, goal) {
         careerImprovementClient.addGoal(goal);
-        this.database.update(careerImprovementClient);
+
+        try {
+            await this.database.update(careerImprovementClient);
+        } catch (e) {
+            careerImprovementClient.removeGoal(goal);
+            throw e;
+        }
     }
 }

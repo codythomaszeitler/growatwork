@@ -1,12 +1,17 @@
 import * as FileSystem from 'expo-file-system';
 import {ExcelSheet} from './excel.sheet';
-import {AchievementCsvRowConverter} from './achievement.csv.row.converter';
+import {AccomplishmentCsvRowConverter} from './accomplishment.csv.row.converter';
 
-export class AchievementExcelWriter {
+export class AccomplishmentExcelWriter {
+
+    constructor(careerImprovementClient) {
+        this.careerImprovementClient = careerImprovementClient;
+    }
+
     async write(filePath, achievements) {
         const excelSheet = new ExcelSheet(
-            ['Achievement', 'Accomplished On'],
-            new AchievementCsvRowConverter()
+            ['Accomplishment', 'Accomplished On', 'Associated Goal'],
+            new AccomplishmentCsvRowConverter(this.careerImprovementClient)
         );
 
         const csvWriter = {

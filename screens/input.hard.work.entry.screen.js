@@ -108,7 +108,9 @@ export class InputHardWorkEntryScreen extends Component {
   }
 
   async onPress() {
-    if (!this.state.accomplishment) {
+
+    const accomplishmentText = this.state.accomplishment.trim();
+    if (!accomplishmentText) {
       return;
     }
 
@@ -117,7 +119,7 @@ export class InputHardWorkEntryScreen extends Component {
     });
 
     const newEntry = new HardWorkEntry(
-      this.state.accomplishment,
+      accomplishmentText,
       Timestamp.today()
     );
 

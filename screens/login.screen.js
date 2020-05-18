@@ -104,7 +104,6 @@ export class LoginScreen extends Component {
       this.hideLoadingScreen();
       this.props.navigation.navigate("Dashboard");  
     } catch (e) {
-      console.log(e);
       this.hideLoadingScreen();
       Alert.alert('Cannot Sign In', e.message);
     }
