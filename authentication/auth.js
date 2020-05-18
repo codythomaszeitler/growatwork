@@ -64,45 +64,73 @@ export class Authentication {
 
   async forgotPasswordSubmit(username, code, newPassword) {
     return await Auth.forgotPasswordSubmit(username, code, newPassword);
-  } 
+  }
 
   async resendSignUp(username) {
     return await Auth.resendSignUp(username);
   }
 }
 
+export const guestUsername = 'Guest';
+
 export class GuestAuthentication {
-  async signIn(email, password) {
-  }
+  async signIn(email, password) {}
 
-  async signUp(email, password) {
-  }
+  async signUp(email, password) {}
 
-  async confirmSignUp(email, code) {
-  }
+  async confirmSignUp(email, code) {}
 
-  async signOut() {
-  }
+  async signOut() {}
 
-  async changePassword(oldPassword, newPassword) {
-  }
+  async changePassword(oldPassword, newPassword) {}
 
-  async forgotPasswordSubmit(username, code, newPassword) {
-  }
+  async forgotPasswordSubmit(username, code, newPassword) {}
 
   async getCurrentUsername() {
-    return "Guest";
+    return guestUsername;
   }
 
-  async sendPasswordResetEmail(username) {
+  async sendPasswordResetEmail(username) {}
+
+  async forgotPassword(username) {}
+
+  async forgotPasswordSubmit(username, code, newPassword) {}
+
+  async resendSignUp(username) {}
+
+}
+
+class AuthenticationFactory {
+
+  create(type) {
+
+      let authentication;
+      if (type === 'Guest') {
+          authentication = new GuestAuthentication();
+      } else if (type === 'AWS') {
+          authentication = new Authentication();
+      } else {
+          throw new Error('Unsupported type [' + type + ']');
+      }
+      return authentication;
+  }
+}
+
+let singleton = null;
+export function configureAWSAuthentication() {
+  const factory = new AuthenticationFactory();
+  singleton = factory.create("AWS");
+}
+
+export function configureGuestAuthenticaion() {
+  const factory = new AuthenticationFactory();
+  singleton = factory.create("Guest");
+}
+
+export function authentication() {
+  if (singleton === null) {
+    throw new Error('Authentication has not been configured');
   }
 
-  async forgotPassword(username) {
-  }
-
-  async forgotPasswordSubmit(username, code, newPassword) {
-  } 
-
-  async resendSignUp(username) {
-  }
+  return singleton;
 }

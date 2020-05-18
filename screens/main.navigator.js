@@ -1,4 +1,3 @@
-// import { createBottomTabNavigator } from "react-navigation-tabs";
 import { DashboardScreen } from "./dashboard.screen";
 import { InputHardWorkEntryScreen } from "./input.hard.work.entry.screen";
 import { View, Modal } from "react-native";
@@ -11,6 +10,7 @@ import { SettingsScreen } from "./settings.screen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { GoalsScreen } from "./goals.screen";
 import { ExcelExportScreen } from "./excel.export.screen";
+import { HelpScreen } from "./help.screen";
 
 const Tab = createBottomTabNavigator();
 function DashboardTabs() {
@@ -90,7 +90,8 @@ export class DashboardNavigation extends Component {
     this.props = props;
 
     this.state = {
-      modalVisible: false,
+      settingsScreenVisible: false,
+      helpScreenVisible: false,
     };
   }
 
@@ -100,23 +101,42 @@ export class DashboardNavigation extends Component {
         <Modal
           animationType="slide"
           transparent={false}
-          visible={this.state.modalVisible}
+          visible={this.state.settingsScreenVisible}
         >
           <SettingsScreen
             onCloseCall={() => {
               this.setState({
-                modalVisible: false,
+                settingsScreenVisible: false,
               });
             }}
             onLogOutCall={() => {
               this.setState({
-                modalVisible: false,
+                settingsScreenVisible: false,
               });
               this.props.navigation.navigate("Login");
             }}
           ></SettingsScreen>
         </Modal>
+
+        <Modal 
+        animationType='slide'
+        transparent={false}
+        visible={this.state.helpScreenVisible}>
+
+          <HelpScreen>
+
+          </HelpScreen>
+        </Modal>
         <Header
+          leftComponent={{
+            icon: "help",
+            color: "#4d7bd1",
+            onPress: () => {
+              this.setState({
+                helpScreenVisible: true,
+              });
+            },
+          }}
           centerComponent={{
             text: "Grow and Thrive at Work",
             style: { color: "#4d7bd1", fontSize: 18 },
@@ -126,7 +146,7 @@ export class DashboardNavigation extends Component {
             color: "#4d7bd1",
             onPress: () => {
               this.setState({
-                modalVisible: true,
+                settingsScreenVisible: true,
               });
             },
           }}

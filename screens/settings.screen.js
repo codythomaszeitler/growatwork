@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { View, Alert } from "react-native";
 import { Button, Text, Card, Input } from "react-native-elements";
-import { Authentication } from "../authentication/auth";
+import { authentication, guestUsername } from "../authentication/auth";
 
 export class SettingsScreen extends Component {
   constructor(props) {
     super(props);
     this.props = props;
 
-    this.authentication = new Authentication();
+    this.authentication = authentication();
 
     this.onClose = this.onClose.bind(this);
     this.onLogOut = this.onLogOut.bind(this);
@@ -23,8 +23,21 @@ export class SettingsScreen extends Component {
       modalVisible: false,
       oldPassword: "",
       newPassword: "",
-      copyNewPassword: ""
+      copyNewPassword: "",
+      isLoggedInAsGuest: true
     };
+  }
+
+  async componentDidMount() {
+    const isGuestUser = async () => {
+      const username = await this.authentication.getCurrentUsername();
+      return username === guestUsername;
+    }
+
+    const isGuest = await isGuestUser(); 
+    this.setState({
+      isLoggedInAsGuest : isGuest
+    });
   }
 
   onClose() {
@@ -51,7 +64,7 @@ export class SettingsScreen extends Component {
       this.setState({
         oldPassword: "",
         newPassword: "",
-        copyNewPassword: ""
+        copyNewPassword: "",
       });
     } catch (e) {
       Alert.alert(
@@ -63,19 +76,19 @@ export class SettingsScreen extends Component {
 
   onOldPasswordChange(oldPassword) {
     this.setState({
-      oldPassword: oldPassword
+      oldPassword: oldPassword,
     });
   }
 
   onNewPasswordChange(newPassword) {
     this.setState({
-      newPassword: newPassword
+      newPassword: newPassword,
     });
   }
 
   onReenterNewPasswordChange(copyNewPassword) {
     this.setState({
-      copyNewPassword: copyNewPassword
+      copyNewPassword: copyNewPassword,
     });
   }
 
@@ -85,24 +98,24 @@ export class SettingsScreen extends Component {
         style={{
           justifyContent: "space-around",
           alignItems: "stretch",
-          flex: 1
+          flex: 1,
         }}
       >
         <View
           style={{
-            flex: .5
+            flex: 0.5,
           }}
         ></View>
         <View
           style={{
-            flex: 1
+            flex: 1,
           }}
         >
           <Text
             style={{
               textAlign: "center",
               fontFamily: "PingFangTC-Thin",
-              fontSize: 30
+              fontSize: 30,
             }}
           >
             Settings
@@ -118,7 +131,7 @@ export class SettingsScreen extends Component {
               style={{
                 textAlign: "center",
                 fontFamily: "PingFangTC-Thin",
-                fontSize: 20
+                fontSize: 20,
               }}
             >
               Change Password
@@ -129,6 +142,7 @@ export class SettingsScreen extends Component {
               onChangeText={this.onOldPasswordChange}
               secureTextEntry={true}
               value={this.state.oldPassword}
+              disabled={this.state.isLoggedInAsGuest}
             />
             <Input
               placeholder="New Password"
@@ -136,6 +150,7 @@ export class SettingsScreen extends Component {
               onChangeText={this.onNewPasswordChange}
               secureTextEntry={true}
               value={this.state.newPassword}
+              disabled={this.state.isLoggedInAsGuest}
             />
             <Input
               placeholder="Confirm New Password"
@@ -143,9 +158,14 @@ export class SettingsScreen extends Component {
               onChangeText={this.onReenterNewPasswordChange}
               secureTextEntry={true}
               value={this.state.copyNewPassword}
+              disabled={this.state.isLoggedInAsGuest}
             />
             <Text></Text>
-            <Button title="Change" onPress={this.onChangePassword}></Button>
+            <Button
+              title="Change"
+              onPress={this.onChangePassword}
+              disabled={this.state.isLoggedInAsGuest}
+            ></Button>
           </Card>
           <Card>
             <Button title="Log Out" onPress={this.onLogOut}></Button>

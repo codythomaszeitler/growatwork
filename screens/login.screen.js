@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, Alert, Modal } from "react-native";
-import { Authentication, UserNotConfirmedCode } from "../authentication/auth";
+import { configureAWSAuthentication, configureGuestAuthenticaion, authentication } from "../authentication/auth";
 import { Input, Icon, Button } from "react-native-elements";
 import { LoadingScreen } from "./loading.screen";
 import { PasswordChangeScreen } from "./password.change.screen";
@@ -19,7 +19,6 @@ import {
 } from "../database/database";
 import { datastore } from "../datastore/datastore";
 import { CareerImprovementClient } from "../pojo/career.improvement.client";
-import { AuthenticationFactory } from "../authentication/auth.factory";
 
 export class LoginScreen extends Component {
   constructor(props) {
@@ -96,8 +95,8 @@ export class LoginScreen extends Component {
 
   async guestSignIn() {
     try {
-      const factory = new AuthenticationFactory();
-      this.authentication = factory.create("Guest");
+      configureGuestAuthenticaion();
+      this.authentication = authentication();
 
       this.showLoadingScreen();
       configureFlatDatabase();
@@ -113,8 +112,8 @@ export class LoginScreen extends Component {
 
   async signIn() {
     try {
-      const factory = new AuthenticationFactory();
-      this.authentication = factory.create("AWS");
+      configureAWSAuthentication();
+      this.authentication = authentication();
       this.authenticationFlow = new AuthenticationFlow(this.authentication);
 
       this.showLoadingScreen();
