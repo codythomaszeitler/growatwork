@@ -17,6 +17,10 @@ export class GoalsScreen extends Component {
     this.client.addOnAccomplishmentDeassociatedListener(this);
     this.client.addOnGoalRemovedListener(this);
 
+    this.onBack = this.onBack.bind(this);
+    this.onCreation = this.onCreation.bind(this);
+    this.removeListeners = this.removeListeners.bind(this);
+
     if (!this.client.hasGoals()) {
       Alert.alert(
         "Weekly View",
@@ -37,11 +41,24 @@ export class GoalsScreen extends Component {
     this.client.removeOnGoalRemovedListener(this);
     this.client.removeOnAccomplishmentDeassociatedListener(this);
     this.client.removeOnLogRemovedListener(this);
+
+    this.removeListeners();
+  }
+
+  removeListeners() {
+    if (this.modifyGoalScreen) {
+      this.modifyGoalScreen.removeOnSuccessfulGoalChangedListener(this);
+      this.modifyGoalScreen.removeOnSuccessfulGoalDeletedListener(this);
+    }
+  }
+
+  onCreation(ref) {
+    this.modifyGoalScreen = ref;
   }
 
   onLogRemoved(event) {
     this.setState({
-      goal : this.client.getGoals()
+      goal: this.client.getGoals(),
     });
   }
 
@@ -53,7 +70,7 @@ export class GoalsScreen extends Component {
 
   onAccomplishmentDeassociated(event) {
     this.setState({
-      goals : this.client.getGoals()
+      goals: this.client.getGoals(),
     });
   }
 
@@ -77,15 +94,24 @@ export class GoalsScreen extends Component {
   }
 
   onSuccessfulGoalChange(event) {
-    this.setState({ 
-      modalVisible: false 
+    this.setState({
+      modalVisible: false,
     });
+    this.removeListeners();
   }
 
   onSuccessfulGoalDelete(event) {
     this.setState({
       modalVisible: false,
     });
+    this.removeListeners();
+  }
+
+  onBack(event) {
+    this.setState({
+      modalVisible: false,
+    });
+    this.removeListeners();
   }
 
   render() {
@@ -103,6 +129,7 @@ export class GoalsScreen extends Component {
               }}
             >
               <ModifyGoalScreen
+                ref={this.onCreation}
                 goal={this.state.selectedGoal}
                 onSuccessfulGoalDeleteListener={this}
                 onSuccessfulGoalChangedListener={this}
@@ -114,14 +141,7 @@ export class GoalsScreen extends Component {
                 alignItems: "center",
               }}
             >
-              <Button
-                title="Back"
-                onPress={(event) => {
-                  this.setState({
-                    modalVisible: false,
-                  });
-                }}
-              ></Button>
+              <Button title="Back" onPress={this.onBack}></Button>
             </View>
           </View>
         </Modal>
