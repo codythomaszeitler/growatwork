@@ -6,7 +6,6 @@ import { datastore } from "../datastore/datastore";
 import { ChangeAccomplishmentService } from "../service/change.accomplishment.service";
 import { DeleteAccomplishmentService } from "../service/delete.accomplishment.service";
 import { database } from "../database/database";
-import { ScrollView } from "react-native-gesture-handler";
 
 export class DashboardScreen extends Component {
   constructor(props) {
@@ -44,7 +43,7 @@ export class DashboardScreen extends Component {
       if (!this.hasAchievements()) {
         Alert.alert(
           "No accomplishments yet!",
-          "Go to the add screen and put your hard work in!"
+          "Go to the log screen and put your hard work in!"
         );
       }
     }, 1000);

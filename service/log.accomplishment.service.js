@@ -5,6 +5,7 @@ export class LogAccomplishmentService {
   }
 
   async log(careerImprovementClient, accomplishment, goal) {
+
     careerImprovementClient.log(accomplishment, goal);
 
     try {

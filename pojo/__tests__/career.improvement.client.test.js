@@ -179,6 +179,22 @@ describe("Career Improvement Client", () => {
     expect(associated.equals(testObject.getGoal(goal))).toBeTruthy();
   });
 
+  it('should have goals in lexographic ordering when added', () => {
+    const c = new Goal('C');
+    const b = new Goal('B');
+    const a = new Goal('A');
+
+    testObject.addGoal(c);
+    testObject.addGoal(b);
+    testObject.addGoal(a);
+
+    const goals = testObject.getGoals();
+
+    expect(goals[0].get()).toBe(a.get());
+    expect(goals[1].get()).toBe(b.get());
+    expect(goals[2].get()).toBe(c.get());
+  });
+
   it("should return null if the accomplishment does not have an associated goal", () => {
     const accomplishment = new HardWorkEntry(
       "First",

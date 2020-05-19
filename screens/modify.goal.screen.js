@@ -46,7 +46,7 @@ export class ModifyGoalScreen extends Component {
     const changedGoal = await service.changeGoalName(
       this.client,
       this.state.goal,
-      this.state.changeGoalInput.trim()
+      input
     );
 
     for (let i = 0; i < this.onSuccessfulGoalChangedListeners.length; i++) {

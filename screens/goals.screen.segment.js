@@ -57,14 +57,12 @@ export class GoalsScreenSegment extends Component {
 
   onGoalRemoved(event) {
     if (event.goal.get() === this.state.goal.get()) {
-      console.log('goal was deleted');
       this.wasGoalDeleted = true;
     }
   }
 
   onAccomplishmentDeassociated(event) {
     if (event.goal.get() === this.state.goal.get()) {
-      console.log(this.wasGoalDeleted);
       if (this.wasGoalDeleted) {
         return;
       }

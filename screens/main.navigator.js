@@ -4,7 +4,7 @@ import { View, Modal } from "react-native";
 import React, { Component } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
-import { Header } from "react-native-elements";
+import { Header, Button } from "react-native-elements";
 import { SettingsScreen } from "./settings.screen";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -118,14 +118,36 @@ export class DashboardNavigation extends Component {
           ></SettingsScreen>
         </Modal>
 
-        <Modal 
-        animationType='slide'
-        transparent={false}
-        visible={this.state.helpScreenVisible}>
-
-          <HelpScreen>
-
-          </HelpScreen>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.helpScreenVisible}
+        >
+          <View
+            style={{
+              flex: 1,
+            }}
+          >
+            <View style={{
+              flex : 6
+            }}>
+              <HelpScreen></HelpScreen>
+            </View>
+            <View style={{
+              flex : 3,
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Button
+              title='Back'
+                onPress={() => {
+                  this.setState({
+                    helpScreenVisible: false,
+                  });
+                }}
+              ></Button>
+            </View>
+          </View>
         </Modal>
         <Header
           leftComponent={{

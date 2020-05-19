@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 import { Text } from "react-native-elements";
 
 export class HelpScreen extends Component {
@@ -9,30 +9,11 @@ export class HelpScreen extends Component {
           style={{
             flex: 1,
             justifyContent: "space-around",
+            alignItems : 'center'
           }}
         >
-          <View
-            style={{
-              flex: 1,
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                fontFamily: "PingFangTC-Thin",
-                fontSize: 30,
-              }}
-            >
-              Help
-            </Text>
-          </View>
-          <View
-            style={{
-              flex: 6,
-            }}
-          >
-            <Text>Screen</Text>
-          </View>
+          <Text>HELP TEXT GOES HERE</Text>
+
         </View>
     );
   }

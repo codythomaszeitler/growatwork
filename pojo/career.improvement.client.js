@@ -78,6 +78,11 @@ export class CareerImprovementClient {
     }
 
     this.goals.push(goal.copy());
+
+    this.goals = this.goals.sort(function (a, b) {
+      return a.get().localeCompare(b.get());
+    });
+
     for (let i = 0; i < this.onGoalAddedListeners.length; i++) {
       this.onGoalAddedListeners[i].onGoalAdded({
         goal: goal.copy(),
@@ -206,9 +211,7 @@ export class CareerImprovementClient {
       );
     }
 
-    console.log('enter checking for duplicate');
     this.checkForDuplicate(hardWorkEntry);
-    console.log('leaving checking for duplicate');
 
     let insertionIndex = this.hardWorkEntries.length;
     for (let i = 0; i < this.hardWorkEntries.length; i++) {
