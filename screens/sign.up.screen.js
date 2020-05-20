@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { View, Text, Modal, Alert } from "react-native";
 import { Button, Card, Input, Icon } from "react-native-elements";
-import { Completed } from "../authentication/authentication.flow";
+import { Completed, AuthenticationFlow } from "../authentication/authentication.flow";
+import {Authentication} from '../authentication/auth';
 
 export class SignUpScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.authenticationFlow = props.navigation.state.params.authenticationFlow;
+    this.authentication = new Authentication();
+    this.authenticationFlow = new AuthenticationFlow(this.authentication);
 
     this.state = {
       modalVisible: false,

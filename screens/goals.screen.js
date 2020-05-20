@@ -120,7 +120,7 @@ export class GoalsScreen extends Component {
         <Modal visible={this.state.modalVisible} animationType="slide">
           <View
             style={{
-              flex: 1,
+              flex: 1.5,
             }}
           >
             <View

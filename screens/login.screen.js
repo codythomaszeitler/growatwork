@@ -246,9 +246,7 @@ export class LoginScreen extends Component {
   }
 
   async signUp() {
-    this.props.navigation.navigate("SignUp", {
-      authenticationFlow: this.authenticationFlow,
-    });
+    this.props.navigation.navigate("SignUp");
   }
 
   async forgotPassword() {

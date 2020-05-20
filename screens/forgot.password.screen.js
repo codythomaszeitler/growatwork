@@ -71,7 +71,7 @@ export class ForgotPasswordScreen extends Component {
 
     try {
       await this.authentication.forgotPasswordSubmit(
-        this.state.email,
+        this.state.email.trim(),
         this.state.confirmationCode,
         this.state.newPassword
       );
@@ -88,14 +88,14 @@ export class ForgotPasswordScreen extends Component {
   }
 
   async onSendPasswordReset() {
-    if (!this.state.email) {
+    if (!this.state.email.trim()) {
       Alert.alert("Please enter an email");
       return;
     }
 
     try {
         await this.authentication.forgotPassword(
-          this.state.email
+          this.state.email.trim()
         );
       this.setState({
         modalVisible: true
