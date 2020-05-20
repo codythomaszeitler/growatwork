@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { Text, View, Alert, Modal } from "react-native";
-import { configureAWSAuthentication, configureGuestAuthenticaion, authentication } from "../authentication/auth";
+import {
+  configureAWSAuthentication,
+  configureGuestAuthenticaion,
+  authentication,
+} from "../authentication/auth";
 import { Input, Icon, Button } from "react-native-elements";
 import { LoadingScreen } from "./loading.screen";
 import { PasswordChangeScreen } from "./password.change.screen";
@@ -102,10 +106,10 @@ export class LoginScreen extends Component {
       configureFlatDatabase();
       await this.load();
       this.hideLoadingScreen();
-      this.props.navigation.navigate("Dashboard");  
+      this.props.navigation.navigate("Dashboard");
     } catch (e) {
       this.hideLoadingScreen();
-      Alert.alert('Cannot Sign In', e.message);
+      Alert.alert("Cannot Sign In", e.message);
     }
   }
 
@@ -283,7 +287,7 @@ export class LoginScreen extends Component {
         ></View>
         <View
           style={{
-            flex: 1,
+            flex: 2,
           }}
         >
           <Text
@@ -339,11 +343,14 @@ export class LoginScreen extends Component {
             ></Button>
           </View>
         </View>
+        <View style={{
+          flex :1.5  
+        }}></View>
 
         <View
           style={{
             alignItems: "center",
-            flex: 1,
+            flex: .7,
           }}
         >
           <Button
@@ -352,14 +359,26 @@ export class LoginScreen extends Component {
             title="Guest Sign In"
             onPress={this.guestSignIn}
           ></Button>
-          <Text></Text>
+        </View>
+        <View
+          style={{
+            alignItems: 'center',
+            flex: .7,
+          }}
+        >
           <Button
             type="outline"
             raised
             title="Sign Up"
             onPress={this.signUp}
           ></Button>
-          <Text></Text>
+        </View>
+        <View
+          style={{
+            alignItems : 'center',
+            flex: .7,
+          }}
+        >
           <Button
             type="outline"
             raised
@@ -367,11 +386,6 @@ export class LoginScreen extends Component {
             onPress={this.forgotPassword}
           ></Button>
         </View>
-        <View
-          style={{
-            flex: 0.5,
-          }}
-        ></View>
       </View>
     );
   }
